@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:gravity="center_vertical"
+        android:background="@color/white"
         android:layout_height="@dimen/title_height"
         android:layout_marginBottom="@dimen/title_bottom_margin">
         <ImageView
@@ -35,7 +36,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/settings_btn_height"
-            android:backgroundTint="@color/white"
+            android:background="@color/white"
             android:padding="@dimen/padding">
             <TextView
                 android:layout_width="match_parent"
@@ -54,7 +55,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/settings_btn_height"
-            android:backgroundTint="@color/white"
+            android:background="@color/white"
             android:padding="@dimen/padding">
             <TextView
                 android:layout_width="match_parent"
@@ -73,7 +74,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/settings_btn_height"
-            android:backgroundTint="@color/white"
+            android:background="@color/white"
             android:padding="@dimen/padding">
             <TextView
                 android:layout_width="match_parent"
@@ -92,7 +93,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/settings_btn_height"
-            android:backgroundTint="@color/white"
+            android:background="@color/white"
             android:padding="@dimen/padding">
             <TextView
                 android:layout_width="match_parent"
