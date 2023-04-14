@@ -4,10 +4,19 @@
     <dimen name="title_text_size">22sp</dimen>
     <dimen name="title_bottom_margin">24dp</dimen>
 
-    <dimen name="menu_icon_padding">10dp</dimen>
+    <dimen name="menu_icon_padding">8dp</dimen>
+    <dimen name="menu_btn_text_size">22sp</dimen>
+    <dimen name="menu_btn_radius">16dp</dimen>
 
     <dimen name="padding">16dp</dimen>
+    <dimen name="margin">16dp</dimen>
 
     <dimen name="settings_btn_height">61dp</dimen>
     <dimen name="settings_btn_text_size">16sp</dimen>
+    <dimen name="settings_btn_margin">21dp</dimen>
+    <dimen name="settings_btn_padding">21dp</dimen>
+    <dimen name="settings_btn_right_padding">12dp</dimen>
+    <dimen name="settings_btn_image_margin_top">19dp</dimen>
+    <dimen name="settings_btn_image_margin_bottom">18dp</dimen>
+    <dimen name="settings_btn_image_margin_left">8dp</dimen>
 </resources>

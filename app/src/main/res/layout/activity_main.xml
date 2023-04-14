@@ -4,69 +4,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue"
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-    <FrameLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_title"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-medium"
+        android:layout_gravity="left|center"
+        android:layout_marginTop="14dp"
+        android:layout_margin="@dimen/margin"
+        android:textSize="@dimen/title_text_size"/>
+
+    <Button
+        android:id="@+id/menu_search"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/title_height"
-        android:layout_marginBottom="@dimen/title_bottom_margin">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="@dimen/margin"
+        android:backgroundTint="@color/button_bg"
+        android:text="@string/menu_search"
+        android:textColor="@color/button_txt"
+        android:textSize="@dimen/menu_btn_text_size"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-medium"
+        app:icon="@drawable/ic_24x24_search"
+        app:iconGravity="textStart"
+        app:iconTint="@color/button_txt"
+        app:iconPadding="@dimen/menu_icon_padding"
+        app:cornerRadius="@dimen/menu_btn_radius"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/menu_title"
-            android:textColor="@color/white"
-            android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            android:textSize="@dimen/title_text_size"/>
-    </FrameLayout>
-
-    <LinearLayout
+    <Button
+        android:id="@+id/menu_library"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/padding"
-        android:layout_marginBottom="28dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginBottom="@dimen/margin"
+        android:backgroundTint="@color/button_bg"
+        android:text="@string/menu_library"
+        android:textColor="@color/button_txt"
+        android:textSize="@dimen/menu_btn_text_size"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-medium"
+        app:icon="@drawable/ic_24x24_library"
+        app:iconGravity="textStart"
+        app:iconTint="@color/button_txt"
+        app:iconPadding="@dimen/menu_icon_padding"
+        app:cornerRadius="@dimen/menu_btn_radius"/>
 
-        <Button
-            android:id="@+id/menu_search"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:backgroundTint="@color/button_bg"
-            android:text="@string/menu_search"
-            android:textColor="@color/button_txt"
-            app:icon="@drawable/search"
-            app:iconGravity="textStart"
-            app:iconTint="@color/button_txt"
-            app:iconPadding="@dimen/menu_icon_padding"/>
-
-        <Button
-            android:id="@+id/menu_library"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:backgroundTint="@color/button_bg"
-            android:text="@string/menu_library"
-            android:textColor="@color/button_txt"
-            app:icon="@drawable/library"
-            app:iconGravity="textStart"
-            app:iconTint="@color/button_txt"
-            app:iconPadding="@dimen/menu_icon_padding"/>
-
-        <Button
-            android:id="@+id/menu_settings"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:backgroundTint="@color/button_bg"
-            android:text="@string/menu_settings"
-            android:textColor="@color/button_txt"
-            app:icon="@drawable/search"
-            app:iconGravity="textStart"
-            app:iconTint="@color/button_txt"
-            app:iconPadding="@dimen/menu_icon_padding"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/menu_settings"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+        android:layout_marginBottom="28dp"
+        android:backgroundTint="@color/button_bg"
+        android:text="@string/menu_settings"
+        android:textColor="@color/button_txt"
+        android:textSize="@dimen/menu_btn_text_size"
+        android:textAllCaps="false"
+        android:fontFamily="sans-serif-medium"
+        app:icon="@drawable/ic_24x24_settings"
+        app:iconGravity="textStart"
+        app:iconTint="@color/button_txt"
+        app:iconPadding="@dimen/menu_icon_padding"
+        app:cornerRadius="@dimen/menu_btn_radius"/>
 
 </LinearLayout>
