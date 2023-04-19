@@ -5,25 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/Theme.PlaylistMaker">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/settings_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_24x24_arrow_back"
-        android:layout_marginBottom="24dp">
-
+        style="@style/ToolBarButtonStyle">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/menu_settings"
-            android:textColor="@color/button_txt"
-            android:textSize="@dimen/title_text_size"
-            android:textStyle="bold"
-            android:gravity="center_vertical" />
+            style="@style/ToolBarTextStyle"
+            android:text="@string/menu_settings"/>
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -31,18 +21,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/padding"
-        android:paddingRight="6dp"
-        android:background="@color/white">
+        android:paddingRight="6dp">
         <TextView
+            style="@style/SettingsTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/settings_btn_margin"
-            android:layout_marginBottom="@dimen/settings_btn_margin"
-            android:text="@string/settings_theme"
-            android:textColor="@color/button_txt"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/settings_btn_text_size"/>
-
+            android:text="@string/settings_theme"/>
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -55,84 +39,54 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:paddingLeft="@dimen/padding"
         android:paddingRight="@dimen/settings_btn_right_padding"
         android:orientation="horizontal">
         <TextView
+            style="@style/SettingsTextViewStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/settings_btn_margin"
-            android:layout_marginBottom="@dimen/settings_btn_margin"
-            android:text="@string/settings_share"
-            android:textColor="@color/button_txt"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/settings_btn_text_size"/>
+            android:text="@string/settings_share"/>
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_24x24_share"
-            android:layout_marginLeft="@dimen/settings_btn_image_margin_left"
-            android:layout_marginTop="@dimen/settings_btn_image_margin_top"
-            android:layout_marginBottom="@dimen/settings_btn_image_margin_bottom"
-            android:layout_gravity="center_vertical|end"/>
+            style="@style/SettingsImageViewStyle"
+            android:src="@drawable/ic_24x24_share"/>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/support"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:paddingLeft="@dimen/padding"
         android:paddingRight="@dimen/settings_btn_right_padding"
         android:orientation="horizontal">
         <TextView
+            style="@style/SettingsTextViewStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/settings_btn_margin"
-            android:layout_marginBottom="@dimen/settings_btn_margin"
-            android:text="@string/settings_support"
-            android:textColor="@color/button_txt"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/settings_btn_text_size"/>
+            android:text="@string/settings_support"/>
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_24x24_support"
-            android:layout_marginLeft="@dimen/settings_btn_image_margin_left"
-            android:layout_marginTop="@dimen/settings_btn_image_margin_top"
-            android:layout_marginBottom="@dimen/settings_btn_image_margin_bottom"
-            android:layout_gravity="center_vertical|end"/>
+            style="@style/SettingsImageViewStyle"
+            android:src="@drawable/ic_24x24_support"/>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/license"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:paddingLeft="@dimen/padding"
         android:paddingRight="@dimen/settings_btn_right_padding"
         android:orientation="horizontal">
         <TextView
+            style="@style/SettingsTextViewStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/settings_btn_margin"
-            android:layout_marginBottom="@dimen/settings_btn_margin"
-            android:text="@string/settings_license"
-            android:textColor="@color/button_txt"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/settings_btn_text_size"/>
+            android:text="@string/settings_license"/>
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_24x24_arrow_forward"
-            android:layout_marginLeft="@dimen/settings_btn_image_margin_left"
-            android:layout_marginTop="@dimen/settings_btn_image_margin_top"
-            android:layout_marginBottom="@dimen/settings_btn_image_margin_bottom"
-            android:layout_gravity="center_vertical|end"/>
+            style="@style/SettingsImageViewStyle"
+            android:src="@drawable/ic_24x24_arrow_forward"/>
     </LinearLayout>
 
 </LinearLayout>

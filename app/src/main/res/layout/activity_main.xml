@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
     tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/Theme.PlaylistMaker"
+    style="@style/MenuBackground">
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,63 +22,33 @@
 
     <Button
         android:id="@+id/menu_search"
+        style="@style/MenuButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginLeft="@dimen/margin"
-        android:layout_marginRight="@dimen/margin"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="@dimen/margin"
-        android:backgroundTint="@color/button_bg"
         android:text="@string/menu_search"
-        android:textColor="@color/button_txt"
-        android:textSize="@dimen/menu_btn_text_size"
-        android:textAllCaps="false"
-        android:fontFamily="sans-serif-medium"
         app:icon="@drawable/ic_24x24_search"
-        app:iconGravity="textStart"
-        app:iconTint="@color/button_txt"
-        app:iconPadding="@dimen/menu_icon_padding"
-        app:cornerRadius="@dimen/menu_btn_radius"/>
+        app:iconTint="@color/button_txt" />
 
     <Button
         android:id="@+id/menu_library"
+        style="@style/MenuButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginLeft="@dimen/margin"
-        android:layout_marginRight="@dimen/margin"
-        android:layout_marginBottom="@dimen/margin"
-        android:backgroundTint="@color/button_bg"
         android:text="@string/menu_library"
-        android:textColor="@color/button_txt"
-        android:textSize="@dimen/menu_btn_text_size"
-        android:textAllCaps="false"
-        android:fontFamily="sans-serif-medium"
         app:icon="@drawable/ic_24x24_library"
-        app:iconGravity="textStart"
-        app:iconTint="@color/button_txt"
-        app:iconPadding="@dimen/menu_icon_padding"
-        app:cornerRadius="@dimen/menu_btn_radius"/>
+        app:iconTint="@color/button_txt"/>
 
     <Button
         android:id="@+id/menu_settings"
+        style="@style/MenuButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginLeft="@dimen/margin"
-        android:layout_marginRight="@dimen/margin"
         android:layout_marginBottom="28dp"
-        android:backgroundTint="@color/button_bg"
         android:text="@string/menu_settings"
-        android:textColor="@color/button_txt"
-        android:textSize="@dimen/menu_btn_text_size"
-        android:textAllCaps="false"
-        android:fontFamily="sans-serif-medium"
         app:icon="@drawable/ic_24x24_settings"
-        app:iconGravity="textStart"
-        app:iconTint="@color/button_txt"
-        app:iconPadding="@dimen/menu_icon_padding"
-        app:cornerRadius="@dimen/menu_btn_radius"/>
-
+        app:iconTint="@color/button_txt" />
 </LinearLayout>
