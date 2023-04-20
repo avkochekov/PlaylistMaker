@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PlaylistMaker</string>
+    <!--  Main menu activity  -->
+    <string name="menu_title">Playlist maker</string>
+    <string name="menu_search">Поиск</string>
+    <string name="menu_library">Медиатека</string>
+    <string name="menu_settings">Настройки</string>
+    <!--  Settings activity  -->
+    <string name="settings_theme">Теманая тема</string>
+    <string name="settings_share">Поделиться приложением</string>
+    <string name="settings_support">Написать в поддержку</string>
+    <string name="settings_license">Пользовательское соглашение</string>
+</resources>
