@@ -11,7 +11,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        findViewById<Toolbar>(R.id.settings_toolbar).setNavigationOnClickListener {
+        findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
             onBackPressed()
         }
 
