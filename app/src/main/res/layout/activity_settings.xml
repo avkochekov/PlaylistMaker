@@ -18,26 +18,15 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <FrameLayout
+    <Switch
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:switchPadding="@dimen/settings_btn_image_margin_left"
         android:paddingLeft="@dimen/padding"
-        android:paddingRight="6dp">
-        <TextView
-            style="@style/SettingsTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_theme"/>
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="11dp"
-            android:layout_marginRight="6dp"
-            android:layout_gravity="right"
-            android:gravity="center"
-            tools:ignore="TouchTargetSizeCheck" />
-    </FrameLayout>
+        android:paddingRight="6dp"
+        android:paddingVertical="@dimen/settings_btn_margin"
+        android:text="@string/settings_theme"
+        android:textSize="@dimen/settings_btn_text_size"/>
 
     <LinearLayout
         android:id="@+id/share"
