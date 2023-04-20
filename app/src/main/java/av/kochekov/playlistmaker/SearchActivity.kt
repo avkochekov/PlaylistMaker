@@ -13,6 +13,7 @@ import androidx.core.widget.addTextChangedListener
 class SearchActivity : AppCompatActivity() {
     companion object{
         const val SEARCH_QUERY = "SEARCH_QUERY"
+        var query:String = String()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,7 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                query = s.toString()
                 clearButton.visibility = clearButtonVisibility(s)
             }
 
@@ -50,11 +52,12 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        findViewById<EditText>(R.id.search_query).setText(savedInstanceState.getString(SEARCH_QUERY))
+        query = savedInstanceState.getString(SEARCH_QUERY).toString()
+        findViewById<EditText>(R.id.search_query).setText(query)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_QUERY, findViewById<EditText>(R.id.search_query).text.toString())
+        outState.putString(SEARCH_QUERY, query)
     }
 }
