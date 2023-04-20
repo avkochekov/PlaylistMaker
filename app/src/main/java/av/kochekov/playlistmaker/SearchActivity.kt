@@ -11,6 +11,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.addTextChangedListener
 
 class SearchActivity : AppCompatActivity() {
+    companion object{
+        const val SEARCH_QUERY = "SEARCH_QUERY"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -44,4 +48,13 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        findViewById<EditText>(R.id.search_query).setText(savedInstanceState.getString(SEARCH_QUERY))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(SEARCH_QUERY, findViewById<EditText>(R.id.search_query).text.toString())
+    }
 }
