@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".SettingsActivity"
     android:orientation="vertical"
     android:theme="@style/Theme.PlaylistMaker">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/settings_toolbar"
-        style="@style/ToolBarButtonStyle">
+        style="@style/ToolBarButtonStyle"
+        android:layout_marginBottom="24dp">
         <TextView
             style="@style/ToolBarTextStyle"
             android:text="@string/menu_settings"/>
