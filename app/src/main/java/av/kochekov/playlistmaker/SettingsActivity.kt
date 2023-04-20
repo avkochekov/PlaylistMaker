@@ -18,22 +18,22 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.share).setOnClickListener {
             var intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
-            intent.putExtra(Intent.EXTRA_TEXT, "https://practicum.yandex.ru/learn/android-developer")
+            intent.putExtra(Intent.EXTRA_TEXT, R.string.settings_shareAddress.toString())
             startActivity(intent)
         }
 
         findViewById<LinearLayout>(R.id.support).setOnClickListener {
             var intent = Intent(Intent.ACTION_SENDTO)
             intent.data = Uri.parse("mailto:")
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("deliremail@gmail.com"))
-            intent.putExtra(Intent.EXTRA_TITLE, "Сообщение разработчикам и разработчицам приложения Playlist Maker")
-            intent.putExtra(Intent.EXTRA_TEXT, "Спасибо разработчикам и разработчицам за крутое приложение!")
+            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(R.string.settings_mailAddress))
+            intent.putExtra(Intent.EXTRA_SUBJECT, R.string.settings_mailSubject)
+            intent.putExtra(Intent.EXTRA_TEXT, R.string.settings_mailText)
             startActivity(intent)
         }
 
         findViewById<LinearLayout>(R.id.license).setOnClickListener {
             var intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse("https://yandex.ru/legal/practicum_offer/")
+            intent.data = Uri.parse(R.string.settings_licenseAddress.toString())
             startActivity(intent)
         }
     }

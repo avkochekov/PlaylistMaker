@@ -10,4 +10,11 @@
     <string name="settings_share">Поделиться приложением</string>
     <string name="settings_support">Написать в поддержку</string>
     <string name="settings_license">Пользовательское соглашение</string>
+    <!--    -->
+    <string name="settings_mailAddress">deliremail@gmail.com</string>
+    <string name="settings_mailSubject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="settings_mailText">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="settings_licenseAddress">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="settings_shareAddress">https://practicum.yandex.ru/learn/android-developer</string>
+
 </resources>
