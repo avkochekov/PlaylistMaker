@@ -47,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchClearButton.setOnClickListener {
             val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            keyboard.hideSoftInputFromWindow(searchEditText.windowToken, 0) // скрыть клавиатуру
+            keyboard.hideSoftInputFromWindow(searchEditText.windowToken, 0)
             searchEditText.clearFocus()
             searchEditText.setText("")
         }
