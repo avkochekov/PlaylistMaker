@@ -26,7 +26,7 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.support).setOnClickListener {
             Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:")
-                putExtra(Intent.EXTRA_EMAIL, getString(R.string.settings_mailAddress))
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.settings_mailAddress)))
                 putExtra(Intent.EXTRA_SUBJECT, getString(R.string.settings_mailSubject))
                 putExtra(Intent.EXTRA_TEXT, getString(R.string.settings_mailText))
                 startActivity(this)
