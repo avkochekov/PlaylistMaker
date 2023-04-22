@@ -18,7 +18,7 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.share).setOnClickListener {
             Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, R.string.settings_shareAddress.toString())
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.settings_shareAddress))
                 startActivity(this)
             }
         }
@@ -35,7 +35,7 @@ class SettingsActivity : AppCompatActivity() {
 
         findViewById<LinearLayout>(R.id.license).setOnClickListener {
             Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(R.string.settings_licenseAddress.toString())
+                data = Uri.parse(getString(R.string.settings_licenseAddress))
                 startActivity(this)
             }
         }
