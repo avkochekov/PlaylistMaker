@@ -16,8 +16,6 @@
     <dimen name="settings_btn_margin">21dp</dimen>
     <dimen name="settings_btn_padding">21dp</dimen>
     <dimen name="settings_btn_right_padding">12dp</dimen>
-    <dimen name="settings_btn_image_margin_top">19dp</dimen>
-    <dimen name="settings_btn_image_margin_bottom">18dp</dimen>
     <dimen name="settings_btn_image_margin_left">8dp</dimen>
 
     <dimen name="search_txt_size">16sp</dimen>

@@ -18,65 +18,65 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <Switch
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:switchPadding="@dimen/settings_btn_image_margin_left"
-        android:paddingLeft="@dimen/padding"
-        android:paddingRight="6dp"
-        android:paddingVertical="@dimen/settings_btn_margin"
-        android:text="@string/settings_theme"
-        android:textSize="@dimen/settings_btn_text_size"/>
-
     <LinearLayout
-        android:id="@+id/share"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/padding"
-        android:paddingRight="@dimen/settings_btn_right_padding"
-        android:orientation="horizontal">
-        <TextView
-            style="@style/SettingsTextViewStyle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="@string/settings_share"/>
-        <ImageView
-            style="@style/SettingsImageViewStyle"
-            android:src="@drawable/ic_24x24_share"/>
-    </LinearLayout>
+        android:paddingRight="@dimen/settings_btn_right_padding">
 
-    <LinearLayout
-        android:id="@+id/support"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/padding"
-        android:paddingRight="@dimen/settings_btn_right_padding"
-        android:orientation="horizontal">
-        <TextView
-            style="@style/SettingsTextViewStyle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="@string/settings_support"/>
-        <ImageView
-            style="@style/SettingsImageViewStyle"
-            android:src="@drawable/ic_24x24_support"/>
-    </LinearLayout>
+        <Switch
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:switchPadding="@dimen/settings_btn_image_margin_left"
+            android:paddingVertical="@dimen/settings_btn_margin"
+            android:text="@string/settings_theme"
+            android:textSize="@dimen/settings_btn_text_size"/>
 
-    <LinearLayout
-        android:id="@+id/license"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/padding"
-        android:paddingRight="@dimen/settings_btn_right_padding"
-        android:orientation="horizontal">
-        <TextView
-            style="@style/SettingsTextViewStyle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="@string/settings_license"/>
-        <ImageView
-            style="@style/SettingsImageViewStyle"
-            android:src="@drawable/ic_24x24_arrow_forward"/>
+        <LinearLayout
+            android:id="@+id/share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/SettingsTextViewStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/settings_share"/>
+            <ImageView
+                style="@style/SettingsImageViewStyle"
+                android:src="@drawable/ic_24x24_share"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/support"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/SettingsTextViewStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/settings_support"/>
+            <ImageView
+                style="@style/SettingsImageViewStyle"
+                android:src="@drawable/ic_24x24_support"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/license"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/SettingsTextViewStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/settings_license"/>
+            <ImageView
+                style="@style/SettingsImageViewStyle"
+                android:src="@drawable/ic_24x24_arrow_forward"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

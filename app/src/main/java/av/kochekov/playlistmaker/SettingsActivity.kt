@@ -16,25 +16,28 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         findViewById<LinearLayout>(R.id.share).setOnClickListener {
-            var intent = Intent(Intent.ACTION_SEND)
-            intent.type = "text/plain"
-            intent.putExtra(Intent.EXTRA_TEXT, R.string.settings_shareAddress.toString())
-            startActivity(intent)
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, R.string.settings_shareAddress.toString())
+                startActivity(this)
+            }
         }
 
         findViewById<LinearLayout>(R.id.support).setOnClickListener {
-            var intent = Intent(Intent.ACTION_SENDTO)
-            intent.data = Uri.parse("mailto:")
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(R.string.settings_mailAddress))
-            intent.putExtra(Intent.EXTRA_SUBJECT, R.string.settings_mailSubject)
-            intent.putExtra(Intent.EXTRA_TEXT, R.string.settings_mailText)
-            startActivity(intent)
+            Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, getString(R.string.settings_mailAddress))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.settings_mailSubject))
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.settings_mailText))
+                startActivity(this)
+            }
         }
 
         findViewById<LinearLayout>(R.id.license).setOnClickListener {
-            var intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(R.string.settings_licenseAddress.toString())
-            startActivity(intent)
+            Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(R.string.settings_licenseAddress.toString())
+                startActivity(this)
+            }
         }
     }
 }
