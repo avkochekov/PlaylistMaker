@@ -11,7 +11,10 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
         <!-- Customize your theme here. -->
+        <item name="trackMainColor">@color/white</item>
+        <item name="trackAdditionalColor">@color/white</item>
     </style>
 
     <style name="MenuBackground">
@@ -71,4 +74,9 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
+
+    <style name="SearchTextViewStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+
 </resources>
