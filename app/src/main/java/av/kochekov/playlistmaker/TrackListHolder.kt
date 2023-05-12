@@ -23,7 +23,7 @@ class TrackListHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             .load(item.artworkUrl100)
             .placeholder(R.drawable.placeholder)
             .fitCenter()
-            .transform(RoundedCorners(itemView.resources.getDimension(R.dimen.trackItemImage_round).toInt()))
+            .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.trackItemImage_round)))
             .into(artwork)
     }
 }
