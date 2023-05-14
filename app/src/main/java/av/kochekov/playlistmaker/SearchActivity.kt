@@ -105,8 +105,17 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
-                    trackListAdapter.setData(testData())
-                    Toast.makeText(applicationContext, "Success with code ${response.code().toString()}", Toast.LENGTH_LONG).show()
+                    when (response.code()){
+                        200 -> {
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                trackListAdapter.setData(response.body()?.results!!)
+                            } else {
+                                trackListAdapter.clearData()
+                            }
+                        }
+                        else -> { }
+                    }
+                    Toast.makeText(applicationContext, "Completed with code ${response.code().toString()}", Toast.LENGTH_LONG).show()
                 }
 
                 override fun onFailure(
