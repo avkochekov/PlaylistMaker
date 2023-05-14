@@ -6,12 +6,18 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     companion object{
@@ -22,8 +28,17 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
     private lateinit var searchClearButton: ImageView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(ITunesApi.apiUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
+    private val iTunesService = retrofit.create(ITunesApi::class.java)
+
+    private val trackListAdapter = TrackListAdapter()
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
@@ -32,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
         searchEditText = findViewById<EditText>(R.id.search_query)
         searchClearButton = findViewById<ImageView>(R.id.search_clear)
 
-        val simpleTextWatcher = object : TextWatcher {
+        searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -41,17 +56,25 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) { }
+        })
+
+        searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                getTrackList()
+                true
+            }
+            false
         }
-        searchEditText.addTextChangedListener(simpleTextWatcher)
 
         searchClearButton.setOnClickListener {
             val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             keyboard.hideSoftInputFromWindow(searchEditText.windowToken, 0)
             searchEditText.clearFocus()
             searchEditText.setText("")
+            getTrackList()
         }
 
-        findViewById<RecyclerView>(R.id.trackList).adapter = TrackListAdapter(testData())
+        findViewById<RecyclerView>(R.id.trackList).adapter = trackListAdapter
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -72,6 +95,29 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_QUERY, query)
+    }
+
+    private fun getTrackList(){
+        if (searchEditText.text.isNotEmpty()){
+            iTunesService.search(searchEditText.text.toString()).enqueue(object : Callback<TrackResponse>{
+                override fun onResponse(
+                    call: Call<TrackResponse>,
+                    response: Response<TrackResponse>
+                ) {
+                    trackListAdapter.setData(testData())
+                    Toast.makeText(applicationContext, "Success with code ${response.code().toString()}", Toast.LENGTH_LONG).show()
+                }
+
+                override fun onFailure(
+                    call: Call<TrackResponse>,
+                    t: Throwable
+                ) {
+                    Toast.makeText(applicationContext, "Failed", Toast.LENGTH_LONG).show()
+                }
+            })
+        } else {
+            trackListAdapter.clearData()
+        }
     }
 
     fun testData(): List<Track> {
