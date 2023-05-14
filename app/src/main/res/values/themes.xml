@@ -2,6 +2,15 @@
     <attr name="trackMainColor" format="color"/>
     <attr name="trackAdditionalColor" format="color"/>
 
+    <attr name="searchTextColor" format="color"/>
+
+    <attr name="emptyListErrorImage" format="reference"/>
+    <attr name="noConnectionErrorImage" format="reference"/>
+
+    <attr name="errorTextColor" format="color"/>
+    <attr name="updateButtonBgColor" format="color"/>
+    <attr name="updateButtonTextColor" format="color"/>
+
     <!-- Base application theme. -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -18,18 +27,27 @@
         <!-- Customize your theme here. -->
         <item name="trackMainColor">@color/black</item>
         <item name="trackAdditionalColor">@color/smoke</item>
+
+        <item name="searchTextColor">@color/YP_black</item>
+
+        <item name="emptyListErrorImage">@drawable/search_error</item>
+        <item name="noConnectionErrorImage">@drawable/connection_error</item>
+
+        <item name="errorTextColor">@color/black</item>
+        <item name="updateButtonBgColor">@color/YP_black</item>
+        <item name="updateButtonTextColor">@color/YP_white</item>
     </style>
 
     <style name="MenuBackground">
-        <item name="android:background">@color/blue</item>
+        <item name="android:background">@color/YP_blue</item>
     </style>
 
     <style name="MenuButtonStyle" parent="Widget.MaterialComponents.Button">
-        <item name="android:backgroundTint">@color/button_bg</item>
-        <item name="android:textColor">@color/button_txt</item>
+        <item name="android:backgroundTint">@color/YP_white</item>
+        <item name="android:textColor">@color/YP_black</item>
         <item name="android:textSize">@dimen/menu_btn_text_size</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">@dimen/menu_icon_padding</item>
         <item name="cornerRadius">@dimen/menu_btn_radius</item>
@@ -99,6 +117,23 @@
         <item name="android:textColor">?attr/trackAdditionalColor</item>
         <item name="android:textSize">@dimen/trackItem_additionalText_size</item>
         <item name="android:ellipsize">none</item>
+    </style>
+
+    <style name="SearchErrorStyle">
+        <item name="android:textColor">?attr/errorTextColor</item>
+        <item name="android:textSize">@dimen/search_errorText_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
+    <style name="SearchErrorStyle.UpdateButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">?attr/updateButtonBgColor</item>
+        <item name="android:textColor">?attr/updateButtonTextColor</item>
+        <item name="android:textSize">@dimen/updateButtonTextSize</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingHorizontal">@dimen/updateButtonHorizontalPadding</item>
+        <item name="android:paddingVertical">@dimen/updateButtonVerticalPadding</item>
+        <item name="cornerRadius">@dimen/updateButtonRadius</item>
+        <item name="android:stateListAnimator">@null</item>
     </style>
 
 </resources>
