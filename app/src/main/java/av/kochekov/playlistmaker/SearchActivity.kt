@@ -137,6 +137,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun getTrackList(){
+        hideErrorMessage()
         if (searchEditText.text.isNotEmpty()){
             iTunesService.search(searchEditText.text.toString()).enqueue(object : Callback<TrackResponse>{
                 override fun onResponse(
@@ -165,7 +166,6 @@ class SearchActivity : AppCompatActivity() {
                 }
             })
         } else {
-            hideErrorMessage()
             trackListAdapter.clearData()
         }
     }
