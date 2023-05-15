@@ -59,6 +59,13 @@
             android:visibility="gone"/>
     </FrameLayout>
 
+    <include layout="@layout/error_no_connection"
+        android:id="@+id/noConnectionMessage"
+        android:visibility="gone"/>
+    <include layout="@layout/error_not_fount"
+        android:id="@+id/noDataMessage"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/trackList"
         android:layout_width="match_parent"
