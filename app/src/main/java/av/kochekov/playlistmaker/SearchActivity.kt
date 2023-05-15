@@ -155,7 +155,6 @@ class SearchActivity : AppCompatActivity() {
                         }
                         else -> showErrorMessage(ErrorMessageType.NO_DATA)
                     }
-                    Toast.makeText(applicationContext, "Completed with code ${response.code().toString()}", Toast.LENGTH_LONG).show()
                 }
 
                 override fun onFailure(
