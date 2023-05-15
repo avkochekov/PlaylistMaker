@@ -1,5 +1,6 @@
 package av.kochekov.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,8 +9,12 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
@@ -26,8 +31,17 @@ class SearchActivity : AppCompatActivity() {
         var query:String = String()
     }
 
+    enum class ErrorMessageType {
+        NO_DATA,
+        NO_CONNECTION
+    }
+
     private lateinit var searchEditText: EditText
     private lateinit var searchClearButton: ImageView
+
+    private lateinit var updateButton: Button
+    private lateinit var errorNoConnection: LinearLayout
+    private lateinit var errorNoData: LinearLayout
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(ITunesApi.apiUrl)
@@ -38,7 +52,6 @@ class SearchActivity : AppCompatActivity() {
 
     private val trackListAdapter = TrackListAdapter()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -47,6 +60,10 @@ class SearchActivity : AppCompatActivity() {
         }
         searchEditText = findViewById<EditText>(R.id.search_query)
         searchClearButton = findViewById<ImageView>(R.id.search_clear)
+
+        updateButton = findViewById(R.id.update)
+        errorNoData = findViewById<LinearLayout>(R.id.noDataMessage)
+        errorNoConnection = findViewById<LinearLayout>(R.id.noConnectionMessage)
 
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -75,6 +92,10 @@ class SearchActivity : AppCompatActivity() {
             getTrackList()
         }
 
+        updateButton.setOnClickListener {
+            getTrackList()
+        }
+
         findViewById<RecyclerView>(R.id.trackList).adapter = trackListAdapter
     }
 
@@ -98,6 +119,23 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_QUERY, query)
     }
 
+    private fun showErrorMessage(type: ErrorMessageType){
+        hideErrorMessage()
+        when (type) {
+            ErrorMessageType.NO_CONNECTION -> {
+                errorNoConnection.visibility = View.VISIBLE
+            }
+            ErrorMessageType.NO_DATA -> {
+                errorNoData.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun hideErrorMessage(){
+        errorNoData.visibility = View.GONE
+        errorNoConnection.visibility = View.GONE
+    }
+
     private fun getTrackList(){
         if (searchEditText.text.isNotEmpty()){
             iTunesService.search(searchEditText.text.toString()).enqueue(object : Callback<TrackResponse>{
@@ -108,12 +146,14 @@ class SearchActivity : AppCompatActivity() {
                     when (response.code()){
                         200 -> {
                             if (response.body()?.results?.isNotEmpty() == true) {
+                                hideErrorMessage()
                                 trackListAdapter.setData(response.body()?.results!!)
                             } else {
+                                showErrorMessage(ErrorMessageType.NO_DATA)
                                 trackListAdapter.clearData()
                             }
                         }
-                        else -> { }
+                        else -> showErrorMessage(ErrorMessageType.NO_DATA)
                     }
                     Toast.makeText(applicationContext, "Completed with code ${response.code().toString()}", Toast.LENGTH_LONG).show()
                 }
@@ -122,10 +162,11 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>,
                     t: Throwable
                 ) {
-                    Toast.makeText(applicationContext, "Failed", Toast.LENGTH_LONG).show()
+                    showErrorMessage(ErrorMessageType.NO_CONNECTION)
                 }
             })
         } else {
+            hideErrorMessage()
             trackListAdapter.clearData()
         }
     }
