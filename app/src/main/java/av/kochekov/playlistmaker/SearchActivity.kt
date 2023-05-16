@@ -28,7 +28,7 @@ import java.util.Random
 class SearchActivity : AppCompatActivity() {
     companion object{
         const val SEARCH_QUERY = "SEARCH_QUERY"
-        var query:String = String()
+        private var query:String = String()
     }
 
     enum class ErrorMessageType {
