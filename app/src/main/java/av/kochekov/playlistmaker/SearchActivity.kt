@@ -138,6 +138,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun getTrackList(){
         hideErrorMessage()
+        trackListAdapter.clearData()
         if (searchEditText.text.isNotEmpty()){
             iTunesService.search(searchEditText.text.toString()).enqueue(object : Callback<TrackResponse>{
                 override fun onResponse(
@@ -151,7 +152,6 @@ class SearchActivity : AppCompatActivity() {
                                 trackListAdapter.setData(response.body()?.results!!)
                             } else {
                                 showErrorMessage(ErrorMessageType.NO_DATA)
-                                trackListAdapter.clearData()
                             }
                         }
                         else -> showErrorMessage(ErrorMessageType.NO_DATA)
@@ -165,8 +165,6 @@ class SearchActivity : AppCompatActivity() {
                     showErrorMessage(ErrorMessageType.NO_CONNECTION)
                 }
             })
-        } else {
-            trackListAdapter.clearData()
         }
     }
 }
