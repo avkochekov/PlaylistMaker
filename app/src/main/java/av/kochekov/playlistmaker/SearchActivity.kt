@@ -2,20 +2,15 @@ package av.kochekov.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -23,7 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.Random
+
 
 class SearchActivity : AppCompatActivity() {
     companion object{
@@ -43,6 +38,11 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var errorNoConnection: LinearLayout
     private lateinit var errorNoData: LinearLayout
 
+    private lateinit var errorPlaceholder: LinearLayout
+    private lateinit var errorPlaceholderText: TextView
+    private lateinit var errorPlaceholderImage: ImageView
+
+
     private val retrofit = Retrofit.Builder()
         .baseUrl(ITunesApi.apiUrl)
         .addConverterFactory(GsonConverterFactory.create())
@@ -60,10 +60,11 @@ class SearchActivity : AppCompatActivity() {
         }
         searchEditText = findViewById<EditText>(R.id.search_query)
         searchClearButton = findViewById<ImageView>(R.id.search_clear)
-
-        updateButton = findViewById(R.id.update)
-        errorNoData = findViewById<LinearLayout>(R.id.noDataMessage)
-        errorNoConnection = findViewById<LinearLayout>(R.id.noConnectionMessage)
+        errorPlaceholder = findViewById(R.id.errorPlaceholder)
+        errorPlaceholderText = findViewById(R.id.errorPlaceholderText)
+        errorPlaceholderImage = findViewById(R.id.errorPlaceholderImage)
+        updateButton = findViewById(R.id.errorPlaceholderButton)
+        updateButton.text = getString(R.string.search_update)
 
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -119,21 +120,33 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_QUERY, query)
     }
 
+    @SuppressLint("ResourceType")
     private fun showErrorMessage(type: ErrorMessageType){
         hideErrorMessage()
+
+        val themedValue = TypedValue()
+        var messageString = ""
+        var updateVisibility = View.GONE
         when (type) {
             ErrorMessageType.NO_CONNECTION -> {
-                errorNoConnection.visibility = View.VISIBLE
+                theme.resolveAttribute(R.attr.noConnectionErrorImage, themedValue, true)
+                messageString = getString(R.string.search_error_connectionFailed)
+                updateVisibility = View.VISIBLE
             }
             ErrorMessageType.NO_DATA -> {
-                errorNoData.visibility = View.VISIBLE
+                theme.resolveAttribute(R.attr.emptyListErrorImage, themedValue, true)
+                messageString = getString(R.string.search_error_emptyTrackList)
             }
+            else -> return
         }
+        updateButton.visibility = updateVisibility
+        errorPlaceholderImage.setImageResource(themedValue.resourceId)
+        errorPlaceholderText.text = messageString
+        errorPlaceholder.visibility = View.VISIBLE
     }
 
     private fun hideErrorMessage(){
-        errorNoData.visibility = View.GONE
-        errorNoConnection.visibility = View.GONE
+        errorPlaceholder.visibility = View.GONE
     }
 
     private fun getTrackList(){
