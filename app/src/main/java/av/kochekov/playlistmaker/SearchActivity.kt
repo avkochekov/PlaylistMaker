@@ -1,29 +1,58 @@
 package av.kochekov.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
 
 class SearchActivity : AppCompatActivity() {
     companion object{
         const val SEARCH_QUERY = "SEARCH_QUERY"
-        var query:String = String()
+        private var query:String = String()
+    }
+
+    enum class ErrorMessageType {
+        NO_DATA,
+        NO_CONNECTION
     }
 
     private lateinit var searchEditText: EditText
     private lateinit var searchClearButton: ImageView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private lateinit var updateButton: Button
+    private lateinit var errorNoConnection: LinearLayout
+    private lateinit var errorNoData: LinearLayout
 
+    private lateinit var errorPlaceholder: LinearLayout
+    private lateinit var errorPlaceholderText: TextView
+    private lateinit var errorPlaceholderImage: ImageView
+
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(ITunesApi.apiUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private val iTunesService = retrofit.create(ITunesApi::class.java)
+
+    private val trackListAdapter = TrackListAdapter()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
@@ -31,8 +60,13 @@ class SearchActivity : AppCompatActivity() {
         }
         searchEditText = findViewById<EditText>(R.id.search_query)
         searchClearButton = findViewById<ImageView>(R.id.search_clear)
+        errorPlaceholder = findViewById(R.id.errorPlaceholder)
+        errorPlaceholderText = findViewById(R.id.errorPlaceholderText)
+        errorPlaceholderImage = findViewById(R.id.errorPlaceholderImage)
+        updateButton = findViewById(R.id.errorPlaceholderButton)
+        updateButton.text = getString(R.string.search_update)
 
-        val simpleTextWatcher = object : TextWatcher {
+        searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -41,17 +75,29 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) { }
+        })
+
+        searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                getTrackList()
+                true
+            }
+            false
         }
-        searchEditText.addTextChangedListener(simpleTextWatcher)
 
         searchClearButton.setOnClickListener {
             val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             keyboard.hideSoftInputFromWindow(searchEditText.windowToken, 0)
             searchEditText.clearFocus()
             searchEditText.setText("")
+            getTrackList()
         }
 
-        findViewById<RecyclerView>(R.id.trackList).adapter = TrackListAdapter(testData())
+        updateButton.setOnClickListener {
+            getTrackList()
+        }
+
+        findViewById<RecyclerView>(R.id.trackList).adapter = trackListAdapter
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -74,38 +120,64 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_QUERY, query)
     }
 
-    fun testData(): List<Track> {
-        return listOf(
-            Track(
-                trackName = "Smells Like Teen Spirit",
-                artistName = "Nirvana",
-                trackTime = "5:01",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Billie Jean",
-                artistName = "Michael Jackson",
-                trackTime = "4:35",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Stayin' Alive",
-                artistName = "Bee Gees",
-                trackTime = "4:10",
-                artworkUrl100 = "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Whole Lotta Love",
-                artistName = "Led Zeppelin",
-                trackTime = "5:33",
-                artworkUrl100 = "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-            ),
-            Track(
-                trackName = "Sweet Child O'Mine",
-                artistName = "Guns N' Roses",
-                trackTime = "5:03",
-                artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-            )
-        )
+    @SuppressLint("ResourceType")
+    private fun showErrorMessage(type: ErrorMessageType){
+        hideErrorMessage()
+
+        val themedValue = TypedValue()
+        var messageString = ""
+        var updateVisibility = View.GONE
+        when (type) {
+            ErrorMessageType.NO_CONNECTION -> {
+                theme.resolveAttribute(R.attr.noConnectionErrorImage, themedValue, true)
+                messageString = getString(R.string.search_error_connectionFailed)
+                updateVisibility = View.VISIBLE
+            }
+            ErrorMessageType.NO_DATA -> {
+                theme.resolveAttribute(R.attr.emptyListErrorImage, themedValue, true)
+                messageString = getString(R.string.search_error_emptyTrackList)
+            }
+            else -> return
+        }
+        updateButton.visibility = updateVisibility
+        errorPlaceholderImage.setImageResource(themedValue.resourceId)
+        errorPlaceholderText.text = messageString
+        errorPlaceholder.visibility = View.VISIBLE
+    }
+
+    private fun hideErrorMessage(){
+        errorPlaceholder.visibility = View.GONE
+    }
+
+    private fun getTrackList(){
+        hideErrorMessage()
+        trackListAdapter.clearData()
+        if (searchEditText.text.isNotEmpty()){
+            iTunesService.search(searchEditText.text.toString()).enqueue(object : Callback<TrackResponse>{
+                override fun onResponse(
+                    call: Call<TrackResponse>,
+                    response: Response<TrackResponse>
+                ) {
+                    when (response.code()){
+                        200 -> {
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                hideErrorMessage()
+                                trackListAdapter.setData(response.body()?.results!!)
+                            } else {
+                                showErrorMessage(ErrorMessageType.NO_DATA)
+                            }
+                        }
+                        else -> showErrorMessage(ErrorMessageType.NO_DATA)
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<TrackResponse>,
+                    t: Throwable
+                ) {
+                    showErrorMessage(ErrorMessageType.NO_CONNECTION)
+                }
+            })
+        }
     }
 }

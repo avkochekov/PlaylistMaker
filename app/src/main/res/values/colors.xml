@@ -15,5 +15,12 @@
     <color name="button_bg">#FFFFFFFF</color>
     <color name="button_txt">#FF000000</color>
 
+    <color name="YP_black">#1A1B22</color>
+    <color name="YP_white">#FFFFFF</color>
+    <color name="YP_text_gray">#AEAFB4</color>
+    <color name="YP_light_gray">#E6E8EB</color>
+    <color name="YP_background">#7F1A1B22</color>
+    <color name="YP_red">#F56B6C</color>
+    <color name="YP_blue">#3772E7</color>
 
 </resources>

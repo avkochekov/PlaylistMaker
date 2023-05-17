@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lines="1"
+            android:ellipsize="end"
             tools:text="@string/testString"
             style="@style/SearchTextViewStyle.TrackName"/>
         <LinearLayout
@@ -39,6 +40,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:lines="1"
+                android:ellipsize="end"
                 tools:text="@string/testString"
                 style="@style/SearchTextViewStyle.ArtistName"/>
             <ImageView

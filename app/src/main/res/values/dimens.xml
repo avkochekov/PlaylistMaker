@@ -19,6 +19,7 @@
     <dimen name="settings_btn_image_margin_left">8dp</dimen>
 
     <dimen name="search_txt_size">16sp</dimen>
+    <dimen name="search_errorText_size">19sp</dimen>
     <dimen name="magicNumber">42dp</dimen>
 
     <dimen name="trackItem_mainText_size">16sp</dimen>
@@ -32,5 +33,11 @@
     <dimen name="trackItemInfo_padding_horizontal">8dp</dimen>
 
     <dimen name="trackItemImage_round">2dp</dimen>
+
+    <dimen name="searchMessageTopMargin">102dp</dimen>
+    <dimen name="updateButtonTextSize">14sp</dimen>
+    <dimen name="updateButtonRadius">54dp</dimen>
+    <dimen name="updateButtonHorizontalPadding">14dp</dimen>
+    <dimen name="updateButtonVerticalPadding">10dp</dimen>
 
 </resources>

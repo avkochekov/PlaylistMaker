@@ -4,9 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class TrackListAdapter(
-    private val data: List<Track>
-) : RecyclerView.Adapter<TrackListHolder> () {
+class TrackListAdapter : RecyclerView.Adapter<TrackListHolder> () {
+    private var data = mutableListOf<Track>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackListHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_list_item, parent, false)
         return TrackListHolder(view)
@@ -18,5 +17,15 @@ class TrackListAdapter(
 
     override fun getItemCount(): Int {
         return data.size
+    }
+
+    fun setData(trackList: List<Track>){
+        data = trackList as MutableList<Track>
+        notifyDataSetChanged()
+    }
+
+    fun clearData(){
+        data = mutableListOf<Track>()
+        notifyDataSetChanged()
     }
 }
