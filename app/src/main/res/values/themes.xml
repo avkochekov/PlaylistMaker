@@ -117,13 +117,13 @@
         <item name="android:ellipsize">none</item>
     </style>
 
-    <style name="SearchErrorStyle">
+    <style name="ErrorPlaceholderStyle">
         <item name="android:textColor">?attr/errorTextColor</item>
         <item name="android:textSize">@dimen/search_errorText_size</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
-    <style name="SearchErrorStyle.UpdateButton" parent="Widget.MaterialComponents.Button">
+    <style name="ErrorPlaceholderStyle.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:backgroundTint">?attr/updateButtonBgColor</item>
         <item name="android:textColor">?attr/updateButtonTextColor</item>
         <item name="android:textSize">@dimen/updateButtonTextSize</item>

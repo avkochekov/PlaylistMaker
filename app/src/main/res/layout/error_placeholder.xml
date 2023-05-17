@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/searchMessageTopMargin"
     android:layout_marginHorizontal="24dp">
     <ImageView
+        android:id="@+id/errorPlaceholderImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="?attr/noConnectionErrorImage"/>
+        tools:src="?attr/noConnectionErrorImage"/>
 
     <TextView
-        style="@style/SearchErrorStyle"
+        android:id="@+id/errorPlaceholderText"
+        style="@style/ErrorPlaceholderStyle"
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="@string/search_error_connectionFailed"/>
+        tools:text="@string/search_error_connectionFailed"/>
     <Button
-        android:id="@+id/update"
-        style="@style/SearchErrorStyle.UpdateButton"
+        android:id="@+id/errorPlaceholderButton"
+        style="@style/ErrorPlaceholderStyle.Button"
         android:layout_marginTop="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/search_update"/>
+        tools:text="@string/search_update"/>
 </LinearLayout>
