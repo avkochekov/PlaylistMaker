@@ -4,9 +4,6 @@
 
     <attr name="searchTextColor" format="color"/>
 
-    <attr name="emptyListErrorImage" format="reference"/>
-    <attr name="noConnectionErrorImage" format="reference"/>
-
     <attr name="errorTextColor" format="color"/>
     <attr name="updateButtonBgColor" format="color"/>
     <attr name="updateButtonTextColor" format="color"/>
@@ -29,9 +26,6 @@
         <item name="trackAdditionalColor">@color/smoke</item>
 
         <item name="searchTextColor">@color/YP_black</item>
-
-        <item name="emptyListErrorImage">@drawable/search_error</item>
-        <item name="noConnectionErrorImage">@drawable/connection_error</item>
 
         <item name="errorTextColor">@color/black</item>
         <item name="updateButtonBgColor">@color/YP_black</item>
