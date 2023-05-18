@@ -123,25 +123,18 @@ class SearchActivity : AppCompatActivity() {
     @SuppressLint("ResourceType")
     private fun showErrorMessage(type: ErrorMessageType){
         hideErrorMessage()
-
-        val themedValue = TypedValue()
-        var messageString = ""
-        var updateVisibility = View.GONE
         when (type) {
             ErrorMessageType.NO_CONNECTION -> {
-                theme.resolveAttribute(R.attr.noConnectionErrorImage, themedValue, true)
-                messageString = getString(R.string.search_error_connectionFailed)
-                updateVisibility = View.VISIBLE
+                errorPlaceholderImage.setImageResource(R.drawable.connection_error)
+                errorPlaceholderText.text = getString(R.string.search_error_connectionFailed)
+                updateButton.visibility = View.VISIBLE
             }
             ErrorMessageType.NO_DATA -> {
-                theme.resolveAttribute(R.attr.emptyListErrorImage, themedValue, true)
-                messageString = getString(R.string.search_error_emptyTrackList)
+                errorPlaceholderImage.setImageResource(R.drawable.search_error)
+                errorPlaceholderText.text = getString(R.string.search_error_emptyTrackList)
             }
             else -> return
         }
-        updateButton.visibility = updateVisibility
-        errorPlaceholderImage.setImageResource(themedValue.resourceId)
-        errorPlaceholderText.text = messageString
         errorPlaceholder.visibility = View.VISIBLE
     }
 

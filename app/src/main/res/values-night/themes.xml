@@ -16,9 +16,6 @@
         <item name="trackMainColor">@color/white</item>
         <item name="trackAdditionalColor">@color/white</item>
 
-        <item name="emptyListErrorImage">@drawable/search_error_dark</item>
-        <item name="noConnectionErrorImage">@drawable/connection_error_dark</item>
-
         <item name="errorTextColor">@color/white</item>
         <item name="updateButtonBgColor">@color/YP_white</item>
         <item name="updateButtonTextColor">@color/YP_black</item>

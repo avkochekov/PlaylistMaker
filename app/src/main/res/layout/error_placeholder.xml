@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        tools:src="?attr/noConnectionErrorImage"/>
+        tools:src="@drawable/connection_error"/>
 
     <TextView
         android:id="@+id/errorPlaceholderText"
