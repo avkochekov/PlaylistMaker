@@ -63,10 +63,15 @@
         android:id="@+id/errorPlaceholder"
         android:visibility="gone"/>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <include layout="@layout/track_list"
         android:id="@+id/trackList"
-        android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/track_list_item"/>
+        android:layout_width="match_parent" />
+
+    <include layout="@layout/track_list_history"
+        android:id="@+id/trackListHistory"
+        android:visibility="visible"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" />
 </LinearLayout>

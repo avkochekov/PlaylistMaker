@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/searchMessageTopMargin"
-    android:layout_marginHorizontal="24dp">
-    <ImageView
-        android:id="@+id/errorPlaceholderImage"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        style="@style/ErrorPlaceholderStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="12dp"
         android:layout_gravity="center_horizontal"
-        tools:src="@drawable/connection_error"/>
-
-    <TextView
-        android:id="@+id/errorPlaceholderText"
-        style="@style/ErrorPlaceholderStyle"
-        android:layout_marginTop="16dp"
-        android:layout_width="match_parent"
+        android:text="@string/search_history_title"/>
+    <include layout="@layout/track_list"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        tools:text="@string/search_error_connectionFailed"/>
+        android:layout_width="match_parent"
+        android:layout_weight="1"/>
     <Button
         android:id="@+id/errorPlaceholderButton"
         style="@style/RoundedButton"
@@ -28,5 +25,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        tools:text="@string/search_update"/>
+        tools:text="@string/search_history_clear"/>
 </LinearLayout>
