@@ -15,15 +15,15 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/search_history_title"/>
     <include layout="@layout/track_list"
+        android:id="@+id/trackListHistory"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_weight="1"/>
+        android:layout_width="match_parent" />
     <Button
-        android:id="@+id/errorPlaceholderButton"
+        android:id="@+id/trackListHistory_Clear"
         style="@style/RoundedButton"
         android:layout_marginTop="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        tools:text="@string/search_history_clear"/>
+        android:text="@string/search_history_clear"/>
 </LinearLayout>
