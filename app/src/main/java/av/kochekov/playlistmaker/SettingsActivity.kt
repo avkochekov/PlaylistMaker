@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.Switch
 import androidx.appcompat.widget.Toolbar
 
 class SettingsActivity : AppCompatActivity() {
@@ -38,6 +39,9 @@ class SettingsActivity : AppCompatActivity() {
                 data = Uri.parse(getString(R.string.settings_licenseAddress))
                 startActivity(this)
             }
+        }
+        findViewById<Switch>(R.id.themeSwitcher).setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).setIsNightMode(checked)
         }
     }
 }

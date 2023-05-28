@@ -41,8 +41,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var errorPlaceholderText: TextView
     private lateinit var errorPlaceholderImage: ImageView
 
-    private lateinit var preferences: SharedPreferences
-
     private val retrofit = Retrofit.Builder()
         .baseUrl(ITunesApi.apiUrl)
         .addConverterFactory(GsonConverterFactory.create())
@@ -61,15 +59,14 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        preferences = getSharedPreferences(applicationInfo.loadLabel(packageManager).toString(), MODE_PRIVATE)
-        trackListAdapter = TrackListAdapter(preferences)
+        trackListAdapter = TrackListAdapter(App.preferences)
         trackListHistoryAdapter = TrackListAdapter()
 
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
             onBackPressed()
         }
 
-        preferences.apply {
+        App.preferences.apply {
             var listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
                 if (key == SearchHistory.DATA_KEY){
                     trackListHistoryAdapter.setData(SearchHistory(sharedPreferences).get())
@@ -129,7 +126,7 @@ class SearchActivity : AppCompatActivity() {
             visibility = if (trackListHistoryView.size > 0) View.VISIBLE else View.GONE
         }
         findViewById<Button>(R.id.trackListHistory_Clear).setOnClickListener {
-            SearchHistory(preferences).clear()
+            SearchHistory(App.preferences).clear()
             showTrackListHistory()
         }
         showTrackListHistory()
@@ -183,7 +180,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showTrackListHistory(){
-        SearchHistory(preferences).get(true).let{
+        SearchHistory(App.preferences).get(true).let{
             trackListHistoryAdapter.setData(it)
             trackListHistoryLayout.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
         }
