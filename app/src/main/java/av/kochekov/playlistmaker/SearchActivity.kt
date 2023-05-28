@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.size
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
@@ -52,6 +53,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackListView: RecyclerView
     private lateinit var trackListAdapter: TrackListAdapter
 
+    private lateinit var trackListHistoryLayout: LinearLayout
     private lateinit var trackListHistoryView: RecyclerView
     private lateinit var trackListHistoryAdapter: TrackListAdapter
 
@@ -83,6 +85,7 @@ class SearchActivity : AppCompatActivity() {
                 searchEditText.clearFocus()
                 searchEditText.setText("")
                 getTrackList()
+                showTrackListHistory()
             }
         }
         searchEditText = findViewById<EditText>(R.id.searchField).apply {
@@ -120,12 +123,17 @@ class SearchActivity : AppCompatActivity() {
             adapter = trackListAdapter
         }
         trackListHistoryView = findViewById<RecyclerView>(R.id.trackListHistory).apply {
-            adapter = trackListHistoryAdapter
-            trackListHistoryAdapter.setData(SearchHistory(preferences).get())
+                adapter = trackListHistoryAdapter
+                trackListHistoryAdapter.setData(SearchHistory(preferences).get())
+            }
+        trackListHistoryLayout = findViewById<LinearLayout>(R.id.trackListHistoryLayout).apply {
+            visibility = if (trackListHistoryView.size > 0) View.VISIBLE else View.GONE
         }
         findViewById<Button>(R.id.trackListHistory_Clear).setOnClickListener {
             SearchHistory(preferences).clear()
+            showTrackListHistory()
         }
+        showTrackListHistory()
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -171,16 +179,28 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showTrackList(){
-        trackListHistoryView.visibility = View.GONE
+        trackListHistoryLayout.visibility = View.GONE
         trackListView.visibility = View.VISIBLE
     }
 
+    private fun showTrackListHistory(){
+        SearchHistory(preferences).get().let{
+            trackListHistoryAdapter.setData(it)
+            trackListHistoryLayout.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun hideTrackListHistory(){
+        trackListHistoryLayout.visibility = View.GONE
+    }
+
     private fun hideTrackList(){
-        trackListView.visibility = View.GONE
+        findViewById<LinearLayout>(R.id.trackListHistoryLayout).visibility = if (trackListHistoryView.size > 0) View.VISIBLE else View.GONE
     }
 
     private fun getTrackList(){
         hideTrackList()
+        hideTrackListHistory()
         hideErrorMessage()
         trackListView.visibility = View.GONE
         trackListAdapter.clearData()
@@ -193,8 +213,8 @@ class SearchActivity : AppCompatActivity() {
                     when (response.code()){
                         200 -> {
                             if (response.body()?.results?.isNotEmpty() == true) {
-                                hideErrorMessage()
                                 trackListAdapter.setData(response.body()?.results!!)
+                                hideErrorMessage()
                                 showTrackList()
                             } else {
                                 showErrorMessage(ErrorMessageType.NO_DATA)

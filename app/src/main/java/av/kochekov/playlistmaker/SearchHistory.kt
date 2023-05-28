@@ -19,17 +19,17 @@ class SearchHistory(private val pref: SharedPreferences) {
             .apply()
     }
 
-
-
     fun get(): List<Track> {
         return pref.getString(DATA_KEY, null)
             ?.let {
                 return Gson().fromJson(it, Array<Track>::class.java).toList()
             }
-            ?: emptyList()
+            ?: mutableListOf()
     }
 
     fun clear(){
-        pref.edit().clear()
+        pref.edit()
+            .clear()
+            .apply()
     }
 }
