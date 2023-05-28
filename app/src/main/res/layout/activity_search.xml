@@ -26,7 +26,7 @@
         android:layout_marginBottom="16dp"
         app:cornerRadius="30dp">
         <EditText
-            android:id="@+id/search_query"
+            android:id="@+id/searchField"
             style="@style/EditeTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
         android:layout_width="match_parent" />
 
     <include layout="@layout/track_list_history"
-        android:id="@+id/trackListHistory"
+        android:id="@+id/trackListHistoryLayout"
         android:visibility="visible"
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
