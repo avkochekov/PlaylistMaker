@@ -86,6 +86,7 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         searchEditText = findViewById<EditText>(R.id.searchField).apply {
+            requestFocus()
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
