@@ -123,9 +123,8 @@ class SearchActivity : AppCompatActivity() {
             adapter = trackListAdapter
         }
         trackListHistoryView = findViewById<RecyclerView>(R.id.trackListHistory).apply {
-                adapter = trackListHistoryAdapter
-                trackListHistoryAdapter.setData(SearchHistory(preferences).get())
-            }
+            adapter = trackListHistoryAdapter
+        }
         trackListHistoryLayout = findViewById<LinearLayout>(R.id.trackListHistoryLayout).apply {
             visibility = if (trackListHistoryView.size > 0) View.VISIBLE else View.GONE
         }
@@ -184,7 +183,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showTrackListHistory(){
-        SearchHistory(preferences).get().let{
+        SearchHistory(preferences).get(true).let{
             trackListHistoryAdapter.setData(it)
             trackListHistoryLayout.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
         }

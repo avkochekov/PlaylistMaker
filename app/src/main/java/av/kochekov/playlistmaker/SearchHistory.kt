@@ -19,10 +19,11 @@ class SearchHistory(private val pref: SharedPreferences) {
             .apply()
     }
 
-    fun get(): List<Track> {
+    fun get(isReversed: Boolean = false): List<Track> {
         return pref.getString(DATA_KEY, null)
             ?.let {
-                return Gson().fromJson(it, Array<Track>::class.java).toList()
+                var list = Gson().fromJson(it, Array<Track>::class.java).toList()
+                return if (isReversed) list.reversed() else list
             }
             ?: mutableListOf()
     }
