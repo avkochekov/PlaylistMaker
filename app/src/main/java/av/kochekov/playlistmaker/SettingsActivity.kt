@@ -1,6 +1,7 @@
 package av.kochekov.playlistmaker
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -40,8 +41,12 @@ class SettingsActivity : AppCompatActivity() {
                 startActivity(this)
             }
         }
-        findViewById<Switch>(R.id.themeSwitcher).setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).setIsNightMode(checked)
+        findViewById<Switch>(R.id.themeSwitcher).let {
+            val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            it.isChecked = currentNightMode == Configuration.UI_MODE_NIGHT_YES
+            it.setOnCheckedChangeListener { switcher, checked ->
+                (applicationContext as App).setIsNightMode(checked)
+            }
         }
     }
 }

@@ -7,12 +7,14 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -21,7 +23,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     companion object{
         const val SEARCH_QUERY = "SEARCH_QUERY"
         private var query:String = String()
@@ -59,20 +61,20 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        trackListAdapter = TrackListAdapter(App.preferences)
+        trackListAdapter = TrackListAdapter(this)
         trackListHistoryAdapter = TrackListAdapter()
 
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
             onBackPressed()
         }
 
-        App.preferences.apply {
+        SearchHistory.apply {
             var listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
                 if (key == SearchHistory.DATA_KEY){
-                    trackListHistoryAdapter.setData(SearchHistory(sharedPreferences).get())
+                    trackListHistoryAdapter.setData(SearchHistory.get())
                 }
             }
-            registerOnSharedPreferenceChangeListener(listener)
+            SearchHistory.pref.registerOnSharedPreferenceChangeListener(listener)
         }
 
         searchClearButton = findViewById<ImageView>(R.id.search_clear).apply {
@@ -124,10 +126,10 @@ class SearchActivity : AppCompatActivity() {
             adapter = trackListHistoryAdapter
         }
         trackListHistoryLayout = findViewById<LinearLayout>(R.id.trackListHistoryLayout).apply {
-            visibility = if (trackListHistoryView.size > 0) View.VISIBLE else View.GONE
+            isVisible = (trackListHistoryView.size > 0)
         }
         findViewById<Button>(R.id.trackListHistory_Clear).setOnClickListener {
-            SearchHistory(App.preferences).clear()
+            SearchHistory.clear()
             showTrackListHistory()
         }
         showTrackListHistory()
@@ -181,7 +183,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showTrackListHistory(){
-        SearchHistory(App.preferences).get(true).let{
+        SearchHistory.get(true).let{
             trackListHistoryAdapter.setData(it)
             trackListHistoryLayout.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
         }
@@ -192,7 +194,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun hideTrackList(){
-        findViewById<LinearLayout>(R.id.trackListHistoryLayout).visibility = if (trackListHistoryView.size > 0) View.VISIBLE else View.GONE
+        trackListHistoryLayout.visibility = if (trackListHistoryView.size > 0) View.VISIBLE else View.GONE
     }
 
     private fun getTrackList(){
@@ -229,5 +231,10 @@ class SearchActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    override fun onItemClick(position: Int) {
+        SearchHistory.pref?.let { SearchHistory.add(trackListAdapter.getData(position)) }
+
     }
 }
