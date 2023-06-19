@@ -2,6 +2,7 @@ package av.kochekov.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
@@ -62,7 +63,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         setContentView(R.layout.activity_search)
 
         trackListAdapter = TrackListAdapter(this)
-        trackListHistoryAdapter = TrackListAdapter()
+        trackListHistoryAdapter = TrackListAdapter(this)
 
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
             onBackPressed()
@@ -75,6 +76,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
                 }
             }
             SearchHistory.pref.registerOnSharedPreferenceChangeListener(listener)
+
         }
 
         searchClearButton = findViewById<ImageView>(R.id.search_clear).apply {
@@ -108,6 +110,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
             }
         }
 
+        updateButton = findViewById(R.id.errorPlaceholderButton)
         errorPlaceholder = findViewById(R.id.errorPlaceholder)
         errorPlaceholderText = findViewById(R.id.errorPlaceholderText)
         errorPlaceholderImage = findViewById(R.id.errorPlaceholderImage)
@@ -233,8 +236,11 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         }
     }
 
-    override fun onItemClick(position: Int) {
-        SearchHistory.pref?.let { SearchHistory.add(trackListAdapter.getData(position)) }
+    override fun onItemClick(position: Int, adapter: TrackListAdapter) {
+        startActivity(Intent(this, AudioPlayerActivity::class.java).apply {
+            putExtra(AudioPlayerActivity.TRACK, adapter.getData(position))
+        })
+        SearchHistory.pref?.let { SearchHistory.add(adapter.getData(position)) }
 
     }
 }
