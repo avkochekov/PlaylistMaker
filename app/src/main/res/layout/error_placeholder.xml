@@ -23,7 +23,7 @@
         tools:text="@string/search_error_connectionFailed"/>
     <Button
         android:id="@+id/errorPlaceholderButton"
-        style="@style/ErrorPlaceholderStyle.Button"
+        style="@style/RoundedButton"
         android:layout_marginTop="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -26,6 +26,7 @@
         android:paddingRight="@dimen/settings_btn_right_padding">
 
         <Switch
+            android:id="@+id/themeSwitcher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:switchPadding="@dimen/settings_btn_image_margin_left"

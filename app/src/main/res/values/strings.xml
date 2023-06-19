@@ -6,7 +6,7 @@
     <string name="menu_library">Медиатека</string>
     <string name="menu_settings">Настройки</string>
     <!--  Settings activity  -->
-    <string name="settings_theme">Теманая тема</string>
+    <string name="settings_theme">Темная тема</string>
     <string name="settings_share">Поделиться приложением</string>
     <string name="settings_support">Написать в поддержку</string>
     <string name="settings_license">Пользовательское соглашение</string>
@@ -21,6 +21,8 @@
     <string name="search_error_connectionFailed">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
 
     <string name="search_update">Обновить</string>
+    <string name="search_history_title">Вы искали</string>
+    <string name="search_history_clear">Очистить историю</string>
 
     <string name="testString">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="testTime">23:15</string>
