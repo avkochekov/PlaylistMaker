@@ -25,5 +25,5 @@ data class Track(
             return@let SimpleDateFormat("yyyy", Locale.getDefault())
                 .format(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
                     .parse(releaseDate))
-        }?: "-.0"
+        }?: ""
 }

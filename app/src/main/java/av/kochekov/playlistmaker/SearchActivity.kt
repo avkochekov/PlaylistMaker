@@ -186,7 +186,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     }
 
     private fun showTrackListHistory(){
-        SearchHistory.get(true).let{
+        SearchHistory.get().let{
             trackListHistoryAdapter.setData(it)
             trackListHistoryLayout.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
         }
