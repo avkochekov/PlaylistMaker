@@ -34,6 +34,7 @@
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/trackName"
         app:layout_constraintDimensionRatio="1:1"
         android:background="@drawable/placeholder"/>
 
@@ -249,6 +250,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/leftTextBorder"
         app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/genre_layout"
         android:paddingTop="@dimen/audioPlayer_topPadding"
         android:paddingBottom="@dimen/audioPlayer_bottomPadding">
@@ -264,6 +266,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin"
+            android:layout_marginBottom="20dp"
             android:gravity="end"
             android:lines="1"
             android:ellipsize="end"

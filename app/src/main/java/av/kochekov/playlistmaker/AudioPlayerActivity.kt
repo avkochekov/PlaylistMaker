@@ -11,19 +11,15 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.util.*
 
 class AudioPlayerActivity : AppCompatActivity() {
-    lateinit var playButton: Button
-    lateinit var addToPlayListButton: Button
-    lateinit var addToFavoriteButton: Button
+    private lateinit var artwork: ImageView
+    private lateinit var trackName: TextView
+    private lateinit var artistName: TextView
 
-    lateinit var artwork: ImageView
-    lateinit var trackName: TextView
-    lateinit var artistName: TextView
-
-    lateinit var duration: TextView
-    lateinit var album: TextView
-    lateinit var release: TextView
-    lateinit var genre: TextView
-    lateinit var country: TextView
+    private lateinit var duration: TextView
+    private lateinit var album: TextView
+    private lateinit var release: TextView
+    private lateinit var genre: TextView
+    private lateinit var country: TextView
 
     companion object {
         const val TRACK = "CurrentTrackInfo"
