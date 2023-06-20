@@ -20,6 +20,7 @@
         <item name="updateButtonBgColor">@color/YP_white</item>
         <item name="updateButtonTextColor">@color/YP_black</item>
         <item name="textColor">@color/YP_white</item>
+        <item name="playButtonBackgroundColor">@color/YP_white</item>
     </style>
 
     <style name="MenuBackground">

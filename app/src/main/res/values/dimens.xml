@@ -40,4 +40,9 @@
     <dimen name="updateButtonHorizontalPadding">14dp</dimen>
     <dimen name="updateButtonVerticalPadding">10dp</dimen>
 
+    <dimen name="audioPlayer_horizontalPadding">16dp</dimen>
+    <dimen name="audioPlayer_topPadding">9dp</dimen>
+    <dimen name="audioPlayer_bottomPadding">8dp</dimen>
+    <dimen name="audioPlayer_artworkRadius">8dp</dimen>
+
 </resources>
