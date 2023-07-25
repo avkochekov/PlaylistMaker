@@ -6,6 +6,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Looper.*
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -28,7 +31,11 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     companion object{
         const val SEARCH_QUERY = "SEARCH_QUERY"
         private var query:String = String()
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
+
+    private var isClickAllowed = true
 
     enum class ErrorMessageType {
         NO_DATA,
@@ -44,6 +51,8 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     private lateinit var errorPlaceholderText: TextView
     private lateinit var errorPlaceholderImage: ImageView
 
+    private lateinit var progressBar: ProgressBar
+
     private val retrofit = Retrofit.Builder()
         .baseUrl(ITunesApi.apiUrl)
         .addConverterFactory(GsonConverterFactory.create())
@@ -58,12 +67,15 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     private lateinit var trackListHistoryView: RecyclerView
     private lateinit var trackListHistoryAdapter: TrackListAdapter
 
+    private val searchRunnable = Runnable { getTrackList() }
+    private val handler = Handler(Looper.getMainLooper())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
         trackListAdapter = TrackListAdapter(this)
-        trackListHistoryAdapter = TrackListAdapter(this)
+        trackListHistoryAdapter = TrackListAdapter()
 
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
             onBackPressed()
@@ -76,8 +88,9 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
                 }
             }
             SearchHistory.pref.registerOnSharedPreferenceChangeListener(listener)
-
         }
+
+        progressBar = findViewById<ProgressBar>(R.id.progress_bar)
 
         searchClearButton = findViewById<ImageView>(R.id.search_clear).apply {
             setOnClickListener{
@@ -97,6 +110,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     query = s.toString()
                     searchClearButton.visibility = clearButtonVisibility(s)
+                    searchDebounce()
                 }
 
                 override fun afterTextChanged(s: Editable?) { }
@@ -110,7 +124,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
             }
         }
 
-        updateButton = findViewById(R.id.errorPlaceholderButton)
         errorPlaceholder = findViewById(R.id.errorPlaceholder)
         errorPlaceholderText = findViewById(R.id.errorPlaceholderText)
         errorPlaceholderImage = findViewById(R.id.errorPlaceholderImage)
@@ -186,7 +199,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     }
 
     private fun showTrackListHistory(){
-        SearchHistory.get().let{
+        SearchHistory.get(true).let{
             trackListHistoryAdapter.setData(it)
             trackListHistoryLayout.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
         }
@@ -207,11 +220,13 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         trackListView.visibility = View.GONE
         trackListAdapter.clearData()
         if (searchEditText.text.isNotEmpty()){
+
             iTunesService.search(searchEditText.text.toString()).enqueue(object : Callback<TrackResponse>{
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
+                    progressBar.visibility = View.GONE
                     when (response.code()){
                         200 -> {
                             if (response.body()?.results?.isNotEmpty() == true) {
@@ -236,11 +251,27 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         }
     }
 
-    override fun onItemClick(position: Int, adapter: TrackListAdapter) {
-        startActivity(Intent(this, AudioPlayerActivity::class.java).apply {
-            putExtra(AudioPlayerActivity.TRACK, adapter.getData(position))
-        })
-        SearchHistory.pref?.let { SearchHistory.add(adapter.getData(position)) }
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
 
+    override fun onItemClick(position: Int, adapter: TrackListAdapter) {
+        if (clickDebounce()){
+            startActivity(Intent(this, AudioPlayerActivity::class.java).apply {
+                putExtra(AudioPlayerActivity.TRACK, adapter.getData(position))
+            })
+            SearchHistory.pref?.let { SearchHistory.add(adapter.getData(position)) }
+        }
+    }
+
+    private fun searchDebounce(){
+        progressBar.visibility = View.VISIBLE
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 }
