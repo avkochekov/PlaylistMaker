@@ -75,7 +75,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         setContentView(R.layout.activity_search)
 
         trackListAdapter = TrackListAdapter(this)
-        trackListHistoryAdapter = TrackListAdapter()
+        trackListHistoryAdapter = TrackListAdapter(this)
 
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
             onBackPressed()
@@ -220,7 +220,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         trackListView.visibility = View.GONE
         trackListAdapter.clearData()
         if (searchEditText.text.isNotEmpty()){
-
             iTunesService.search(searchEditText.text.toString()).enqueue(object : Callback<TrackResponse>{
                 override fun onResponse(
                     call: Call<TrackResponse>,
