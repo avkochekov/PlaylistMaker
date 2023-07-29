@@ -76,8 +76,8 @@ class AudioPlayerActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-//            play.im = "PLAY"
             playerState = STATE_PREPARED
+            updateButtonImage()
         }
         Glide.with(this)
             .load(track.artworkUrl512)
