@@ -35,11 +35,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
     private var isClickAllowed = true
 
-    enum class ErrorMessageType {
-        NO_DATA,
-        NO_CONNECTION
-    }
-
     private lateinit var searchEditText: EditText
     private lateinit var searchClearButton: ImageView
 
