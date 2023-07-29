@@ -247,6 +247,8 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
                     showErrorMessage(ErrorMessageType.NO_CONNECTION)
                 }
             })
+        } else {
+            progressBar.visibility = View.GONE
         }
     }
 
