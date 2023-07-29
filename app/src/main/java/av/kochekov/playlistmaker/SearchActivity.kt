@@ -31,8 +31,8 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     companion object{
         const val SEARCH_QUERY = "SEARCH_QUERY"
         private var query:String = String()
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
     private var isClickAllowed = true
@@ -258,7 +258,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
         }
         return current
     }
@@ -279,6 +279,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
     private fun searchDebounce(){
         handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
     }
 }

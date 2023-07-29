@@ -32,7 +32,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     companion object {
         const val TRACK = "CurrentTrackInfo"
-        private const val TIME_UPDATE_VALUE = 500L
+        private const val TIME_UPDATE_VALUE_MILLIS = 200L
         private const val STATE_DEFAULT = 0
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
@@ -134,7 +134,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             }
             STATE_PLAYING -> {
                 trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
-                handler.postDelayed(timeUpdateRunnable, AudioPlayerActivity.TIME_UPDATE_VALUE)
+                handler.postDelayed(timeUpdateRunnable, AudioPlayerActivity.TIME_UPDATE_VALUE_MILLIS)
             }
             STATE_PAUSED -> {
                 handler.removeCallbacks(timeUpdateRunnable)
