@@ -14,17 +14,17 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.util.*
 
 class AudioPlayerActivity : AppCompatActivity() {
-    private lateinit var artwork: ImageView
-    private lateinit var trackName: TextView
-    private lateinit var artistName: TextView
-    private lateinit var duration: TextView
-    private lateinit var album: TextView
-    private lateinit var release: TextView
-    private lateinit var genre: TextView
-    private lateinit var country: TextView
-    private lateinit var play: ImageButton
+    private var artwork: ImageView? = null
+    private var trackName: TextView? = null
+    private var artistName: TextView? = null
+    private var duration: TextView? = null
+    private var album: TextView? = null
+    private var release: TextView? = null
+    private var genre: TextView? = null
+    private var country: TextView? = null
+    private var play: ImageButton? = null
+    private var trackTime: TextView? = null
     private var mediaPlayer = MediaPlayer()
-    private lateinit var trackTime: TextView
     private var playerState = STATE_DEFAULT
     private val timeUpdateRunnable = Runnable { updateRemainingTime() }
     private val handler = Handler(Looper.getMainLooper())
@@ -55,34 +55,36 @@ class AudioPlayerActivity : AppCompatActivity() {
         (intent.getSerializableExtra(TRACK) as? Track)?.let {
             bindTrackData(it)
         }
-        play.setOnClickListener {
+        play?.setOnClickListener {
             playbackControl()
         }
     }
     fun bindTrackData(track: Track){
-        trackName.text = track.trackName
-        artistName.text = track.artistName
-        duration.text = track.duration
-        album.text = track.collectionName
-        release.text = track.releaseYear
-        genre.text = track.primaryGenreName
-        country.text = track.country
+        trackName?.text = track.trackName
+        artistName?.text = track.artistName
+        duration?.text = track.duration
+        album?.text = track.collectionName
+        release?.text = track.releaseYear
+        genre?.text = track.primaryGenreName
+        country?.text = track.country
         mediaPlayer.setDataSource(track.previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            play.isEnabled = true
+            play?.isEnabled = true
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
             updateButtonImage()
         }
-        Glide.with(this)
-            .load(track.artworkUrl512)
-            .placeholder(R.drawable.placeholder)
-            .fitCenter()
-            .transform(RoundedCorners(artwork.resources.getDimensionPixelSize(R.dimen.audioPlayer_artworkRadius)))
-            .into(artwork)
+        artwork?.let {
+            Glide.with(this)
+                .load(track.artworkUrl512)
+                .placeholder(R.drawable.placeholder)
+                .fitCenter()
+                .transform(RoundedCorners(it.resources.getDimensionPixelSize(R.dimen.audioPlayer_artworkRadius)))
+                .into(it)
+        }
         updateRemainingTime()
     }
     private fun playbackControl() {
@@ -110,10 +112,10 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun updateButtonImage() {
         when(playerState){
             STATE_PLAYING -> {
-                play.setBackgroundResource(R.drawable.audioplayer_pause_button)
+                play?.setBackgroundResource(R.drawable.audioplayer_pause_button)
             }
             STATE_PREPARED, STATE_PAUSED -> {
-                play.setBackgroundResource(R.drawable.audioplayer_play_button)
+                play?.setBackgroundResource(R.drawable.audioplayer_play_button)
             }
         }
     }
@@ -128,10 +130,10 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun updateRemainingTime(){
         when(playerState){
             STATE_DEFAULT -> {
-                trackTime.text = "00:00"
+                trackTime?.text = "00:00"
             }
             STATE_PLAYING -> {
-                trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+                trackTime?.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
                 handler.postDelayed(timeUpdateRunnable, AudioPlayerActivity.TIME_UPDATE_VALUE_MILLIS)
             }
             STATE_PAUSED -> {
@@ -139,7 +141,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             }
             STATE_PREPARED -> {
                 handler.removeCallbacks(timeUpdateRunnable)
-                trackTime.text = "00:00"
+                trackTime?.text = "00:00"
             }
         }
     }
