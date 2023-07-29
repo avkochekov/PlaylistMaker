@@ -117,7 +117,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
             })
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    searchDebounce()
+                    search()
                     true
                 }
                 false
@@ -219,7 +219,9 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         hideErrorMessage()
         trackListView.visibility = View.GONE
         trackListAdapter.clearData()
+
         if (searchEditText.text.isNotEmpty()){
+            progressBar.visibility = View.VISIBLE
             iTunesService.search(searchEditText.text.toString()).enqueue(object : Callback<TrackResponse>{
                 override fun onResponse(
                     call: Call<TrackResponse>,
@@ -270,8 +272,12 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         }
     }
 
+    private fun search(){
+        handler.removeCallbacks(searchRunnable)
+        searchRunnable.run()
+    }
+
     private fun searchDebounce(){
-        progressBar.visibility = View.VISIBLE
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
