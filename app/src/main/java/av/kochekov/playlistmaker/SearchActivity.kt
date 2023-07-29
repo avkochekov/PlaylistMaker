@@ -98,7 +98,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
                 keyboard.hideSoftInputFromWindow(searchEditText.windowToken, 0)
                 searchEditText.clearFocus()
                 searchEditText.setText("")
-                getTrackList()
+                searchDebounce()
                 showTrackListHistory()
             }
         }
@@ -117,7 +117,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
             })
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    getTrackList()
+                    searchDebounce()
                     true
                 }
                 false
@@ -131,7 +131,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         findViewById<Button>(R.id.errorPlaceholderButton).apply {
             text = getString(R.string.search_update)
             setOnClickListener{
-                getTrackList()
+                searchDebounce()
             }
         }
 
