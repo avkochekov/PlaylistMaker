@@ -3,12 +3,13 @@ package av.kochekov.playlistmaker
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Looper.*
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -28,21 +29,22 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     companion object{
         const val SEARCH_QUERY = "SEARCH_QUERY"
         private var query:String = String()
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
-    enum class ErrorMessageType {
-        NO_DATA,
-        NO_CONNECTION
-    }
+    private var isClickAllowed = true
 
-    private lateinit var searchEditText: EditText
-    private lateinit var searchClearButton: ImageView
+    private var searchEditText: EditText? = null
+    private var searchClearButton: ImageView? = null
 
-    private lateinit var updateButton: Button
+    private var updateButton: Button? = null
 
-    private lateinit var errorPlaceholder: LinearLayout
-    private lateinit var errorPlaceholderText: TextView
-    private lateinit var errorPlaceholderImage: ImageView
+    private var errorPlaceholder: LinearLayout? = null
+    private var errorPlaceholderText: TextView? = null
+    private var errorPlaceholderImage: ImageView? = null
+
+    private var progressBar: ProgressBar? = null
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(ITunesApi.apiUrl)
@@ -51,12 +53,15 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
     private val iTunesService = retrofit.create(ITunesApi::class.java)
 
-    private lateinit var trackListView: RecyclerView
-    private lateinit var trackListAdapter: TrackListAdapter
+    private var trackListView: RecyclerView? = null
+    private var trackListAdapter: TrackListAdapter? = null
 
-    private lateinit var trackListHistoryLayout: LinearLayout
-    private lateinit var trackListHistoryView: RecyclerView
-    private lateinit var trackListHistoryAdapter: TrackListAdapter
+    private var trackListHistoryLayout: LinearLayout? = null
+    private var trackListHistoryView: RecyclerView? = null
+    private var trackListHistoryAdapter: TrackListAdapter? = null
+
+    private val searchRunnable = Runnable { getTrackList() }
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,20 +77,23 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         SearchHistory.apply {
             var listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
                 if (key == SearchHistory.DATA_KEY){
-                    trackListHistoryAdapter.setData(SearchHistory.get())
+                    trackListHistoryAdapter?.setData(SearchHistory.get())
                 }
             }
-            SearchHistory.pref.registerOnSharedPreferenceChangeListener(listener)
-
+            pref?.registerOnSharedPreferenceChangeListener(listener)
         }
+
+        progressBar = findViewById<ProgressBar>(R.id.progress_bar)
 
         searchClearButton = findViewById<ImageView>(R.id.search_clear).apply {
             setOnClickListener{
                 val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                keyboard.hideSoftInputFromWindow(searchEditText.windowToken, 0)
-                searchEditText.clearFocus()
-                searchEditText.setText("")
-                getTrackList()
+                searchEditText?.let {
+                    keyboard.hideSoftInputFromWindow(it.windowToken, 0)
+                    it.clearFocus()
+                    it.setText("")
+                }
+                searchDebounce()
                 showTrackListHistory()
             }
         }
@@ -96,21 +104,21 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     query = s.toString()
-                    searchClearButton.visibility = clearButtonVisibility(s)
+                    searchClearButton?.visibility = clearButtonVisibility(s)
+                    searchDebounce()
                 }
 
                 override fun afterTextChanged(s: Editable?) { }
             })
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    getTrackList()
+                    search()
                     true
                 }
                 false
             }
         }
 
-        updateButton = findViewById(R.id.errorPlaceholderButton)
         errorPlaceholder = findViewById(R.id.errorPlaceholder)
         errorPlaceholderText = findViewById(R.id.errorPlaceholderText)
         errorPlaceholderImage = findViewById(R.id.errorPlaceholderImage)
@@ -118,7 +126,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         findViewById<Button>(R.id.errorPlaceholderButton).apply {
             text = getString(R.string.search_update)
             setOnClickListener{
-                getTrackList()
+                searchDebounce()
             }
         }
 
@@ -129,7 +137,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
             adapter = trackListHistoryAdapter
         }
         trackListHistoryLayout = findViewById<LinearLayout>(R.id.trackListHistoryLayout).apply {
-            isVisible = (trackListHistoryView.size > 0)
+            isVisible = (trackListHistoryView?.size!! > 0)
         }
         findViewById<Button>(R.id.trackListHistory_Clear).setOnClickListener {
             SearchHistory.clear()
@@ -140,7 +148,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
-            searchEditText.clearFocus()
+            searchEditText?.clearFocus()
             View.GONE
         } else {
             View.VISIBLE
@@ -150,7 +158,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         query = savedInstanceState.getString(SEARCH_QUERY).toString()
-        searchEditText.setText(query)
+        searchEditText?.setText(query)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -163,84 +171,111 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         hideErrorMessage()
         when (type) {
             ErrorMessageType.NO_CONNECTION -> {
-                errorPlaceholderImage.setImageResource(R.drawable.connection_error)
-                errorPlaceholderText.text = getString(R.string.search_error_connectionFailed)
-                updateButton.visibility = View.VISIBLE
+                errorPlaceholderImage?.setImageResource(R.drawable.connection_error)
+                errorPlaceholderText?.text = getString(R.string.search_error_connectionFailed)
+                updateButton?.visibility = View.VISIBLE
             }
             ErrorMessageType.NO_DATA -> {
-                errorPlaceholderImage.setImageResource(R.drawable.search_error)
-                errorPlaceholderText.text = getString(R.string.search_error_emptyTrackList)
+                errorPlaceholderImage?.setImageResource(R.drawable.search_error)
+                errorPlaceholderText?.text = getString(R.string.search_error_emptyTrackList)
             }
             else -> return
         }
-        errorPlaceholder.visibility = View.VISIBLE
+        errorPlaceholder?.visibility = View.VISIBLE
     }
 
     private fun hideErrorMessage(){
-        errorPlaceholder.visibility = View.GONE
+        errorPlaceholder?.visibility = View.GONE
     }
 
     private fun showTrackList(){
-        trackListHistoryLayout.visibility = View.GONE
-        trackListView.visibility = View.VISIBLE
+        trackListHistoryLayout?.visibility = View.GONE
+        trackListView?.visibility = View.VISIBLE
     }
 
     private fun showTrackListHistory(){
-        SearchHistory.get().let{
-            trackListHistoryAdapter.setData(it)
-            trackListHistoryLayout.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
+        SearchHistory.get(true).let{
+            trackListHistoryAdapter?.setData(it)
+            trackListHistoryLayout?.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
         }
     }
 
     private fun hideTrackListHistory(){
-        trackListHistoryLayout.visibility = View.GONE
+        trackListHistoryLayout?.visibility = View.GONE
     }
 
     private fun hideTrackList(){
-        trackListHistoryLayout.visibility = if (trackListHistoryView.size > 0) View.VISIBLE else View.GONE
+        trackListHistoryLayout?.visibility = if (trackListHistoryView?.size!! > 0) View.VISIBLE else View.GONE
     }
 
     private fun getTrackList(){
         hideTrackList()
         hideTrackListHistory()
         hideErrorMessage()
-        trackListView.visibility = View.GONE
-        trackListAdapter.clearData()
-        if (searchEditText.text.isNotEmpty()){
-            iTunesService.search(searchEditText.text.toString()).enqueue(object : Callback<TrackResponse>{
-                override fun onResponse(
-                    call: Call<TrackResponse>,
-                    response: Response<TrackResponse>
-                ) {
-                    when (response.code()){
-                        200 -> {
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                trackListAdapter.setData(response.body()?.results!!)
-                                hideErrorMessage()
-                                showTrackList()
-                            } else {
-                                showErrorMessage(ErrorMessageType.NO_DATA)
-                            }
-                        }
-                        else -> showErrorMessage(ErrorMessageType.NO_DATA)
-                    }
-                }
+        trackListView?.visibility = View.GONE
+        trackListAdapter?.clearData()
 
-                override fun onFailure(
-                    call: Call<TrackResponse>,
-                    t: Throwable
-                ) {
-                    showErrorMessage(ErrorMessageType.NO_CONNECTION)
-                }
-            })
+        searchEditText?.let{
+            if (it.text.isNotEmpty()){
+                progressBar?.visibility = View.VISIBLE
+                iTunesService.search(it.text.toString()).enqueue(object : Callback<TrackResponse>{
+                    override fun onResponse(
+                        call: Call<TrackResponse>,
+                        response: Response<TrackResponse>
+                    ) {
+                        progressBar?.visibility = View.GONE
+                        when (response.code()){
+                            200 -> {
+                                if (response.body()?.results?.isNotEmpty() == true) {
+                                    trackListAdapter?.setData(response.body()?.results!!)
+                                    hideErrorMessage()
+                                    showTrackList()
+                                } else {
+                                    showErrorMessage(ErrorMessageType.NO_DATA)
+                                }
+                            }
+                            else -> showErrorMessage(ErrorMessageType.NO_DATA)
+                        }
+                    }
+
+                    override fun onFailure(
+                        call: Call<TrackResponse>,
+                        t: Throwable
+                    ) {
+                        showErrorMessage(ErrorMessageType.NO_CONNECTION)
+                    }
+                })
+            } else {
+                progressBar?.visibility = View.GONE
+            }
         }
     }
 
-    override fun onItemClick(position: Int, adapter: TrackListAdapter) {
-        startActivity(Intent(this, AudioPlayerActivity::class.java).apply {
-            putExtra(AudioPlayerActivity.TRACK, adapter.getData(position))
-        })
-        SearchHistory.pref?.let { SearchHistory.add(adapter.getData(position)) }
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
+        }
+        return current
+    }
 
+    override fun onItemClick(position: Int, adapter: TrackListAdapter) {
+        if (clickDebounce()){
+            startActivity(Intent(this, AudioPlayerActivity::class.java).apply {
+                putExtra(AudioPlayerActivity.TRACK, adapter.getData(position))
+            })
+            SearchHistory.pref?.let { SearchHistory.add(adapter.getData(position)) }
+        }
+    }
+
+    private fun search(){
+        handler.removeCallbacks(searchRunnable)
+        searchRunnable.run()
+    }
+
+    private fun searchDebounce(){
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
     }
 }

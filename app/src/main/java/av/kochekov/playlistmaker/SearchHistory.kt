@@ -6,9 +6,9 @@ import com.google.gson.Gson
 
 object SearchHistory{
     const val DATA_KEY = "TRACK_LIST_HISTORY"
-    const val MAX_LIST_SIZE = 10
+    private const val MAX_LIST_SIZE = 10
 
-    lateinit var pref: SharedPreferences
+    var pref: SharedPreferences? = null
 
     fun add(track: Track){
         var trackList = get().toMutableList()
@@ -16,13 +16,15 @@ object SearchHistory{
         if (trackList.size == MAX_LIST_SIZE)
             trackList.removeFirst()
         trackList.add(track)
-        pref.edit()
-            .putString(DATA_KEY, Gson().toJson(trackList))
-            .apply()
+        pref?.run {
+            edit()
+                .putString(DATA_KEY, Gson().toJson(trackList))
+                .apply()
+        }
     }
 
     fun get(isReversed: Boolean = false): List<Track> {
-        return pref.getString(DATA_KEY, null)
+        return pref?.getString(DATA_KEY, null)
             ?.let {
                 return Gson().fromJson(it, Array<Track>::class.java).toList()
             }
@@ -30,9 +32,11 @@ object SearchHistory{
     }
 
     fun clear(){
-        pref.edit()
-            .clear()
-            .apply()
+        pref?.run {
+            edit()
+                .clear()
+                .apply()
+        }
     }
 }
 

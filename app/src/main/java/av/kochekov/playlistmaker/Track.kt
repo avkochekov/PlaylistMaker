@@ -12,7 +12,8 @@ data class Track(
     val collectionName: String,     // Название альбома
     val releaseDate: String,        // Год релиза TODO: проверить тип поля
     val primaryGenreName: String,   // Жанр трека
-    val country: String             // Страна исполнителя
+    val country: String,            // Страна исполнителя
+    val previewUrl: String          // Превью трека
 ) : java.io.Serializable {
     val artworkUrl512: String
         get() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
