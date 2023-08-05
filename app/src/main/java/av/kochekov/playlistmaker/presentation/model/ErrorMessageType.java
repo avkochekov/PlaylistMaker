@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker;
+package av.kochekov.playlistmaker.presentation.model;
 
 public enum ErrorMessageType {
     NO_DATA,

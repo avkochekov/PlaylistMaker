@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker.domain.usecase
+package av.kochekov.playlistmaker.domain.mediaplayer.usecase
 
 import av.kochekov.playlistmaker.domain.mediaplayer.api.MediaPlayerInterface
 import av.kochekov.playlistmaker.domain.mediaplayer.api.MediaPlayerStateListenerInterface

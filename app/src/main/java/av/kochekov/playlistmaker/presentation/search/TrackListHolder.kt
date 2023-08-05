@@ -1,11 +1,11 @@
-package av.kochekov.playlistmaker
+package av.kochekov.playlistmaker.presentation.search
 
-import android.content.Intent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import av.kochekov.playlistmaker.presentation.PlayerActivity
+import av.kochekov.playlistmaker.R
+import av.kochekov.playlistmaker.presentation.model.TrackInfo
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.text.SimpleDateFormat
@@ -22,7 +22,7 @@ class TrackListHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         const val TRACK = "CurrentTrackInfo"
     }
 
-    fun bind(item: Track) {
+    fun bind(item: TrackInfo) {
         trackName.text = item.trackName
         artistName.text = item.artistName
         trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(item.trackTimeMillis)

@@ -1,9 +1,8 @@
-package av.kochekov.playlistmaker
+package av.kochekov.playlistmaker.presentation.search
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,14 +18,19 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.recyclerview.widget.RecyclerView
-import av.kochekov.playlistmaker.presentation.PlayerActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import av.kochekov.playlistmaker.presentation.model.ErrorMessageType
+import av.kochekov.playlistmaker.R
+import av.kochekov.playlistmaker.SearchHistoryRepositoryCreator
+import av.kochekov.playlistmaker.TrackListCreator
+import av.kochekov.playlistmaker.domain.search.api.TrackListInteractor
+import av.kochekov.playlistmaker.domain.search.model.Track
+import av.kochekov.playlistmaker.domain.search.usecase.AddTrackToSearchHistoryUseCase
+import av.kochekov.playlistmaker.domain.search.usecase.ClearSearchHistoryUseCase
+import av.kochekov.playlistmaker.domain.search.usecase.GetSearchHistoryUseCase
+import av.kochekov.playlistmaker.presentation.player.PlayerActivity
+import av.kochekov.playlistmaker.presentation.model.TrackInfo
 
-class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
+class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener, TrackListInteractor.TrackConsumer {
     companion object{
         const val SEARCH_QUERY = "SEARCH_QUERY"
         private var query:String = String()
@@ -47,13 +51,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
     private var progressBar: ProgressBar? = null
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(ITunesApi.apiUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesService = retrofit.create(ITunesApi::class.java)
-
     private var trackListView: RecyclerView? = null
     private var trackListAdapter: TrackListAdapter? = null
 
@@ -63,6 +60,13 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
     private val searchRunnable = Runnable { getTrackList() }
     private val handler = Handler(Looper.getMainLooper())
+
+    private val trackListInteractor = TrackListCreator.provideTrackListInteractor()
+
+    private val searchHistoryInteractor by lazy { SearchHistoryRepositoryCreator().provideSearchHistoryInteractor(applicationContext) }
+    private val addTrackToSearchHistoryUseCase by lazy { AddTrackToSearchHistoryUseCase(searchHistoryInteractor.repository()) }
+    private val getSearchHistoryUseCase by lazy { GetSearchHistoryUseCase(searchHistoryInteractor.repository()) }
+    private val clearSearchHistory by lazy { ClearSearchHistoryUseCase(searchHistoryInteractor.repository()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,14 +79,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
             onBackPressed()
         }
 
-        SearchHistory.apply {
-            var listener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
-                if (key == SearchHistory.DATA_KEY){
-                    trackListHistoryAdapter?.setData(SearchHistory.get())
-                }
-            }
-            pref?.registerOnSharedPreferenceChangeListener(listener)
-        }
+        showTrackListHistory()
 
         progressBar = findViewById<ProgressBar>(R.id.progress_bar)
 
@@ -94,8 +91,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
                     it.clearFocus()
                     it.setText("")
                 }
-                searchDebounce()
-                showTrackListHistory()
             }
         }
         searchEditText = findViewById<EditText>(R.id.searchField).apply {
@@ -106,7 +101,11 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     query = s.toString()
                     searchClearButton?.visibility = clearButtonVisibility(s)
-                    searchDebounce()
+                    if (query.isEmpty()){
+                        showTrackListHistory()
+                    } else {
+                        searchDebounce()
+                    }
                 }
 
                 override fun afterTextChanged(s: Editable?) { }
@@ -141,7 +140,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
             isVisible = (trackListHistoryView?.size!! > 0)
         }
         findViewById<Button>(R.id.trackListHistory_Clear).setOnClickListener {
-            SearchHistory.clear()
+            clearSearchHistory.execute()
             showTrackListHistory()
         }
         showTrackListHistory()
@@ -183,6 +182,18 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
             else -> return
         }
         errorPlaceholder?.visibility = View.VISIBLE
+        progressBar?.visibility = View.GONE
+    }
+
+    private fun showProgressBar(){
+        progressBar?.visibility = View.VISIBLE
+        trackListHistoryLayout?.visibility = View.GONE
+        trackListView?.visibility = View.GONE
+        errorPlaceholder?.visibility = View.GONE
+    }
+
+    private fun hideProgressBar(){
+        progressBar?.visibility = View.GONE
     }
 
     private fun hideErrorMessage(){
@@ -190,15 +201,30 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     }
 
     private fun showTrackList(){
+        progressBar?.visibility = View.GONE
         trackListHistoryLayout?.visibility = View.GONE
         trackListView?.visibility = View.VISIBLE
     }
 
     private fun showTrackListHistory(){
-        SearchHistory.get(true).let{
-            trackListHistoryAdapter?.setData(it)
-            trackListHistoryLayout?.visibility = if (it.isNotEmpty()) View.VISIBLE else View.GONE
-        }
+        val trackList = getSearchHistoryUseCase.execute()
+        progressBar?.visibility = View.GONE
+        trackListView?.visibility = View.GONE
+        trackListHistoryAdapter?.setData(trackList.map {
+            TrackInfo(
+                it.trackId,
+                it.trackName,
+                it.artistName,
+                it.trackTimeMillis,
+                it.artworkUrl100,
+                it.collectionName,
+                it.releaseDate,
+                it.primaryGenreName,
+                it.country,
+                it.previewUrl
+            )
+        })
+        trackListHistoryLayout?.visibility = if (trackList.isNotEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun hideTrackListHistory(){
@@ -219,35 +245,10 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         searchEditText?.let{
             if (it.text.isNotEmpty()){
                 progressBar?.visibility = View.VISIBLE
-                iTunesService.search(it.text.toString()).enqueue(object : Callback<TrackResponse>{
-                    override fun onResponse(
-                        call: Call<TrackResponse>,
-                        response: Response<TrackResponse>
-                    ) {
-                        progressBar?.visibility = View.GONE
-                        when (response.code()){
-                            200 -> {
-                                if (response.body()?.results?.isNotEmpty() == true) {
-                                    trackListAdapter?.setData(response.body()?.results!!)
-                                    hideErrorMessage()
-                                    showTrackList()
-                                } else {
-                                    showErrorMessage(ErrorMessageType.NO_DATA)
-                                }
-                            }
-                            else -> showErrorMessage(ErrorMessageType.NO_DATA)
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<TrackResponse>,
-                        t: Throwable
-                    ) {
-                        showErrorMessage(ErrorMessageType.NO_CONNECTION)
-                    }
-                })
+                trackListInteractor.searchTracks(it.text.toString(), this)
             } else {
                 progressBar?.visibility = View.GONE
+                showTrackListHistory()
             }
         }
     }
@@ -266,7 +267,20 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
             startActivity(Intent(this, PlayerActivity::class.java).apply {
                 putExtra(PlayerActivity.TRACK, adapter.getData(position))
             })
-            SearchHistory.pref?.let { SearchHistory.add(adapter.getData(position)) }
+            addTrackToSearchHistoryUseCase.execute(adapter.getData(position).let {
+                Track(
+                    it.trackId,
+                    it.trackName,
+                    it.artistName,
+                    it.trackTimeMillis,
+                    it.artworkUrl100,
+                    it.collectionName,
+                    it.releaseDate,
+                    it.primaryGenreName,
+                    it.country,
+                    it.previewUrl
+                )
+            })
         }
     }
 
@@ -278,5 +292,34 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     private fun searchDebounce(){
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+    }
+
+    override fun consume(foundTracks: List<Track>?) {
+        runOnUiThread {
+            hideErrorMessage()
+            hideTrackList()
+            foundTracks
+                ?.let { it ->
+                    if (it.isEmpty())
+                        showErrorMessage(ErrorMessageType.NO_DATA)
+                    else
+                        this.trackListAdapter?.setData(it.map {
+                            TrackInfo(
+                                it.trackId,
+                                it.trackName,
+                                it.artistName,
+                                it.trackTimeMillis,
+                                it.artworkUrl100,
+                                it.collectionName,
+                                it.releaseDate,
+                                it.primaryGenreName,
+                                it.country,
+                                it.previewUrl
+                            )
+                        })
+                    showTrackList()
+                }
+                ?: showErrorMessage(ErrorMessageType.NO_CONNECTION)
+        }
     }
 }

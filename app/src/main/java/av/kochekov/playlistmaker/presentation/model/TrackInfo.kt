@@ -1,9 +1,9 @@
-package av.kochekov.playlistmaker
+package av.kochekov.playlistmaker.presentation.model
 
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class Track(
+data class TrackInfo(
     val trackId: Int,               // Уникальный ID композиции
     val trackName: String,          // Название композиции
     val artistName: String,         // Имя исполнителя

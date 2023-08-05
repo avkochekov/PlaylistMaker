@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker.presentation
+package av.kochekov.playlistmaker.presentation.player
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,10 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import av.kochekov.playlistmaker.MediaPlayerCreator
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.Track
+import av.kochekov.playlistmaker.presentation.model.TrackInfo
 import av.kochekov.playlistmaker.domain.mediaplayer.api.MediaPlayerStateListenerInterface
 import av.kochekov.playlistmaker.domain.mediaplayer.model.MediaPlayerState
-import av.kochekov.playlistmaker.domain.usecase.*
+import av.kochekov.playlistmaker.domain.mediaplayer.usecase.*
+import av.kochekov.playlistmaker.presentation.Formatter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
@@ -59,7 +60,7 @@ class PlayerActivity : AppCompatActivity(), MediaPlayerStateListenerInterface {
         genre = findViewById(R.id.genre)
         country = findViewById(R.id.country)
         trackTime = findViewById(R.id.trackTime)
-        (intent.getSerializableExtra(TRACK) as? Track)?.let {
+        (intent.getSerializableExtra(TRACK) as? TrackInfo)?.let {
             bindTrackData(it)
         }
         play?.setOnClickListener {
@@ -68,20 +69,20 @@ class PlayerActivity : AppCompatActivity(), MediaPlayerStateListenerInterface {
 
         setPlayerListener.execute(this)
     }
-    fun bindTrackData(track: Track){
-        setTrackUseCase.execute(track.previewUrl)
+    fun bindTrackData(trackInfo: TrackInfo){
+        setTrackUseCase.execute(trackInfo.previewUrl)
 
-        trackName?.text = track.trackName
-        artistName?.text = track.artistName
-        duration?.text = track.duration
-        album?.text = track.collectionName
-        release?.text = track.releaseYear
-        genre?.text = track.primaryGenreName
-        country?.text = track.country
+        trackName?.text = trackInfo.trackName
+        artistName?.text = trackInfo.artistName
+        duration?.text = trackInfo.duration
+        album?.text = trackInfo.collectionName
+        release?.text = trackInfo.releaseYear
+        genre?.text = trackInfo.primaryGenreName
+        country?.text = trackInfo.country
 
         artwork?.let {
             Glide.with(this)
-                .load(track.artworkUrl512)
+                .load(trackInfo.artworkUrl512)
                 .placeholder(R.drawable.placeholder)
                 .fitCenter()
                 .transform(RoundedCorners(it.resources.getDimensionPixelSize(R.dimen.audioPlayer_artworkRadius)))
