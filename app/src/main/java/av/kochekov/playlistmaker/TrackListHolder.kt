@@ -5,9 +5,9 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import av.kochekov.playlistmaker.presentation.PlayerActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import kotlinx.coroutines.NonDisposableHandle.parent
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,11 +33,5 @@ class TrackListHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             .fitCenter()
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.trackItemImage_round)))
             .into(artwork)
-    }
-
-    fun onClickListner(item: Track){
-        val intent = Intent(itemView.context, AudioPlayerActivity::class.java)
-        intent.putExtra(AudioPlayerActivity.TRACK, item);
-        itemView.context.startActivity(intent)
     }
 }

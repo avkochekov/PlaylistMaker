@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.recyclerview.widget.RecyclerView
+import av.kochekov.playlistmaker.presentation.PlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -262,8 +263,8 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
     override fun onItemClick(position: Int, adapter: TrackListAdapter) {
         if (clickDebounce()){
-            startActivity(Intent(this, AudioPlayerActivity::class.java).apply {
-                putExtra(AudioPlayerActivity.TRACK, adapter.getData(position))
+            startActivity(Intent(this, PlayerActivity::class.java).apply {
+                putExtra(PlayerActivity.TRACK, adapter.getData(position))
             })
             SearchHistory.pref?.let { SearchHistory.add(adapter.getData(position)) }
         }
