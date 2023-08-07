@@ -1,6 +1,4 @@
-package av.kochekov.playlistmaker
-import android.icu.text.SimpleDateFormat
-import android.media.MediaPlayer
+package av.kochekov.playlistmaker.presentation.player
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,11 +7,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import av.kochekov.playlistmaker.MediaPlayerCreator
+import av.kochekov.playlistmaker.R
+import av.kochekov.playlistmaker.presentation.model.TrackInfo
+import av.kochekov.playlistmaker.domain.mediaplayer.api.MediaPlayerStateListenerInterface
+import av.kochekov.playlistmaker.domain.mediaplayer.model.MediaPlayerState
+import av.kochekov.playlistmaker.presentation.Formatter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import java.util.*
 
-class AudioPlayerActivity : AppCompatActivity() {
+class PlayerActivity : AppCompatActivity(), MediaPlayerStateListenerInterface {
     private var artwork: ImageView? = null
     private var trackName: TextView? = null
     private var artistName: TextView? = null
@@ -24,17 +27,16 @@ class AudioPlayerActivity : AppCompatActivity() {
     private var country: TextView? = null
     private var play: ImageButton? = null
     private var trackTime: TextView? = null
-    private var mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
+
+    private var playerState = MediaPlayerState.STATE_DEFAULT
     private val timeUpdateRunnable = Runnable { updateRemainingTime() }
     private val handler = Handler(Looper.getMainLooper())
+
+    private val playerInteractor = MediaPlayerCreator.provideMediaPlayerInteractor();
+
     companion object {
         const val TRACK = "CurrentTrackInfo"
         private const val TIME_UPDATE_VALUE_MILLIS = 200L
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,34 +54,31 @@ class AudioPlayerActivity : AppCompatActivity() {
         genre = findViewById(R.id.genre)
         country = findViewById(R.id.country)
         trackTime = findViewById(R.id.trackTime)
-        (intent.getSerializableExtra(TRACK) as? Track)?.let {
+        (intent.getSerializableExtra(TRACK) as? TrackInfo)?.let {
             bindTrackData(it)
         }
         play?.setOnClickListener {
             playbackControl()
         }
+
+        playerInteractor.setListener(this)
     }
-    fun bindTrackData(track: Track){
-        trackName?.text = track.trackName
-        artistName?.text = track.artistName
-        duration?.text = track.duration
-        album?.text = track.collectionName
-        release?.text = track.releaseYear
-        genre?.text = track.primaryGenreName
-        country?.text = track.country
-        mediaPlayer.setDataSource(track.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            play?.isEnabled = true
-            playerState = STATE_PREPARED
+    fun bindTrackData(trackInfo: TrackInfo){
+        trackInfo.previewUrl?.run {
+            playerInteractor.setTrack(this)
         }
-        mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
-            updateButtonImage()
-        }
+
+        trackName?.text = trackInfo.trackName
+        artistName?.text = trackInfo.artistName
+        duration?.text = trackInfo.duration
+        album?.text = trackInfo.collectionName
+        release?.text = trackInfo.releaseYear
+        genre?.text = trackInfo.primaryGenreName
+        country?.text = trackInfo.country
+
         artwork?.let {
             Glide.with(this)
-                .load(track.artworkUrl512)
+                .load(trackInfo.artworkUrl512)
                 .placeholder(R.drawable.placeholder)
                 .fitCenter()
                 .transform(RoundedCorners(it.resources.getDimensionPixelSize(R.dimen.audioPlayer_artworkRadius)))
@@ -89,60 +88,60 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
     private fun playbackControl() {
         when(playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
+            MediaPlayerState.STATE_PLAYING -> {
+                playerInteractor.pause()
             }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
+            MediaPlayerState.STATE_PREPARED,
+            MediaPlayerState.STATE_PAUSED -> {
+                playerInteractor.play()
             }
         }
     }
-    private fun pausePlayer(){
-        mediaPlayer.pause()
-        playerState = STATE_PAUSED
-        updateRemainingTime()
-        updateButtonImage()
-    }
-    private fun startPlayer(){
-        mediaPlayer.start()
-        playerState = STATE_PLAYING
-        updateRemainingTime()
-        updateButtonImage()
-    }
     private fun updateButtonImage() {
         when(playerState){
-            STATE_PLAYING -> {
+            MediaPlayerState.STATE_DEFAULT -> {
+                play?.isEnabled = false
+                play?.setBackgroundResource(R.drawable.audioplayer_play_button)
+            }
+            MediaPlayerState.STATE_PLAYING -> {
+                play?.isEnabled = true
                 play?.setBackgroundResource(R.drawable.audioplayer_pause_button)
             }
-            STATE_PREPARED, STATE_PAUSED -> {
+            MediaPlayerState.STATE_PAUSED,
+            MediaPlayerState.STATE_PREPARED-> {
+                play?.isEnabled = true
                 play?.setBackgroundResource(R.drawable.audioplayer_play_button)
             }
         }
     }
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        playerInteractor.pause()
     }
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        playerInteractor.stop()
     }
     private fun updateRemainingTime(){
         when(playerState){
-            STATE_DEFAULT -> {
-                trackTime?.text = "00:00"
-            }
-            STATE_PLAYING -> {
-                trackTime?.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
-                handler.postDelayed(timeUpdateRunnable, AudioPlayerActivity.TIME_UPDATE_VALUE_MILLIS)
-            }
-            STATE_PAUSED -> {
+            MediaPlayerState.STATE_DEFAULT,
+            MediaPlayerState.STATE_PREPARED -> {
+                trackTime?.text = Formatter.timeToText(0)
                 handler.removeCallbacks(timeUpdateRunnable)
             }
-            STATE_PREPARED -> {
+            MediaPlayerState.STATE_PLAYING -> {
+                trackTime?.text = Formatter.timeToText(playerInteractor.timePosition())
+                handler.postDelayed(timeUpdateRunnable, TIME_UPDATE_VALUE_MILLIS)
+            }
+            MediaPlayerState.STATE_PAUSED -> {
                 handler.removeCallbacks(timeUpdateRunnable)
-                trackTime?.text = "00:00"
             }
         }
+    }
+
+    override fun onStateChanged(state: Int) {
+        playerState = state
+        updateButtonImage()
+        updateRemainingTime()
     }
 }

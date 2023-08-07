@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker
+package av.kochekov.playlistmaker.presentation.settings
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.Switch
 import androidx.appcompat.widget.Toolbar
+import av.kochekov.playlistmaker.App
+import av.kochekov.playlistmaker.R
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

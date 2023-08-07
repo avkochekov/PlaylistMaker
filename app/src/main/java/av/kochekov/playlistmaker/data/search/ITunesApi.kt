@@ -1,5 +1,6 @@
-package av.kochekov.playlistmaker
+package av.kochekov.playlistmaker.data.search
 
+import av.kochekov.playlistmaker.data.dto.TrackListResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,5 +12,5 @@ interface ITunesApi {
     }
 
     @GET("/search?entity=song")
-    fun search(@Query("term") text: String): Call<TrackResponse>
+    fun search(@Query("term") text: String): Call<TrackListResponse>
 }

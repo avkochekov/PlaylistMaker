@@ -1,10 +1,12 @@
-package av.kochekov.playlistmaker
+package av.kochekov.playlistmaker.presentation
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
+import av.kochekov.playlistmaker.R
+import av.kochekov.playlistmaker.presentation.search.SearchActivity
+import av.kochekov.playlistmaker.presentation.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -13,7 +13,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         preferences = getSharedPreferences(applicationInfo.loadLabel(packageManager).toString(), MODE_PRIVATE)
-        SearchHistory.pref = preferences!!
         preferences?.run {
             var listener =
                 SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
