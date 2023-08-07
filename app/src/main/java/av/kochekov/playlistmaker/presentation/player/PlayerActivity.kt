@@ -12,7 +12,6 @@ import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.presentation.model.TrackInfo
 import av.kochekov.playlistmaker.domain.mediaplayer.api.MediaPlayerStateListenerInterface
 import av.kochekov.playlistmaker.domain.mediaplayer.model.MediaPlayerState
-import av.kochekov.playlistmaker.domain.mediaplayer.usecase.*
 import av.kochekov.playlistmaker.presentation.Formatter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -33,12 +32,7 @@ class PlayerActivity : AppCompatActivity(), MediaPlayerStateListenerInterface {
     private val timeUpdateRunnable = Runnable { updateRemainingTime() }
     private val handler = Handler(Looper.getMainLooper())
 
-    private val player = MediaPlayerCreator.provideMediaPlayerInteractor().player();
-    private val setPlayerListener = AddPlayerStateListener(player)
-    private val setTrackUseCase = SetPlayerTrackUseCase(player)
-    private val startTrackUseCase = StartPlayerUseCase(player)
-    private val pauseTrackUseCase = PausePlayerUseCase(player)
-    private val getTrackPositionUseCase = GetPlayerTimePositionUseCase(player)
+    private val playerInteractor = MediaPlayerCreator.provideMediaPlayerInteractor();
 
     companion object {
         const val TRACK = "CurrentTrackInfo"
@@ -67,10 +61,12 @@ class PlayerActivity : AppCompatActivity(), MediaPlayerStateListenerInterface {
             playbackControl()
         }
 
-        setPlayerListener.execute(this)
+        playerInteractor.setListener(this)
     }
     fun bindTrackData(trackInfo: TrackInfo){
-        setTrackUseCase.execute(trackInfo.previewUrl)
+        trackInfo.previewUrl?.run {
+            playerInteractor.setTrack(this)
+        }
 
         trackName?.text = trackInfo.trackName
         artistName?.text = trackInfo.artistName
@@ -93,11 +89,11 @@ class PlayerActivity : AppCompatActivity(), MediaPlayerStateListenerInterface {
     private fun playbackControl() {
         when(playerState) {
             MediaPlayerState.STATE_PLAYING -> {
-                pauseTrackUseCase.execute()
+                playerInteractor.pause()
             }
             MediaPlayerState.STATE_PREPARED,
             MediaPlayerState.STATE_PAUSED -> {
-                startTrackUseCase.execute()
+                playerInteractor.play()
             }
         }
     }
@@ -120,10 +116,11 @@ class PlayerActivity : AppCompatActivity(), MediaPlayerStateListenerInterface {
     }
     override fun onPause() {
         super.onPause()
-        pauseTrackUseCase.execute()
+        playerInteractor.pause()
     }
     override fun onDestroy() {
         super.onDestroy()
+        playerInteractor.stop()
     }
     private fun updateRemainingTime(){
         when(playerState){
@@ -133,7 +130,7 @@ class PlayerActivity : AppCompatActivity(), MediaPlayerStateListenerInterface {
                 handler.removeCallbacks(timeUpdateRunnable)
             }
             MediaPlayerState.STATE_PLAYING -> {
-                trackTime?.text = Formatter.timeToText(getTrackPositionUseCase.execute())
+                trackTime?.text = Formatter.timeToText(playerInteractor.timePosition())
                 handler.postDelayed(timeUpdateRunnable, TIME_UPDATE_VALUE_MILLIS)
             }
             MediaPlayerState.STATE_PAUSED -> {

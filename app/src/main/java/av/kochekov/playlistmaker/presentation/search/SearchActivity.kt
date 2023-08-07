@@ -24,9 +24,6 @@ import av.kochekov.playlistmaker.SearchHistoryRepositoryCreator
 import av.kochekov.playlistmaker.TrackListCreator
 import av.kochekov.playlistmaker.domain.search.api.TrackListInteractor
 import av.kochekov.playlistmaker.domain.search.model.Track
-import av.kochekov.playlistmaker.domain.search.usecase.AddTrackToSearchHistoryUseCase
-import av.kochekov.playlistmaker.domain.search.usecase.ClearSearchHistoryUseCase
-import av.kochekov.playlistmaker.domain.search.usecase.GetSearchHistoryUseCase
 import av.kochekov.playlistmaker.presentation.player.PlayerActivity
 import av.kochekov.playlistmaker.presentation.model.TrackInfo
 
@@ -62,11 +59,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener, 
     private val handler = Handler(Looper.getMainLooper())
 
     private val trackListInteractor = TrackListCreator.provideTrackListInteractor()
-
     private val searchHistoryInteractor by lazy { SearchHistoryRepositoryCreator().provideSearchHistoryInteractor(applicationContext) }
-    private val addTrackToSearchHistoryUseCase by lazy { AddTrackToSearchHistoryUseCase(searchHistoryInteractor.repository()) }
-    private val getSearchHistoryUseCase by lazy { GetSearchHistoryUseCase(searchHistoryInteractor.repository()) }
-    private val clearSearchHistory by lazy { ClearSearchHistoryUseCase(searchHistoryInteractor.repository()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +78,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener, 
 
         searchClearButton = findViewById<ImageView>(R.id.search_clear).apply {
             setOnClickListener{
+                hideErrorMessage()
                 val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 searchEditText?.let {
                     keyboard.hideSoftInputFromWindow(it.windowToken, 0)
@@ -140,7 +134,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener, 
             isVisible = (trackListHistoryView?.size!! > 0)
         }
         findViewById<Button>(R.id.trackListHistory_Clear).setOnClickListener {
-            clearSearchHistory.execute()
+            searchHistoryInteractor.clear()
             showTrackListHistory()
         }
         showTrackListHistory()
@@ -179,7 +173,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener, 
                 errorPlaceholderImage?.setImageResource(R.drawable.search_error)
                 errorPlaceholderText?.text = getString(R.string.search_error_emptyTrackList)
             }
-            else -> return
         }
         errorPlaceholder?.visibility = View.VISIBLE
         progressBar?.visibility = View.GONE
@@ -207,7 +200,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener, 
     }
 
     private fun showTrackListHistory(){
-        val trackList = getSearchHistoryUseCase.execute()
+        val trackList = searchHistoryInteractor.get()
         progressBar?.visibility = View.GONE
         trackListView?.visibility = View.GONE
         trackListHistoryAdapter?.setData(trackList.map {
@@ -267,7 +260,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener, 
             startActivity(Intent(this, PlayerActivity::class.java).apply {
                 putExtra(PlayerActivity.TRACK, adapter.getData(position))
             })
-            addTrackToSearchHistoryUseCase.execute(adapter.getData(position).let {
+            searchHistoryInteractor.add(adapter.getData(position).let {
                 Track(
                     it.trackId,
                     it.trackName,

@@ -13,8 +13,6 @@ class TrackListRepositoryImpl(private val networkClient: NetworkClient) : TrackL
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private val iTunesService = retrofit.create(ITunesApi::class.java)
-
     override fun search(query: String): List<Track>? {
         val response = networkClient.doRequest(TrackListRequest(query))
         if (response.resultCode == 200) {
@@ -32,7 +30,7 @@ class TrackListRepositoryImpl(private val networkClient: NetworkClient) : TrackL
                     it.previewUrl)
             }
         } else {
-            return emptyList()
+            return null
         }
     }
 }
