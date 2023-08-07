@@ -31,22 +31,6 @@ class MediaPlayerInteractorImpl(private val player: MediaPlayerInterface) : Medi
 
     }
 
-    override fun isPlaying(): Boolean {
-        return player.state() == MediaPlayerState.STATE_PLAYING
-    }
-
-    override fun isPaused(): Boolean {
-        return player.state() == MediaPlayerState.STATE_PAUSED
-    }
-
-    override fun isStopped(): Boolean {
-        return player.state() == MediaPlayerState.STATE_PREPARED
-    }
-
-    override fun isReady(): Boolean {
-        return player.state() != MediaPlayerState.STATE_DEFAULT
-    }
-
     override fun setListener(listener: MediaPlayerStateListenerInterface) {
         player.addListener(listener)
     }
