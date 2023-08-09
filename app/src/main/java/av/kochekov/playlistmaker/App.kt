@@ -3,6 +3,9 @@ package av.kochekov.playlistmaker
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import av.kochekov.playlistmaker.creator.RepositoryCreator
+import av.kochekov.playlistmaker.repository.settings_repository.domain.SettingsInteractor
+import av.kochekov.playlistmaker.settings.domain.models.ThemeSettings
 
 class App : Application() {
     companion object {
@@ -10,31 +13,25 @@ class App : Application() {
         private const val DATA_KEY = "IS_NIGHT_MODE"
     }
 
+    private lateinit var settingsInteractor: SettingsInteractor
+
     override fun onCreate() {
         super.onCreate()
-        preferences = getSharedPreferences(applicationInfo.loadLabel(packageManager).toString(), MODE_PRIVATE)
-        preferences?.run {
-            var listener =
-                SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-                    if (key == DATA_KEY) {
-                        setIsNightMode(getIsNightMode())
-                    }
-                }
-            registerOnSharedPreferenceChangeListener(listener)
-        }
+
+        settingsInteractor = RepositoryCreator.provideSettingsInteractor(applicationContext)
         setIsNightMode(getIsNightMode(), true)
     }
 
     fun getIsNightMode(): Boolean{
-        return preferences?.getBoolean(DATA_KEY, false) ?: false
+        return settingsInteractor.getThemeSettings().equals(ThemeSettings.DARK)
     }
 
     fun setIsNightMode(state: Boolean, force: Boolean = false){
         if (state == getIsNightMode() && !force)
             return
-        preferences?.run{
-            edit().putBoolean(DATA_KEY, state).commit()
-        }
+
+        settingsInteractor.updateThemeSetting(if (state) ThemeSettings.DARK else ThemeSettings.LIGHT)
+
         AppCompatDelegate.setDefaultNightMode(
             if (state) {
                 AppCompatDelegate.MODE_NIGHT_YES
