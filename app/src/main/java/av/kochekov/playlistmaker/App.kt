@@ -13,25 +13,30 @@ class App : Application() {
         private const val DATA_KEY = "IS_NIGHT_MODE"
     }
 
-    private lateinit var settingsInteractor: SettingsInteractor
-
     override fun onCreate() {
         super.onCreate()
-
-        settingsInteractor = RepositoryCreator.provideSettingsInteractor(applicationContext)
+        preferences = getSharedPreferences(applicationInfo.loadLabel(packageManager).toString(), MODE_PRIVATE)
+        preferences?.run {
+            var listener =
+                SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+                    if (key == DATA_KEY) {
+                        setIsNightMode(getIsNightMode())
+                    }
+                }
+            registerOnSharedPreferenceChangeListener(listener)
+        }
         setIsNightMode(getIsNightMode(), true)
     }
 
     fun getIsNightMode(): Boolean{
-        return settingsInteractor.getThemeSettings().equals(ThemeSettings.DARK)
+        return preferences?.getBoolean(DATA_KEY, false) ?: false
     }
-
     fun setIsNightMode(state: Boolean, force: Boolean = false){
         if (state == getIsNightMode() && !force)
             return
-
-        settingsInteractor.updateThemeSetting(if (state) ThemeSettings.DARK else ThemeSettings.LIGHT)
-
+        preferences?.run{
+            edit().putBoolean(DATA_KEY, state).commit()
+        }
         AppCompatDelegate.setDefaultNightMode(
             if (state) {
                 AppCompatDelegate.MODE_NIGHT_YES

@@ -13,6 +13,7 @@ import av.kochekov.playlistmaker.player.models.MediaPlayerState
 import av.kochekov.playlistmaker.search.models.TrackInfo
 
 private const val TIME_UPDATE_VALUE_MILLIS = 200L
+private const val DEFAULT_TRACK_POSITION = 0
 
 class PlayerViewModel (
     private val mediaPlayerInteractor: MediaPlayerInteractor
@@ -47,7 +48,7 @@ class PlayerViewModel (
 
     fun setTrack(track: TrackInfo) {
         trackInfo.value = track
-        trackPosition.value = 0
+        trackPosition.value = DEFAULT_TRACK_POSITION
         mediaPlayerInteractor.setTrack(track.previewUrl.toString())
     }
 

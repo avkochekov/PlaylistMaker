@@ -1,6 +1,7 @@
 package av.kochekov.playlistmaker.creator
 
 import android.content.Context
+import android.content.SharedPreferences
 import av.kochekov.playlistmaker.network_client.NetworkClient
 import av.kochekov.playlistmaker.network_client.itunes.ITunesNetworkClient
 import av.kochekov.playlistmaker.repository.search_repository.domain.SearchHistoryInteractor
@@ -17,12 +18,12 @@ import av.kochekov.playlistmaker.repository.track_list_repository.domain.TrackLi
 import av.kochekov.playlistmaker.repository.track_list_repository.domain.TrackListRepository
 
 object RepositoryCreator {
-    private fun getSearchHistoryRepository(context: Context): SearchHistoryRepository {
-        return SearchHistoryRepositoryImpl(context)
+    private fun getSearchHistoryRepository(sharedPreferences: SharedPreferences): SearchHistoryRepository {
+        return SearchHistoryRepositoryImpl(sharedPreferences)
     }
 
-    fun provideSearchHistoryInteractor(context: Context): SearchHistoryInteractor {
-        return SearchHistoryInteractorImpl(getSearchHistoryRepository(context))
+    fun provideSearchHistoryInteractor(sharedPreferences: SharedPreferences): SearchHistoryInteractor {
+        return SearchHistoryInteractorImpl(getSearchHistoryRepository(sharedPreferences))
     }
 
     private fun getSettingsRepository(context: Context): SettingsRepository {

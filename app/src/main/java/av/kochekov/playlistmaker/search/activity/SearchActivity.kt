@@ -14,6 +14,7 @@ import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import av.kochekov.playlistmaker.App
 import av.kochekov.playlistmaker.search.models.ErrorMessageType
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.creator.TrackListCreator
@@ -52,7 +53,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener{
 
         viewModel = ViewModelProvider(this, SearchViewModel.getSearchModelFactory(
             trackListInteractor = TrackListCreator.provideTrackListInteractor(),
-            searchHistoryInteractor = RepositoryCreator.provideSearchHistoryInteractor(applicationContext)
+            searchHistoryInteractor = RepositoryCreator.provideSearchHistoryInteractor(App.preferences!!)
         )).get(SearchViewModel::class.java)
 
 
