@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import av.kochekov.playlistmaker.creator.MediaPlayerCreator
+import av.kochekov.playlistmaker.player.MediaPlayerCreator
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.search.domain.model.TrackInfo
 import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState

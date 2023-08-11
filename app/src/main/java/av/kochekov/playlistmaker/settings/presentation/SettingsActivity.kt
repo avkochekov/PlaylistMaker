@@ -9,9 +9,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.creator.RepositoryCreator
+import av.kochekov.playlistmaker.settings.SettingsCreator
 import av.kochekov.playlistmaker.settings.presentation.SettingsViewModel.Companion.getViewModelFactory
-import av.kochekov.playlistmaker.creator.SharingCreator
+import av.kochekov.playlistmaker.settings.SharingCreator
 
 @SuppressLint("RestrictedApi")
 class SettingsActivity : AppCompatActivity()  {
@@ -25,7 +25,7 @@ class SettingsActivity : AppCompatActivity()  {
 
         viewModel = ViewModelProvider(this, getViewModelFactory(
             sharingInteractor = SharingCreator.provideSharingInteractor(this),
-            settingsInteractor = RepositoryCreator.provideSettingsInteractor(this)
+            settingsInteractor = SettingsCreator.provideSettingsInteractor(this)
         )).get(SettingsViewModel::class.java)
 
         viewModel.isDarkTheme().observe(this, Observer {

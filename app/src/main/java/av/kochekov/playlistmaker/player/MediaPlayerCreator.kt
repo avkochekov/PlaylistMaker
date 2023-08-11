@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker.creator
+package av.kochekov.playlistmaker.player
 
 import av.kochekov.playlistmaker.player.data.MediaPlayerImpl
 import av.kochekov.playlistmaker.player.domain.MediaPlayerInteractor

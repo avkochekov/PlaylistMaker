@@ -17,9 +17,9 @@ import androidx.recyclerview.widget.RecyclerView
 import av.kochekov.playlistmaker.App
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.creator.TrackListCreator
+import av.kochekov.playlistmaker.search.TrackListCreator
 import av.kochekov.playlistmaker.player.presentation.PlayerActivity
-import av.kochekov.playlistmaker.creator.RepositoryCreator
+import av.kochekov.playlistmaker.search.SearchHistoryCreator
 import av.kochekov.playlistmaker.search.domain.model.SearchActivityState
 
 class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
@@ -52,16 +52,9 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
         viewModel = ViewModelProvider(this, SearchViewModel.getSearchModelFactory(
             trackListInteractor = TrackListCreator.provideTrackListInteractor(),
-            searchHistoryInteractor = RepositoryCreator.provideSearchHistoryInteractor(App.preferences!!)
+            searchHistoryInteractor = SearchHistoryCreator.provideSearchHistoryInteractor(App.preferences!!)
         )).get(SearchViewModel::class.java)
 
-
-        viewModel.searchText().observe(this, Observer {
-            searchClearButton?.isVisible = it.isNotEmpty()
-            if (searchEditText?.text.toString() == it)
-                return@Observer
-            searchEditText?.setText(it)
-        })
         viewModel.activityState().observe(this, Observer {
             when (it){
                 is SearchActivityState.HistoryList -> {
@@ -116,7 +109,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
         searchClearButton = findViewById<ImageView>(R.id.search_clear).apply {
             setOnClickListener{
-                viewModel.clearSearchText()
+                searchEditText?.text?.clear()
             }
         }
         searchEditText = findViewById<EditText>(R.id.searchField).apply {
@@ -125,8 +118,8 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    viewModel.setSearchText(s.toString())
-
+                    viewModel.search(s.toString())
+                    searchClearButton?.isVisible = s.toString().isNotEmpty()
                 }
 
                 override fun afterTextChanged(s: Editable?) { }

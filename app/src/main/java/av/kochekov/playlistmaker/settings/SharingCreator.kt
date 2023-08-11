@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker.creator
+package av.kochekov.playlistmaker.settings
 
 import android.content.Context
 import av.kochekov.playlistmaker.settings.domain.SharingInteractorImpl

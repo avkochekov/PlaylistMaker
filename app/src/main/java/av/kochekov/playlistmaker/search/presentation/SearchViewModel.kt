@@ -2,6 +2,7 @@ package av.kochekov.playlistmaker.search.presentation
 
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
@@ -22,49 +23,68 @@ class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
-    private val activityState = MutableLiveData<SearchActivityState>()
-    private val searchText = MutableLiveData<String>()
 
-    private val searchRunnable = Runnable { showTrackList() }
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private val SEARCH_REQUEST_TOKEN = Any()
+
+        fun getSearchModelFactory(
+            trackListInteractor: TrackListInteractor,
+            searchHistoryInteractor: SearchHistoryInteractor
+        ) : ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return SearchViewModel(
+                        trackListInteractor = trackListInteractor,
+                        searchHistoryInteractor = searchHistoryInteractor
+                    ) as T
+                }
+            }
+    }
+
+    private val activityState = MutableLiveData<SearchActivityState>()
+
     private val handler = Handler(Looper.getMainLooper())
 
+    private var latestSearchText: String? = null
     private var isClickAllowed: Boolean = true
 
     fun activityState() : LiveData<SearchActivityState> {
         return activityState
     }
 
-    fun searchText() : LiveData<String> {
-        return searchText
-    }
-
     init {
-        clearSearchText()
         showHistory()
     }
 
-    fun search(){
-        handler.removeCallbacks(searchRunnable)
-        searchText.value?.let {
-            if (it.isEmpty())
-                showHistory()
-            else
-                searchRunnable.run()
+    fun search(changedText: String) {
+        if (latestSearchText == changedText) {
+            return
         }
-    }
 
-    fun setSearchText(text: String){
-        handler.removeCallbacks(searchRunnable)
-        searchText.value = text
-        if (text.isEmpty()) {
+        this.latestSearchText = changedText
+
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+
+        if (this.latestSearchText!!.isEmpty()){
             showHistory()
-        } else {
-            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
+            return
         }
+
+        val searchRunnable = Runnable { showTrackList(changedText) }
+
+        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+        handler.postAtTime(
+            searchRunnable,
+            SEARCH_REQUEST_TOKEN,
+            postTime,
+        )
     }
 
-    fun clearSearchText(){
-        setSearchText("")
+    fun search(){
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        latestSearchText?.let { showTrackList(it) }
     }
 
     fun addToHistory(track: TrackInfo){
@@ -80,27 +100,25 @@ class SearchViewModel(
         showHistory()
     }
 
-    private fun showTrackList() {
+    private fun showTrackList(text: String) {
         activityState.value = SearchActivityState.InSearchActivity
-        searchText.value?.let {
-            trackListInteractor.searchTracks(it, object : TrackListInteractor.TrackConsumer {
-                override fun consume(foundTracks: List<Track>?) {
-                    handler.post {
-                        foundTracks?.let { it ->
-                            if (it.isEmpty()) {
-                                showErrorMessage(ErrorMessageType.NO_DATA)
-                            } else {
-                                activityState.value =
-                                    SearchActivityState.SearchResultList(foundTracks.map {
-                                        Mapper.toTrackInfo(it)
-                                    })
-                            }
+        trackListInteractor.searchTracks(text, object : TrackListInteractor.TrackConsumer {
+            override fun consume(foundTracks: List<Track>?) {
+                handler.post {
+                    foundTracks?.let { it ->
+                        if (it.isEmpty()) {
+                            showErrorMessage(ErrorMessageType.NO_DATA)
+                        } else {
+                            activityState.value =
+                                SearchActivityState.SearchResultList(foundTracks.map {
+                                    Mapper.toTrackInfo(it)
+                                })
                         }
-                            ?: showErrorMessage(ErrorMessageType.NO_CONNECTION)
                     }
+                        ?: showErrorMessage(ErrorMessageType.NO_CONNECTION)
                 }
-            })
-        }
+            }
+        })
     }
 
     private fun showErrorMessage(type: ErrorMessageType){
@@ -118,21 +136,5 @@ class SearchViewModel(
             handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
         }
         return current
-    }
-
-    companion object {
-        fun getSearchModelFactory(
-            trackListInteractor: TrackListInteractor,
-            searchHistoryInteractor: SearchHistoryInteractor
-        ) : ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(
-                        trackListInteractor = trackListInteractor,
-                        searchHistoryInteractor = searchHistoryInteractor
-                    ) as T
-                }
-            }
     }
 }
