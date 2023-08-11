@@ -4,9 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import av.kochekov.playlistmaker.library.activity.LibraryActivity
-import av.kochekov.playlistmaker.search.activity.SearchActivity
-import av.kochekov.playlistmaker.settings.activity.SettingsActivity
+import av.kochekov.playlistmaker.library.presentation.LibraryActivity
+import av.kochekov.playlistmaker.search.presentation.SearchActivity
+import av.kochekov.playlistmaker.settings.presentation.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

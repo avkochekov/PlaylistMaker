@@ -3,7 +3,7 @@ package av.kochekov.playlistmaker.creator
 import av.kochekov.playlistmaker.player.data.MediaPlayerImpl
 import av.kochekov.playlistmaker.player.domain.MediaPlayerInteractor
 import av.kochekov.playlistmaker.player.domain.MediaPlayer
-import av.kochekov.playlistmaker.player.data.MediaPlayerInteractorImpl
+import av.kochekov.playlistmaker.player.domain.MediaPlayerInteractorImpl
 
 object MediaPlayerCreator {
     private fun getMediaPlayer(): MediaPlayer {

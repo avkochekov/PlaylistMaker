@@ -2,7 +2,7 @@ package av.kochekov.playlistmaker.player.data
 
 import android.media.MediaPlayer
 import av.kochekov.playlistmaker.player.domain.MediaPlayerStateListenerInterface
-import av.kochekov.playlistmaker.player.models.MediaPlayerState
+import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 
 class MediaPlayerImpl : MediaPlayer(),
     av.kochekov.playlistmaker.player.domain.MediaPlayer {

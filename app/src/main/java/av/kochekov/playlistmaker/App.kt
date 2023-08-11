@@ -3,9 +3,6 @@ package av.kochekov.playlistmaker
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import av.kochekov.playlistmaker.creator.RepositoryCreator
-import av.kochekov.playlistmaker.repository.settings_repository.domain.SettingsInteractor
-import av.kochekov.playlistmaker.settings.domain.models.ThemeSettings
 
 class App : Application() {
     companion object {

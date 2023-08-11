@@ -1,10 +1,10 @@
 package av.kochekov.playlistmaker.creator
 
-import av.kochekov.playlistmaker.network_client.itunes.ITunesNetworkClient
-import av.kochekov.playlistmaker.repository.track_list_repository.data.TrackListRepositoryImpl
-import av.kochekov.playlistmaker.repository.track_list_repository.domain.TrackListInteractor
-import av.kochekov.playlistmaker.repository.track_list_repository.domain.TrackListRepository
-import av.kochekov.playlistmaker.repository.track_list_repository.data.TrackListInteractorImpl
+import av.kochekov.playlistmaker.search.data.network_client.itunes.ITunesNetworkClient
+import av.kochekov.playlistmaker.search.data.TrackListRepositoryImpl
+import av.kochekov.playlistmaker.search.domain.TrackListInteractor
+import av.kochekov.playlistmaker.search.domain.TrackListRepository
+import av.kochekov.playlistmaker.search.domain.TrackListInteractorImpl
 
 object TrackListCreator {
     private fun getTrackListRepository(): TrackListRepository {
