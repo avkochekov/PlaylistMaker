@@ -3,18 +3,11 @@ package av.kochekov.playlistmaker.search.data
 import av.kochekov.playlistmaker.search.domain.TrackListRepository
 import av.kochekov.playlistmaker.search.data.model.TrackListRequest
 import av.kochekov.playlistmaker.search.data.model.TrackListResponse
-import av.kochekov.playlistmaker.search.data.network_client.itunes.ITunesApi
 import av.kochekov.playlistmaker.search.data.network_client.NetworkClient
 import av.kochekov.playlistmaker.search.data.model.Track
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class TrackListRepositoryImpl(private val networkClient: NetworkClient) :
     TrackListRepository {
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(ITunesApi.apiUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
 
     override fun search(query: String): List<Track>? {
         val response = networkClient.doRequest(TrackListRequest(query))
