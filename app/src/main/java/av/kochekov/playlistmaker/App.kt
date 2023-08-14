@@ -28,7 +28,6 @@ class App : Application() {
     fun getIsNightMode(): Boolean{
         return preferences?.getBoolean(DATA_KEY, false) ?: false
     }
-
     fun setIsNightMode(state: Boolean, force: Boolean = false){
         if (state == getIsNightMode() && !force)
             return
