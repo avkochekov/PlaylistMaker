@@ -19,8 +19,10 @@ import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.search.TrackListCreator
 import av.kochekov.playlistmaker.player.presentation.PlayerActivity
+import av.kochekov.playlistmaker.player.presentation.PlayerViewModel
 import av.kochekov.playlistmaker.search.SearchHistoryCreator
 import av.kochekov.playlistmaker.search.domain.model.SearchActivityState
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
@@ -44,16 +46,11 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
     private var historyClearButton: Button? = null
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        viewModel = ViewModelProvider(this, SearchViewModel.getSearchModelFactory(
-            trackListInteractor = TrackListCreator.provideTrackListInteractor(),
-            searchHistoryInteractor = SearchHistoryCreator.provideSearchHistoryInteractor(App.preferences!!)
-        )).get(SearchViewModel::class.java)
 
         viewModel.activityState().observe(this, Observer {
             when (it){

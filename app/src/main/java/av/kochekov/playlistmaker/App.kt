@@ -3,6 +3,11 @@ package av.kochekov.playlistmaker
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import av.kochekov.playlistmaker.player.di.playerModule
+import av.kochekov.playlistmaker.search.di.searchModule
+import av.kochekov.playlistmaker.settings.di.settingsModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
 class App : Application() {
     companion object {
@@ -12,6 +17,12 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        startKoin {
+            androidContext(this@App)
+            modules(settingsModule, searchModule, playerModule)
+        }
+
         preferences = getSharedPreferences(applicationInfo.loadLabel(packageManager).toString(), MODE_PRIVATE)
         preferences?.run {
             var listener =

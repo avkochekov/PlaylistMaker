@@ -14,6 +14,7 @@ import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.player.presentation.utils.Formatter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
     private var artwork: ImageView? = null
@@ -27,7 +28,7 @@ class PlayerActivity : AppCompatActivity() {
     private var play: ImageButton? = null
     private var trackTime: TextView? = null
 
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel by viewModel<PlayerViewModel>()
 
     companion object {
         const val TRACK = "CurrentTrackInfo"
@@ -36,10 +37,6 @@ class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audioplayer)
-
-        viewModel = ViewModelProvider(this, PlayerViewModel.getPlayerModelFactory(
-            mediaPlayerInteractor = MediaPlayerCreator.provideMediaPlayerInteractor(),
-        )).get(PlayerViewModel::class.java)
 
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
             onBackPressed()
