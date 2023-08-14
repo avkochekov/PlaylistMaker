@@ -6,8 +6,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import av.kochekov.playlistmaker.player.MediaPlayerCreator
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.search.domain.model.TrackInfo
 import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
@@ -32,7 +30,6 @@ class PlayerActivity : AppCompatActivity() {
 
     companion object {
         const val TRACK = "CurrentTrackInfo"
-        private const val TIME_UPDATE_VALUE_MILLIS = 200L
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -7,12 +7,7 @@ import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.player.presentation.PlayerViewModel
-import av.kochekov.playlistmaker.settings.SettingsCreator
-import av.kochekov.playlistmaker.settings.presentation.SettingsViewModel.Companion.getViewModelFactory
-import av.kochekov.playlistmaker.settings.SharingCreator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @SuppressLint("RestrictedApi")
