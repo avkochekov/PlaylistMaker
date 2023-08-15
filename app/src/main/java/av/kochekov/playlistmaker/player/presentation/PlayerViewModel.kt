@@ -69,6 +69,14 @@ class PlayerViewModel (
         }
     }
 
+    fun pausePlayer() {
+        playerState.value?.let {
+            if (it == MediaPlayerState.STATE_DEFAULT)
+                return
+            mediaPlayerInteractor.pause()
+        }
+    }
+
     private fun updateRemainingTime(){
         when(playerState.value){
             MediaPlayerState.STATE_DEFAULT,

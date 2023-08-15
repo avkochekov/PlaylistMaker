@@ -99,6 +99,11 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.pausePlayer()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         viewModel.stopPlayer()
