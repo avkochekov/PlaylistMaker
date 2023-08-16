@@ -37,25 +37,24 @@
             android:singleLine="true"
             android:maxLength="42"
             android:inputType="text"
-            android:textColorHint="@color/gray"
             android:textSize="16sp"
             android:background="@drawable/rounded_layout"
             android:fontFamily="@font/ys_display_regular"/>
         <ImageView
+            style="@style/SearchTextViewStyle.ImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
-            android:layout_gravity="center_vertical|left"
-            android:src="@drawable/ic_16x16_search"
-            app:tint="@color/gray"/>
+            android:layout_gravity="center_vertical|start"
+            android:src="@drawable/ic_16x16_search" />
         <ImageView
+            style="@style/SearchTextViewStyle.ImageView"
             android:id="@+id/search_clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
-            android:layout_gravity="center_vertical|right"
+            android:layout_gravity="center_vertical|end"
             android:src="@drawable/ic_16x16_clear"
-            app:tint="@color/gray"
             android:visibility="gone"/>
     </FrameLayout>
 

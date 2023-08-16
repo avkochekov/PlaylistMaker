@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.core.view.size
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
@@ -35,7 +36,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     private var trackListView: RecyclerView? = null
     private var trackListAdapter: TrackListAdapter? = null
 
-    private var trackListHistoryLayout: ScrollView? = null
+    private var trackListHistoryLayout: NestedScrollView? = null
     private var trackListHistoryView: RecyclerView? = null
     private var trackListHistoryAdapter: TrackListAdapter? = null
 
@@ -145,7 +146,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         trackListHistoryView = findViewById<RecyclerView>(R.id.trackListHistory).apply {
             adapter = trackListHistoryAdapter
         }
-        trackListHistoryLayout = findViewById<ScrollView>(R.id.trackListHistoryLayout).apply {
+        trackListHistoryLayout = findViewById<NestedScrollView>(R.id.trackListHistoryLayout).apply {
             isVisible = (trackListHistoryView?.size!! > 0)
         }
 

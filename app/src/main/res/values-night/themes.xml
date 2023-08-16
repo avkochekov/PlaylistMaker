@@ -21,6 +21,8 @@
         <item name="updateButtonTextColor">@color/YP_black</item>
         <item name="textColor">@color/YP_white</item>
         <item name="playButtonBackgroundColor">@color/YP_white</item>
+
+        <item name="searchFieldColor">@color/YP_white</item>
     </style>
 
     <style name="MenuBackground">
@@ -54,6 +56,7 @@
 
     <style name="EditeTextStyle">
         <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/black</item>
         <item name="android:textSize">@dimen/search_txt_size</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
@@ -61,5 +64,9 @@
 
     <style name="TrackListControl">
         <item name="android:tint">@color/white</item>
+    </style>
+
+    <style name="SearchTextViewStyle.ImageView">
+        <item name="tint">@color/YP_black</item>
     </style>
 </resources>
