@@ -161,4 +161,10 @@
         <item name="android:textSize">13sp</item>
     </style>
 
+    <style name="TrackListControl">
+        <item name="android:tint">@color/gray</item>
+    </style>
+
+
+
 </resources>

@@ -11,7 +11,7 @@ class SearchHistoryInteractorImpl(private val repository: SearchHistoryRepositor
         trackList.remove(track)
         while (trackList.size >= MAX_LIST_SIZE)
             trackList.removeFirst()
-        trackList.add(track)
+        trackList.add(0, track)
         repository.setTrackList(trackList)
     }
 

@@ -1,18 +1,28 @@
 package av.kochekov.playlistmaker.search.di
 
-import android.content.Context
 import av.kochekov.playlistmaker.search.data.SearchHistoryRepositoryImpl
 import av.kochekov.playlistmaker.search.data.TrackListRepositoryImpl
 import av.kochekov.playlistmaker.search.data.network_client.NetworkClient
+import av.kochekov.playlistmaker.search.data.network_client.itunes.ITunesApi
 import av.kochekov.playlistmaker.search.data.network_client.itunes.ITunesNetworkClient
 import av.kochekov.playlistmaker.search.domain.*
 import av.kochekov.playlistmaker.search.presentation.SearchViewModel
 import com.google.gson.Gson
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 val searchModule = module {
+
+    single<ITunesApi> {
+        Retrofit.Builder()
+                .baseUrl(ITunesApi.apiUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(ITunesApi::class.java)
+    }
 
     single<SearchHistoryRepository> {
         SearchHistoryRepositoryImpl(
@@ -26,13 +36,10 @@ val searchModule = module {
         )
     }
 
-    single {
-        androidContext()
-            .getSharedPreferences("local_storage", Context.MODE_PRIVATE)
-    }
-
     single<NetworkClient> {
-        ITunesNetworkClient()
+        ITunesNetworkClient(
+            service = get()
+        )
     }
 
     single<TrackListRepository> {

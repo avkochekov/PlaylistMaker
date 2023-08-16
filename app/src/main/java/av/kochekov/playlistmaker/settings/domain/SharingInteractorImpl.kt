@@ -4,8 +4,7 @@ import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.settings.data.ExternalNavigator
 import av.kochekov.playlistmaker.settings.domain.models.EmailData
 
-class SharingInteractorImpl(private val context: Context) : SharingInteractor {
-    private val externalNavigator = ExternalNavigator(context)
+class SharingInteractorImpl(private val context: Context, private val externalNavigator: ExternalNavigator) : SharingInteractor {
     override fun shareApp() {
         externalNavigator.shareLink(getShareAppLink())
     }

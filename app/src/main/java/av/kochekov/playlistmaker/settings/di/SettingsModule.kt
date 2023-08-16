@@ -1,12 +1,16 @@
 package av.kochekov.playlistmaker.settings.di
 
-import av.kochekov.playlistmaker.search.presentation.SearchViewModel
+import android.content.Context
+import android.content.SharedPreferences
 import av.kochekov.playlistmaker.settings.data.ExternalNavigator
 import av.kochekov.playlistmaker.settings.data.SettingsRepositoryImpl
 import av.kochekov.playlistmaker.settings.domain.*
 import av.kochekov.playlistmaker.settings.presentation.SettingsViewModel
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+
+private const val SHARED_PREFERENCES_NAME = "local_storage"
 
 val settingsModule = module {
 
@@ -16,15 +20,21 @@ val settingsModule = module {
         )
     }
 
+    single<SharedPreferences> {
+        androidContext()
+            .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+    }
+
     single<SharingInteractor> {
         SharingInteractorImpl(
-            context = get()
+            context = get(),
+            externalNavigator = get()
         )
     }
 
     single<SettingsRepository> {
         SettingsRepositoryImpl(
-            context = get()
+            sharedPreferences = get()
         )
     }
 

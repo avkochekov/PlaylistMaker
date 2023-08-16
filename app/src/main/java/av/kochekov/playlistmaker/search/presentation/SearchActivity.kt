@@ -35,7 +35,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     private var trackListView: RecyclerView? = null
     private var trackListAdapter: TrackListAdapter? = null
 
-    private var trackListHistoryLayout: LinearLayout? = null
+    private var trackListHistoryLayout: ScrollView? = null
     private var trackListHistoryView: RecyclerView? = null
     private var trackListHistoryAdapter: TrackListAdapter? = null
 
@@ -145,7 +145,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         trackListHistoryView = findViewById<RecyclerView>(R.id.trackListHistory).apply {
             adapter = trackListHistoryAdapter
         }
-        trackListHistoryLayout = findViewById<LinearLayout>(R.id.trackListHistoryLayout).apply {
+        trackListHistoryLayout = findViewById<ScrollView>(R.id.trackListHistoryLayout).apply {
             isVisible = (trackListHistoryView?.size!! > 0)
         }
 

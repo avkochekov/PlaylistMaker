@@ -76,7 +76,7 @@
             android:layout_gravity="center_vertical|start"
             android:backgroundTint="@color/YP_text_gray"
             android:background="@drawable/round_button"
-            android:src="@drawable/ic_24x24_library"
+            android:src="@drawable/ic_24x24_add_to_playlist"
             app:tint="@color/YP_white"/>
 
         <ImageButton
@@ -95,7 +95,7 @@
             android:layout_gravity="center_vertical|end"
             android:backgroundTint="@color/YP_text_gray"
             android:background="@drawable/round_button"
-            android:src="@drawable/ic_24x24_library"
+            android:src="@drawable/ic_favorite"
             app:tint="@color/YP_white"/>
     </FrameLayout>
 
