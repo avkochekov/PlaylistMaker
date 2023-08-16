@@ -158,9 +158,11 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
     override fun onItemClick(position: Int, adapter: TrackListAdapter) {
         val track = adapter.getData(position)
-        viewModel.addToHistory(track)
-        startActivity(Intent(this, PlayerActivity::class.java).apply {
-            putExtra(PlayerActivity.TRACK, track)
-        })
+        if (viewModel.clickDebounce()) {
+            startActivity(Intent(this, PlayerActivity::class.java).apply {
+                putExtra(PlayerActivity.TRACK, track)
+            })
+            viewModel.addToHistory(track)
+        }
     }
 }
