@@ -11,6 +11,7 @@ class MediaPlayerImpl : MediaPlayer(),
     private var listenerList: MutableList<MediaPlayerStateListenerInterface> = mutableListOf()
 
     override fun setTrack(track: String) {
+        reset()
         setDataSource(track)
         prepareAsync()
         setOnPreparedListener {
@@ -53,8 +54,6 @@ class MediaPlayerImpl : MediaPlayer(),
     }
 
     private fun setState(state: MediaPlayerState){
-        if (this.state == state)
-            return
         this.state = state
         listenerList.map {
             it.onStateChanged(this.state)

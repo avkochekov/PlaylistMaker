@@ -11,16 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.core.view.size
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import av.kochekov.playlistmaker.App
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.search.TrackListCreator
 import av.kochekov.playlistmaker.player.presentation.PlayerActivity
-import av.kochekov.playlistmaker.search.SearchHistoryCreator
 import av.kochekov.playlistmaker.search.domain.model.SearchActivityState
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
@@ -38,22 +36,17 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
     private var trackListView: RecyclerView? = null
     private var trackListAdapter: TrackListAdapter? = null
 
-    private var trackListHistoryLayout: LinearLayout? = null
+    private var trackListHistoryLayout: NestedScrollView? = null
     private var trackListHistoryView: RecyclerView? = null
     private var trackListHistoryAdapter: TrackListAdapter? = null
 
     private var historyClearButton: Button? = null
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        viewModel = ViewModelProvider(this, SearchViewModel.getSearchModelFactory(
-            trackListInteractor = TrackListCreator.provideTrackListInteractor(),
-            searchHistoryInteractor = SearchHistoryCreator.provideSearchHistoryInteractor(App.preferences!!)
-        )).get(SearchViewModel::class.java)
 
         viewModel.activityState().observe(this, Observer {
             when (it){
@@ -153,7 +146,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
         trackListHistoryView = findViewById<RecyclerView>(R.id.trackListHistory).apply {
             adapter = trackListHistoryAdapter
         }
-        trackListHistoryLayout = findViewById<LinearLayout>(R.id.trackListHistoryLayout).apply {
+        trackListHistoryLayout = findViewById<NestedScrollView>(R.id.trackListHistoryLayout).apply {
             isVisible = (trackListHistoryView?.size!! > 0)
         }
 
@@ -166,9 +159,11 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.ItemClickListener {
 
     override fun onItemClick(position: Int, adapter: TrackListAdapter) {
         val track = adapter.getData(position)
-        viewModel.addToHistory(track)
-        startActivity(Intent(this, PlayerActivity::class.java).apply {
-            putExtra(PlayerActivity.TRACK, track)
-        })
+        if (viewModel.clickDebounce()) {
+            startActivity(Intent(this, PlayerActivity::class.java).apply {
+                putExtra(PlayerActivity.TRACK, track)
+            })
+            viewModel.addToHistory(track)
+        }
     }
 }

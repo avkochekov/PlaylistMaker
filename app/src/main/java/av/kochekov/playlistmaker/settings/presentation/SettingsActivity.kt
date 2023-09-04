@@ -7,26 +7,18 @@ import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.settings.SettingsCreator
-import av.kochekov.playlistmaker.settings.presentation.SettingsViewModel.Companion.getViewModelFactory
-import av.kochekov.playlistmaker.settings.SharingCreator
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @SuppressLint("RestrictedApi")
 class SettingsActivity : AppCompatActivity()  {
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel by viewModel<SettingsViewModel>()
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        viewModel = ViewModelProvider(this, getViewModelFactory(
-            sharingInteractor = SharingCreator.provideSharingInteractor(this),
-            settingsInteractor = SettingsCreator.provideSettingsInteractor(this)
-        )).get(SettingsViewModel::class.java)
 
         viewModel.isDarkTheme().observe(this, Observer {
             val checked = it

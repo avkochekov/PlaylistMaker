@@ -88,11 +88,9 @@ class SearchViewModel(
     }
 
     fun addToHistory(track: TrackInfo){
-        if (clickDebounce()) {
-            searchHistoryInteractor.add(Mapper.fromTrackInfo(track))
-            if (activityState.value is SearchActivityState.HistoryList)
-                showHistory()
-        }
+        searchHistoryInteractor.add(Mapper.fromTrackInfo(track))
+        if (activityState.value is SearchActivityState.HistoryList)
+            showHistory()
     }
 
     fun clearHistory(){
@@ -129,7 +127,7 @@ class SearchViewModel(
         activityState.value = SearchActivityState.HistoryList(searchHistoryInteractor.get().map{ Mapper.toTrackInfo(it) })
     }
 
-    private fun clickDebounce() : Boolean {
+    fun clickDebounce() : Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
