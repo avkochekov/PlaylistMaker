@@ -66,7 +66,7 @@
         <item name="android:tint">@color/white</item>
     </style>
 
-    <style name="SearchTextViewStyle.ImageView">
+        <style name="SearchTextViewStyle.ImageView">
         <item name="tint">@color/YP_black</item>
     </style>
 </resources>

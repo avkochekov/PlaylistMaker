@@ -32,4 +32,12 @@
     <string name="audioPlayer_year">Год</string>
     <string name="audioPlayer_genre">Жанр</string>
     <string name="audioPlayer_country">Страна</string>
+
+    <string name="library_favoriteTracks">Избранные треки</string>
+    <string name="library_playLists">Плейлисты</string>
+    <string name="library_newPlayList">Новый плейлист</string>
+
+    <string name="library_error_favoriteTracks">Ваша медиатека пуста</string>
+    <string name="library_error_playLists">Вы не создали\nни одного плейлиста</string>
+
 </resources>
