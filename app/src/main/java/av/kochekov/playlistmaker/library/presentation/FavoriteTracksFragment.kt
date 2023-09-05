@@ -9,11 +9,15 @@ import av.kochekov.playlistmaker.databinding.FragmentFavoriteTracksBinding
 
 class FavoriteTracksFragment : Fragment() {
 
-    private lateinit var binding: FragmentFavoriteTracksBinding
+    companion object {
+        fun newInstance() = FavoriteTracksFragment()
+    }
+
+    private var binding: FragmentFavoriteTracksBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 }

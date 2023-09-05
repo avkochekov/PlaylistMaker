@@ -18,8 +18,8 @@ class LibraryPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle
 
     override fun createFragment(position: Int): Fragment {
         return when(LibraryTab.values()[position]) {
-            LibraryTab.FAVORITE_TRACKS_TAB -> FavoriteTracksFragment()
-            LibraryTab.PLAY_LISTS_TAB -> PlayListsFragment()
+            LibraryTab.FAVORITE_TRACKS_TAB -> FavoriteTracksFragment.newInstance()
+            LibraryTab.PLAY_LISTS_TAB -> PlayListsFragment.newInstance()
         }
     }
 }

@@ -9,6 +9,10 @@ import av.kochekov.playlistmaker.databinding.FragmentPlaylistsBinding
 
 class PlayListsFragment : Fragment() {
 
+    companion object {
+        fun newInstance() = PlayListsFragment()
+    }
+
     private var binding: FragmentPlaylistsBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
