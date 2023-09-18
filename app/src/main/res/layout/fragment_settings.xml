@@ -2,11 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".settings.presentation.SettingsActivity"
+    tools:context=".settings.presentation.SettingsFragment"
     android:orientation="vertical"
-    android:theme="@style/Theme.PlaylistMaker">
+    android:theme="@style/Theme.PlaylistMaker"
+    android:background="?attr/backgroundColor">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -15,7 +17,6 @@
         <TextView
             style="@style/ToolBarTextStyle"
             android:text="@string/menu_settings"/>
-
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout

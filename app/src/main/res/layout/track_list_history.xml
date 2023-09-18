@@ -19,7 +19,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/search_history_title"/>
         <include layout="@layout/track_list"
-            android:id="@+id/trackListHistory"
+            android:id="@+id/trackList"
             android:layout_height="wrap_content"
             android:layout_width="match_parent" />
         <Button

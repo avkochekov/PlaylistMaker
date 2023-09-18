@@ -87,6 +87,10 @@ class SearchViewModel(
         latestSearchText?.let { showTrackList(it) }
     }
 
+    fun breakSearch(){
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+    }
+
     fun addToHistory(track: TrackInfo){
         searchHistoryInteractor.add(Mapper.fromTrackInfo(track))
         if (activityState.value is SearchActivityState.HistoryList)

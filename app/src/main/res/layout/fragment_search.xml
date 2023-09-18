@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.presentation.SearchActivity"
+    tools:context=".search.presentation.SearchFragment"
     android:orientation="vertical"
-    android:theme="@style/Theme.PlaylistMaker">
+    android:theme="@style/Theme.PlaylistMaker"
+    android:background="?attr/backgroundColor">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -59,17 +60,17 @@
     </FrameLayout>
 
     <include layout="@layout/error_placeholder"
-        android:id="@+id/errorPlaceholder"
+        android:id="@+id/errorPlaceholderLayout"
         android:visibility="gone"/>
 
     <include layout="@layout/track_list"
-        android:id="@+id/trackList"
+        android:id="@+id/trackListLayout"
         android:visibility="gone"
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
 
     <include layout="@layout/track_list_history"
-        android:id="@+id/trackListHistoryLayout"
+        android:id="@+id/history_list_layout"
         android:visibility="visible"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>

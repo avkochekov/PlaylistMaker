@@ -3,14 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/backgroundColor">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolBarButtonStyle"
+        app:navigationIcon="@drawable/ic_24x24_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/rightBorder"

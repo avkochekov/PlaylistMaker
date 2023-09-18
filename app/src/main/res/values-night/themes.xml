@@ -23,6 +23,12 @@
         <item name="playButtonBackgroundColor">@color/YP_white</item>
 
         <item name="searchFieldColor">@color/YP_white</item>
+
+        <item name="imageButtonColor">@color/white</item>
+        <item name="backgroundColor">@color/YP_black</item>
+
+        <item name="menuSelectedItemColor">@color/YP_blue</item>
+        <item name="menuUnselectedItemColor">@color/YP_white</item>
     </style>
 
     <style name="MenuBackground">
@@ -35,12 +41,6 @@
         <item name="android:layout_marginLeft">@dimen/settings_btn_image_margin_left</item>
         <item name="android:layout_gravity">center_vertical|end</item>
         <item name="tint">@color/white</item>
-    </style>
-
-    <style name="ToolBarButtonStyle">
-        <item name="navigationIcon">@drawable/ic_24x24_arrow_back_dark_mode</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">?attr/actionBarSize</item>
     </style>
 
     <style name="ToolBarTextStyle" parent="Widget.MaterialComponents.TextView">
@@ -66,7 +66,7 @@
         <item name="android:tint">@color/white</item>
     </style>
 
-        <style name="SearchTextViewStyle.ImageView">
+    <style name="SearchTextViewStyle.ImageView">
         <item name="tint">@color/YP_black</item>
     </style>
 </resources>
