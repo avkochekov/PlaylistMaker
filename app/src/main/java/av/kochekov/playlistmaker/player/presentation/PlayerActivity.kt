@@ -1,4 +1,5 @@
 package av.kochekov.playlistmaker.player.presentation
+
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -31,6 +32,7 @@ class PlayerActivity : AppCompatActivity() {
     companion object {
         const val TRACK = "CurrentTrackInfo"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audioplayer)
@@ -60,7 +62,7 @@ class PlayerActivity : AppCompatActivity() {
         })
 
         viewModel.playerState().observe(this, Observer {
-            when(it){
+            when (it) {
                 MediaPlayerState.STATE_DEFAULT -> {
                     play?.isEnabled = false
                     play?.setBackgroundResource(R.drawable.audioplayer_play_button)
@@ -70,7 +72,7 @@ class PlayerActivity : AppCompatActivity() {
                     play?.setBackgroundResource(R.drawable.audioplayer_pause_button)
                 }
                 MediaPlayerState.STATE_PAUSED,
-                MediaPlayerState.STATE_PREPARED-> {
+                MediaPlayerState.STATE_PREPARED -> {
                     play?.isEnabled = true
                     play?.setBackgroundResource(R.drawable.audioplayer_play_button)
                 }

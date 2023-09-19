@@ -14,7 +14,7 @@ import av.kochekov.playlistmaker.search.domain.model.TrackInfo
 private const val TIME_UPDATE_VALUE_MILLIS = 200L
 private const val DEFAULT_TRACK_POSITION = 0
 
-class PlayerViewModel (
+class PlayerViewModel(
     private val mediaPlayerInteractor: MediaPlayerInteractor
 ) : ViewModel() {
 
@@ -33,15 +33,15 @@ class PlayerViewModel (
         })
     }
 
-    fun playerState() : LiveData<MediaPlayerState> {
+    fun playerState(): LiveData<MediaPlayerState> {
         return playerState
     }
 
-    fun trackPosition() : LiveData<Int> {
+    fun trackPosition(): LiveData<Int> {
         return trackPosition
     }
 
-    fun trackInfo() : LiveData<TrackInfo> {
+    fun trackInfo(): LiveData<TrackInfo> {
         return trackInfo
     }
 
@@ -51,8 +51,8 @@ class PlayerViewModel (
         mediaPlayerInteractor.setTrack(track.previewUrl.toString())
     }
 
-    fun onPlayClicked(){
-        when(playerState.value){
+    fun onPlayClicked() {
+        when (playerState.value) {
             MediaPlayerState.STATE_PLAYING -> mediaPlayerInteractor.pause()
             MediaPlayerState.STATE_PAUSED,
             MediaPlayerState.STATE_PREPARED -> mediaPlayerInteractor.play()
@@ -77,8 +77,8 @@ class PlayerViewModel (
         }
     }
 
-    private fun updateRemainingTime(){
-        when(playerState.value){
+    private fun updateRemainingTime() {
+        when (playerState.value) {
             MediaPlayerState.STATE_DEFAULT,
             MediaPlayerState.STATE_PREPARED -> {
                 trackPosition.value = 0
@@ -98,7 +98,7 @@ class PlayerViewModel (
     companion object {
         fun getPlayerModelFactory(
             mediaPlayerInteractor: MediaPlayerInteractor
-        ) : ViewModelProvider.Factory =
+        ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -10,11 +10,11 @@ interface MediaPlayer {
 
     fun stopTrack()
 
-    fun duration() : Int
+    fun duration(): Int
 
-    fun position() : Int
+    fun position(): Int
 
-    fun state() : Int
+    fun state(): Int
 
     fun addListener(listener: MediaPlayerStateListenerInterface)
 }

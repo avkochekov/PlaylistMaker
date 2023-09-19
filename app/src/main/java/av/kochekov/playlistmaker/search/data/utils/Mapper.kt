@@ -4,7 +4,7 @@ import av.kochekov.playlistmaker.search.data.model.Track
 import av.kochekov.playlistmaker.search.domain.model.TrackInfo
 
 object Mapper {
-    fun toTrackInfo(track: Track) : TrackInfo {
+    fun toTrackInfo(track: Track): TrackInfo {
         return TrackInfo(
             track.trackId,
             track.trackName,
@@ -19,7 +19,7 @@ object Mapper {
         )
     }
 
-    fun fromTrackInfo(track: TrackInfo) : Track {
+    fun fromTrackInfo(track: TrackInfo): Track {
         return Track(
             track.trackId,
             track.trackName,

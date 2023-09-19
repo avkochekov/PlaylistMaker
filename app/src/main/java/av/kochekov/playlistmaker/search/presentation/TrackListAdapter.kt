@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.search.domain.model.TrackInfo
 
-class TrackListAdapter(private val itemClickListener: ItemClickListener? = null) : RecyclerView.Adapter<TrackListHolder> () {
+class TrackListAdapter(private val itemClickListener: ItemClickListener? = null) :
+    RecyclerView.Adapter<TrackListHolder>() {
     private var data = mutableListOf<TrackInfo>()
 
     interface ItemClickListener {
@@ -15,7 +16,8 @@ class TrackListAdapter(private val itemClickListener: ItemClickListener? = null)
 
     lateinit var holder: TrackListHolder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackListHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.track_list_item, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.track_list_item, parent, false)
         holder = TrackListHolder(view)
         return holder
     }
@@ -31,7 +33,7 @@ class TrackListAdapter(private val itemClickListener: ItemClickListener? = null)
         return data.size
     }
 
-    fun setData(trackInfoList: List<TrackInfo>){
+    fun setData(trackInfoList: List<TrackInfo>) {
         data = trackInfoList as MutableList<TrackInfo>
         notifyDataSetChanged()
     }
@@ -40,7 +42,7 @@ class TrackListAdapter(private val itemClickListener: ItemClickListener? = null)
         return data.elementAt(index)
     }
 
-    fun clearData(){
+    fun clearData() {
         data = mutableListOf<TrackInfo>()
         notifyDataSetChanged()
     }

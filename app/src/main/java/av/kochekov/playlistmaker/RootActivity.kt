@@ -8,16 +8,17 @@ import av.kochekov.playlistmaker.databinding.ActivityMainBinding
 
 class RootActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private val binding: ActivityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val bottomNavigationView = binding?.bottomNavigationView
-        bottomNavigationView?.setupWithNavController(navController)
+        val bottomNavigationView = binding.bottomNavigationView
+        bottomNavigationView.setupWithNavController(navController)
     }
 }

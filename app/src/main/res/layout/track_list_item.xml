@@ -1,67 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
 
+    android:paddingVertical="@dimen/trackItem_padding_vertical"
     android:paddingLeft="@dimen/trackItem_padding_left"
-    android:paddingRight="@dimen/trackItem_padding_right"
-    android:paddingVertical="@dimen/trackItem_padding_vertical">
+    android:paddingRight="@dimen/trackItem_padding_right">
 
     <ImageView
         android:id="@+id/artwork"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@drawable/placeholder"/>
+        android:background="@drawable/placeholder" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingVertical="@dimen/trackItemInfo_padding_vertical"
-        android:paddingHorizontal="@dimen/trackItemInfo_padding_horizontal">
+        android:paddingHorizontal="@dimen/trackItemInfo_padding_horizontal"
+        android:paddingVertical="@dimen/trackItemInfo_padding_vertical">
+
         <TextView
             android:id="@+id/trackName"
+            style="@style/SearchTextViewStyle.TrackName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lines="1"
             android:ellipsize="end"
-            tools:text="@string/testString"
-            style="@style/SearchTextViewStyle.TrackName"/>
+            android:lines="1"
+            tools:text="@string/testString" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/artistName"
+                style="@style/SearchTextViewStyle.ArtistName"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:lines="1"
                 android:ellipsize="end"
-                tools:text="@string/testString"
-                style="@style/SearchTextViewStyle.ArtistName"/>
+                android:lines="1"
+                tools:text="@string/testString" />
+
             <ImageView
+                style="@style/SearchTextViewStyle.Separator"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic"
-                style="@style/SearchTextViewStyle.Separator"/>
+                android:src="@drawable/ic" />
+
             <TextView
                 android:id="@+id/trackTime"
+                style="@style/SearchTextViewStyle.TrackTime"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                tools:text="@string/testTime"
-                style="@style/SearchTextViewStyle.TrackTime"/>
+                tools:text="@string/testTime" />
         </LinearLayout>
     </LinearLayout>
 
     <ImageView
+        style="@style/TrackListControl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_24x24_arrow_forward"
-        style="@style/TrackListControl"/>
+        android:src="@drawable/ic_24x24_arrow_forward" />
 </LinearLayout>

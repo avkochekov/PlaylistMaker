@@ -19,18 +19,21 @@ import av.kochekov.playlistmaker.search.domain.model.SearchActivityState
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
-    private var binding: FragmentSearchBinding? = null
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel by viewModel<SearchViewModel>()
 
     private var trackListAdapter: TrackListAdapter? = null
     private var historyListAdapter: TrackListAdapter? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,87 +42,90 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
         trackListAdapter = TrackListAdapter(this)
         historyListAdapter = TrackListAdapter(this)
 
-        val progressBar = binding?.progressBar
-        val errorPlaceholder = binding?.errorPlaceholderLayout
-        val trackList = binding?.trackListLayout
-        val historyList = binding?.historyListLayout
+        val progressBar = binding.progressBar
+        val errorPlaceholder = binding.errorPlaceholderLayout
+        val trackList = binding.trackListLayout
+        val historyList = binding.historyListLayout
 
-        trackList?.root?.adapter = trackListAdapter
-        historyList?.trackList?.root?.adapter = historyListAdapter
+        trackList.root.adapter = trackListAdapter
+        historyList.trackList.root.adapter = historyListAdapter
 
         viewModel.activityState().observe(viewLifecycleOwner, Observer {
-            when (it){
+            when (it) {
                 is SearchActivityState.HistoryList -> {
                     historyListAdapter?.setData(it.trackList)
-                    progressBar?.isVisible = false
-                    trackList?.root?.isVisible = false
-                    historyList?.root?.isVisible = it.trackList.isNotEmpty()
-                    errorPlaceholder?.root?.isVisible = false
-                    errorPlaceholder?.root?.isVisible = false
-                    errorPlaceholder?.errorPlaceholderButton?.apply {
-                        text = getString(R.string.search_history_clear)
-                        setOnClickListener {
-                            viewModel.clearHistory()
-                        }
-                    }
+                    historyList.root.isVisible = it.trackList.isNotEmpty()
+                    trackList.root.isVisible = false
+                    progressBar.isVisible = false
+                    errorPlaceholder.root.isVisible = false
                 }
                 is SearchActivityState.SearchResultList -> {
                     trackListAdapter?.setData(it.trackList)
-                    binding?.progressBar?.isVisible = false
-                    errorPlaceholder?.root?.isVisible = false
-                    errorPlaceholder?.errorPlaceholderButton?.isVisible = false
-                    trackList?.root?.isVisible = true
-                    historyList?.root?.isVisible = false
+                    trackList.root.isVisible = true
+                    historyList.root.isVisible = false
+                    progressBar.isVisible = false
+                    errorPlaceholder.root.isVisible = false
                 }
                 is SearchActivityState.InSearchActivity -> {
-                    binding?.progressBar?.isVisible = true
-                    errorPlaceholder?.root?.isVisible = false
-                    errorPlaceholder?.errorPlaceholderButton?.isVisible = false
-                    trackList?.root?.isVisible = false
-                    historyList?.root?.isVisible = false
+                    progressBar.isVisible = true
+                    trackList.root.isVisible = false
+                    historyList.root.isVisible = false
+                    errorPlaceholder.root.isVisible = false
                 }
                 is SearchActivityState.Error -> {
-                    binding?.progressBar?.isVisible = false
-                    trackList?.root?.isVisible = false
-                    historyList?.root?.isVisible = false
-                    errorPlaceholder?.root?.isVisible = true
-                    errorPlaceholder?.errorPlaceholderButton?.apply {
+                    binding.progressBar.isVisible = false
+                    trackList.root.isVisible = false
+                    historyList.root.isVisible = false
+                    errorPlaceholder.root.isVisible = true
+                    errorPlaceholder.errorPlaceholderButton.apply {
                         text = getString(R.string.search_update)
-                        setOnClickListener{
+                        setOnClickListener {
                             viewModel.search()
                         }
                     }
-                    when(it.error) {
+                    when (it.error) {
                         ErrorMessageType.NO_CONNECTION -> {
-                            errorPlaceholder?.errorPlaceholderImage?.setImageResource(R.drawable.connection_error)
-                            errorPlaceholder?.errorPlaceholderText?.text = getString(R.string.search_error_connectionFailed)
-                            errorPlaceholder?.errorPlaceholderButton?.isVisible = true
+                            errorPlaceholder.errorPlaceholderImage.setImageResource(R.drawable.connection_error)
+                            errorPlaceholder.errorPlaceholderText.text =
+                                getString(R.string.search_error_connectionFailed)
+                            errorPlaceholder.errorPlaceholderButton.isVisible = true
                         }
                         ErrorMessageType.NO_DATA -> {
-                            errorPlaceholder?.errorPlaceholderImage?.setImageResource(R.drawable.search_error)
-                            errorPlaceholder?.errorPlaceholderText?.text = getString(R.string.search_error_emptyTrackList)
-                            errorPlaceholder?.errorPlaceholderButton?.isVisible = true
+                            errorPlaceholder.errorPlaceholderImage.setImageResource(R.drawable.search_error)
+                            errorPlaceholder.errorPlaceholderText.text =
+                                getString(R.string.search_error_emptyTrackList)
+                            errorPlaceholder.errorPlaceholderButton.isVisible = true
                         }
                     }
                 }
             }
         })
 
-        binding?.searchClear?.setOnClickListener{
-            binding?.searchField?.text?.clear()
+        binding.searchClear.setOnClickListener {
+            binding.searchField.text?.clear()
         }
 
-        binding?.searchField?.apply {
+        binding.historyListLayout.trackListHistoryClear.setOnClickListener {
+            viewModel.clearHistory()
+        }
+
+        binding.searchField.apply {
             requestFocus()
             addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     viewModel.search(s.toString())
-                    binding?.searchClear?.isVisible = s.toString().isNotEmpty()
+                    binding.searchClear.isVisible = s.toString().isNotEmpty()
                 }
 
-                override fun afterTextChanged(s: Editable?) { }
+                override fun afterTextChanged(s: Editable?) {}
             })
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -134,6 +140,7 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.breakSearch()
+        _binding = null
     }
 
     override fun onItemClick(position: Int, adapter: TrackListAdapter) {

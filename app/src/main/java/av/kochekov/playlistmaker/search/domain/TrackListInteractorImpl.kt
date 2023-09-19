@@ -4,7 +4,7 @@ import av.kochekov.playlistmaker.search.domain.TrackListInteractor
 import av.kochekov.playlistmaker.search.domain.TrackListRepository
 import java.util.concurrent.Executors
 
-class TrackListInteractorImpl (private val repository: TrackListRepository) :
+class TrackListInteractorImpl(private val repository: TrackListRepository) :
     TrackListInteractor {
 
     private val executor = Executors.newCachedThreadPool()

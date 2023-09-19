@@ -1,4 +1,5 @@
 package av.kochekov.playlistmaker.settings.presentation
+
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,15 +21,15 @@ class SettingsViewModel(
         updateTheme()
     }
 
-    fun isDarkTheme() : LiveData<Boolean>{
-        return  isDarkTheme
+    fun isDarkTheme(): LiveData<Boolean> {
+        return isDarkTheme
     }
 
-    fun shareApp(){
+    fun shareApp() {
         sharingInteractor.shareApp()
     }
 
-    fun openSupport(){
+    fun openSupport() {
         sharingInteractor.openSupport()
     }
 
@@ -36,7 +37,7 @@ class SettingsViewModel(
         sharingInteractor.openTerms()
     }
 
-    fun switchTheme(){
+    fun switchTheme() {
         settingsInteractor.updateThemeSetting(if (isDarkTheme.value == true) ThemeSettings.LIGHT else ThemeSettings.DARK)
         isDarkTheme.value = (isDarkTheme.value != true)
 
@@ -53,7 +54,7 @@ class SettingsViewModel(
         fun getViewModelFactory(
             sharingInteractor: SharingInteractor,
             settingsInteractor: SettingsInteractor
-        ) : ViewModelProvider.Factory =
+        ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -65,7 +66,7 @@ class SettingsViewModel(
             }
     }
 
-    private fun updateTheme(){
+    private fun updateTheme() {
         AppCompatDelegate.setDefaultNightMode(
             if (isDarkTheme.value == true) {
                 AppCompatDelegate.MODE_NIGHT_YES

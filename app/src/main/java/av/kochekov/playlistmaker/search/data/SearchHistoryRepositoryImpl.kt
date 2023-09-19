@@ -24,6 +24,6 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
     }
 
     override fun clear() {
-        sharedPreferences.edit().clear().apply()
+        setTrackList(mutableListOf())
     }
 }

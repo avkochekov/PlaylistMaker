@@ -5,8 +5,8 @@ interface MediaPlayerInteractor {
     fun play()
     fun pause()
     fun stop()
-    fun timePosition() : Int
-    fun duration() : Int
+    fun timePosition(): Int
+    fun duration(): Int
 
     fun setListener(listener: MediaPlayerStateListenerInterface)
 }
