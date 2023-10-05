@@ -1,17 +1,15 @@
 package av.kochekov.playlistmaker.player.presentation
 
-import android.os.Handler
-import android.os.Looper
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import av.kochekov.playlistmaker.player.domain.MediaPlayerInteractor
 import av.kochekov.playlistmaker.player.domain.MediaPlayerStateListenerInterface
 import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.search.domain.model.TrackInfo
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-private const val TIME_UPDATE_VALUE_MILLIS = 200L
+private const val TIME_UPDATE_VALUE_MILLIS = 300L
 private const val DEFAULT_TRACK_POSITION = 0
 
 class PlayerViewModel(
@@ -22,8 +20,7 @@ class PlayerViewModel(
     private var trackPosition = MutableLiveData<Int>()
     private var playerState = MutableLiveData<MediaPlayerState>()
 
-    private val handler = Handler(Looper.getMainLooper())
-    private val timeUpdateRunnable = Runnable { updateRemainingTime() }
+    private var timerJob: Job? = null
 
     init {
         mediaPlayerInteractor.setListener(object : MediaPlayerStateListenerInterface {
@@ -67,6 +64,7 @@ class PlayerViewModel(
                 return
             mediaPlayerInteractor.stop()
         }
+        timerJob?.cancel()
     }
 
     fun pausePlayer() {
@@ -78,20 +76,12 @@ class PlayerViewModel(
     }
 
     private fun updateRemainingTime() {
-        when (playerState.value) {
-            MediaPlayerState.STATE_DEFAULT,
-            MediaPlayerState.STATE_PREPARED -> {
-                trackPosition.value = 0
-                handler.removeCallbacks(timeUpdateRunnable)
+        timerJob = viewModelScope.launch {
+            while (playerState?.value == MediaPlayerState.STATE_PLAYING || playerState?.value == MediaPlayerState.STATE_PAUSED) {
+                delay(TIME_UPDATE_VALUE_MILLIS)
+                trackPosition.postValue(mediaPlayerInteractor.timePosition())
             }
-            MediaPlayerState.STATE_PLAYING -> {
-                trackPosition.value = mediaPlayerInteractor.timePosition()
-                handler.postDelayed(timeUpdateRunnable, TIME_UPDATE_VALUE_MILLIS)
-            }
-            MediaPlayerState.STATE_PAUSED -> {
-                handler.removeCallbacks(timeUpdateRunnable)
-            }
-            else -> {}
+            trackPosition.postValue(0)
         }
     }
 

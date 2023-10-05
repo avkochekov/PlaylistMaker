@@ -8,6 +8,7 @@ import av.kochekov.playlistmaker.search.data.network_client.itunes.ITunesNetwork
 import av.kochekov.playlistmaker.search.domain.*
 import av.kochekov.playlistmaker.search.presentation.SearchViewModel
 import com.google.gson.Gson
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -37,7 +38,8 @@ val searchModule = module {
 
     single<NetworkClient> {
         ITunesNetworkClient(
-            service = get()
+            service = get(),
+            androidContext()
         )
     }
 
