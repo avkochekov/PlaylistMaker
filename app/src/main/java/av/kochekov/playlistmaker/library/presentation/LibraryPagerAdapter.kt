@@ -10,14 +10,14 @@ enum class LibraryTab {
     PLAY_LISTS_TAB
 }
 
-class LibraryPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle)
-    : FragmentStateAdapter(fragmentManager, lifecycle) {
+class LibraryPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+    FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
         return 2
     }
 
     override fun createFragment(position: Int): Fragment {
-        return when(LibraryTab.values()[position]) {
+        return when (LibraryTab.values()[position]) {
             LibraryTab.FAVORITE_TRACKS_TAB -> FavoriteTracksFragment.newInstance()
             LibraryTab.PLAY_LISTS_TAB -> PlayListsFragment.newInstance()
         }

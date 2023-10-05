@@ -53,7 +53,7 @@ class MediaPlayerImpl : MediaPlayer(),
         listenerList.add(listener)
     }
 
-    private fun setState(state: MediaPlayerState){
+    private fun setState(state: MediaPlayerState) {
         this.state = state
         listenerList.map {
             it.onStateChanged(this.state)

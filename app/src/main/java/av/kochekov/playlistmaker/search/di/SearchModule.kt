@@ -17,10 +17,10 @@ val searchModule = module {
 
     single<ITunesApi> {
         Retrofit.Builder()
-                .baseUrl(ITunesApi.apiUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(ITunesApi::class.java)
+            .baseUrl(ITunesApi.apiUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ITunesApi::class.java)
     }
 
     single<SearchHistoryRepository> {
@@ -55,7 +55,7 @@ val searchModule = module {
 
     factory { Gson() }
 
-    viewModel<SearchViewModel>{
+    viewModel<SearchViewModel> {
         SearchViewModel(
             trackListInteractor = get(),
             searchHistoryInteractor = get()

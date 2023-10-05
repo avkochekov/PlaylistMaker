@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:paddingTop="@dimen/audioPlayer_topPadding"
-    android:paddingBottom="@dimen/audioPlayer_bottomPadding">>
+    android:paddingBottom="@dimen/audioPlayer_bottomPadding">
 
     <TextView
         style="@style/TrackAdditionalInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/YP_text_gray"
-        tools:text="Item title"/>
+        tools:text="Item title" />
 
     <TextView
         android:id="@+id/country"
@@ -20,9 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin"
+        android:ellipsize="end"
         android:gravity="end"
         android:lines="1"
-        android:ellipsize="end"
         tools:text="@string/testString" />
 
 </LinearLayout>

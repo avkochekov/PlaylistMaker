@@ -24,7 +24,9 @@ data class TrackInfo(
     val releaseYear: String
         get() = releaseDate?.let {
             return@let SimpleDateFormat("yyyy", Locale.getDefault())
-                .format(SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-                    .parse(releaseDate))
-        }?: ""
+                .format(
+                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+                        .parse(releaseDate)
+                )
+        } ?: ""
 }

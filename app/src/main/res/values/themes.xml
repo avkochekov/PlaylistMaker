@@ -1,17 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <attr name="trackMainColor" format="color"/>
-    <attr name="trackAdditionalColor" format="color"/>
+    <attr name="trackMainColor" format="color" />
+    <attr name="trackAdditionalColor" format="color" />
 
-    <attr name="textColor" format="color"/>
+    <attr name="textColor" format="color" />
 
-    <attr name="searchTextColor" format="color"/>
+    <attr name="searchTextColor" format="color" />
 
-    <attr name="errorTextColor" format="color"/>
-    <attr name="updateButtonBgColor" format="color"/>
-    <attr name="updateButtonTextColor" format="color"/>
-    <attr name="playButtonBackgroundColor" format="color"/>
+    <attr name="errorTextColor" format="color" />
+    <attr name="updateButtonBgColor" format="color" />
+    <attr name="updateButtonTextColor" format="color" />
+    <attr name="playButtonBackgroundColor" format="color" />
 
-    <attr name="searchFieldColor" format="color"/>
+    <attr name="searchFieldColor" format="color" />
+
+    <attr name="backgroundColor" format="color" />
+    <attr name="imageButtonColor" format="color" />
+
+    <attr name="menuSelectedItemColor" format="color" />
+    <attr name="menuUnselectedItemColor" format="color" />
 
     <!-- Base application theme. -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -39,6 +45,12 @@
         <item name="playButtonBackgroundColor">@color/black</item>
 
         <item name="searchFieldColor">@color/lightgray</item>
+
+        <item name="imageButtonColor">@color/black</item>
+        <item name="backgroundColor">@color/YP_white</item>
+
+        <item name="menuSelectedItemColor">@color/YP_blue</item>
+        <item name="menuUnselectedItemColor">@color/YP_black</item>
     </style>
 
     <style name="MenuBackground">
@@ -76,7 +88,6 @@
     </style>
 
     <style name="ToolBarButtonStyle">
-        <item name="navigationIcon">@drawable/ic_24x24_arrow_back</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
     </style>
@@ -104,21 +115,26 @@
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:color">@color/black</item>
     </style>
+
     <style name="SearchTextViewStyle.TrackName">
         <item name="android:textColor">?attr/trackMainColor</item>
         <item name="android:textSize">@dimen/trackItem_mainText_size</item>
     </style>
+
     <style name="SearchTextViewStyle.ArtistName">
         <item name="android:textColor">?attr/trackAdditionalColor</item>
         <item name="android:textSize">@dimen/trackItem_additionalText_size</item>
     </style>
+
     <style name="SearchTextViewStyle.ImageView">
         <item name="tint">@color/gray</item>
     </style>
+
     <style name="SearchTextViewStyle.Separator">
         <item name="android:foregroundGravity">center</item>
         <item name="tint">?attr/trackAdditionalColor</item>
     </style>
+
     <style name="SearchTextViewStyle.TrackTime">
         <item name="android:textColor">?attr/trackAdditionalColor</item>
         <item name="android:textSize">@dimen/trackItem_additionalText_size</item>
@@ -173,7 +189,6 @@
         <item name="android:tint">@color/gray</item>
     </style>
 
-
     <style name="TabBarLayout" parent="Widget.Design.TabLayout">
         <item name="tabTextAppearance">@style/TabAppearance</item>
     </style>
@@ -184,6 +199,4 @@
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
-
-
 </resources>

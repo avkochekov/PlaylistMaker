@@ -2,20 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".settings.presentation.SettingsActivity"
+    android:background="?attr/backgroundColor"
     android:orientation="vertical"
-    android:theme="@style/Theme.PlaylistMaker">
+    android:theme="@style/Theme.PlaylistMaker"
+    tools:context=".settings.presentation.SettingsFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolBarButtonStyle"
         android:layout_marginBottom="24dp">
+
         <TextView
             style="@style/ToolBarTextStyle"
-            android:text="@string/menu_settings"/>
-
+            android:text="@string/menu_settings" />
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
@@ -29,24 +31,26 @@
             android:id="@+id/themeSwitcher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:switchPadding="@dimen/settings_btn_image_margin_left"
             android:paddingVertical="@dimen/settings_btn_margin"
+            android:switchPadding="@dimen/settings_btn_image_margin_left"
             android:text="@string/settings_theme"
-            android:textSize="@dimen/settings_btn_text_size"/>
+            android:textSize="@dimen/settings_btn_text_size" />
 
         <LinearLayout
             android:id="@+id/share"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 style="@style/SettingsTextViewStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/settings_share"/>
+                android:text="@string/settings_share" />
+
             <ImageView
                 style="@style/SettingsImageViewStyle"
-                android:src="@drawable/ic_24x24_share"/>
+                android:src="@drawable/ic_24x24_share" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,14 +58,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 style="@style/SettingsTextViewStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/settings_support"/>
+                android:text="@string/settings_support" />
+
             <ImageView
                 style="@style/SettingsImageViewStyle"
-                android:src="@drawable/ic_24x24_support"/>
+                android:src="@drawable/ic_24x24_support" />
         </LinearLayout>
 
         <LinearLayout
@@ -69,14 +75,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 style="@style/SettingsTextViewStyle"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/settings_license"/>
+                android:text="@string/settings_license" />
+
             <ImageView
                 style="@style/SettingsImageViewStyle"
-                android:src="@drawable/ic_24x24_arrow_forward"/>
+                android:src="@drawable/ic_24x24_arrow_forward" />
         </LinearLayout>
     </LinearLayout>
 

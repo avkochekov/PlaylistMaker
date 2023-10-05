@@ -15,7 +15,7 @@ val playerModule = module {
         )
     }
 
-    viewModel<PlayerViewModel>{
+    viewModel<PlayerViewModel> {
         PlayerViewModel(
             mediaPlayerInteractor = get()
         )

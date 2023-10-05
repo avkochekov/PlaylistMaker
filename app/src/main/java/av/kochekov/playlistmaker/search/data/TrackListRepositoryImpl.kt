@@ -23,7 +23,8 @@ class TrackListRepositoryImpl(private val networkClient: NetworkClient) :
                     it.releaseDate,
                     it.primaryGenreName,
                     it.country,
-                    it.previewUrl)
+                    it.previewUrl
+                )
             }
         } else {
             return null

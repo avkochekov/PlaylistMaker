@@ -12,7 +12,7 @@ sealed interface SearchActivityState {
         val trackList: List<TrackInfo>
     ) : SearchActivityState
 
-    data class Error (
+    data class Error(
         val error: ErrorMessageType
-    ): SearchActivityState
+    ) : SearchActivityState
 }

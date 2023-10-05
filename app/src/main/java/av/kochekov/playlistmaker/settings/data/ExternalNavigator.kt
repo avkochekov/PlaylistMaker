@@ -6,8 +6,8 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.net.Uri
 import av.kochekov.playlistmaker.settings.domain.models.EmailData
 
-class ExternalNavigator (private val context: Context) {
-    fun shareLink(link: String){
+class ExternalNavigator(private val context: Context) {
+    fun shareLink(link: String) {
         Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, link)
@@ -16,7 +16,7 @@ class ExternalNavigator (private val context: Context) {
         }
     }
 
-    fun openLink(link: String){
+    fun openLink(link: String) {
         Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(link)
             flags = FLAG_ACTIVITY_NEW_TASK
@@ -24,7 +24,7 @@ class ExternalNavigator (private val context: Context) {
         }
     }
 
-    fun openEmail(emailData: EmailData){
+    fun openEmail(emailData: EmailData) {
         Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")
             putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.email))

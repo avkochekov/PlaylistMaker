@@ -5,30 +5,35 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <TextView
             style="@style/ErrorPlaceholderStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginHorizontal="@dimen/margin"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="12dp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/search_history_title"/>
-        <include layout="@layout/track_list"
-            android:id="@+id/trackListHistory"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent" />
+            android:text="@string/search_history_title" />
+
+        <include
+            android:id="@+id/trackList"
+            layout="@layout/track_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <Button
             android:id="@+id/trackListHistory_Clear"
             style="@style/RoundedButton"
-            android:layout_marginTop="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/search_history_clear"/>
+            android:layout_marginTop="24dp"
+            android:text="@string/search_history_clear" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

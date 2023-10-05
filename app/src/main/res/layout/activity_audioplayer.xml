@@ -1,72 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="?attr/backgroundColor">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolBarButtonStyle"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_24x24_arrow_back">
+
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/rightBorder"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="24dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="24dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorder"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="24dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="24dp" />
 
     <ImageView
         android:id="@+id/artwork"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="26dp"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:background="@drawable/placeholder"
         app:layout_constraintBottom_toTopOf="@id/trackName"
         app:layout_constraintDimensionRatio="1:1"
-        android:background="@drawable/placeholder"/>
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <TextView
         android:id="@+id/trackName"
+        style="@style/TrackMainInfo.TrackName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/artwork"
-        tools:text="Yesterday (Remastered 2009)"
-        style="@style/TrackMainInfo.TrackName"/>
+        tools:text="Yesterday (Remastered 2009)" />
 
     <TextView
         android:id="@+id/artistName"
+        style="@style/TrackMainInfo.ArtistName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/trackName"
-        tools:text="The Beatles"
-        style="@style/TrackMainInfo.ArtistName"/>
+        tools:text="The Beatles" />
 
     <FrameLayout
         android:id="@+id/controls"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/artistName">
 
         <ImageButton
@@ -74,192 +78,202 @@
             android:layout_width="51dp"
             android:layout_height="51dp"
             android:layout_gravity="center_vertical|start"
-            android:backgroundTint="@color/YP_text_gray"
             android:background="@drawable/round_button"
+            android:backgroundTint="@color/YP_text_gray"
             android:src="@drawable/ic_24x24_add_to_playlist"
-            app:tint="@color/YP_white"/>
+            app:tint="@color/YP_white" />
 
         <ImageButton
             android:id="@+id/playButton"
             android:layout_width="83dp"
             android:layout_height="83dp"
             android:layout_gravity="center"
-            android:backgroundTint="?attr/playButtonBackgroundColor"
+            android:layout_margin="8dp"
             android:background="@drawable/audioplayer_play_button"
-            android:layout_margin="8dp"/>
+            android:backgroundTint="?attr/playButtonBackgroundColor" />
 
         <ImageButton
             android:id="@+id/addToFavoriteButton"
             android:layout_width="51dp"
             android:layout_height="51dp"
             android:layout_gravity="center_vertical|end"
-            android:backgroundTint="@color/YP_text_gray"
             android:background="@drawable/round_button"
+            android:backgroundTint="@color/YP_text_gray"
             android:src="@drawable/ic_favorite"
-            app:tint="@color/YP_white"/>
+            app:tint="@color/YP_white" />
     </FrameLayout>
 
     <TextView
         android:id="@id/trackTime"
+        style="@style/TrackMainInfo.TrackTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintTop_toBottomOf="@id/controls"
         android:text="00:30"
-        style="@style/TrackMainInfo.TrackTime"/>
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@id/controls" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/rightTextBorder"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftTextBorder"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/duration_layout"
-        android:orientation="horizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="@id/leftTextBorder"
-        app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
-        app:layout_constraintTop_toBottomOf="@id/trackTime"
+        android:orientation="horizontal"
         android:paddingTop="@dimen/audioPlayer_topPadding"
-        android:paddingBottom="@dimen/audioPlayer_bottomPadding">
+        android:paddingBottom="@dimen/audioPlayer_bottomPadding"
+        app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
+        app:layout_constraintStart_toStartOf="@id/leftTextBorder"
+        app:layout_constraintTop_toBottomOf="@id/trackTime">
+
         <TextView
             style="@style/TrackAdditionalInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/YP_text_gray"
-            android:text="@string/audioPlayer_duration"/>
+            android:text="@string/audioPlayer_duration"
+            android:textColor="@color/YP_text_gray" />
+
         <TextView
             android:id="@+id/duration"
             style="@style/TrackAdditionalInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin"
+            android:ellipsize="end"
             android:gravity="end"
             android:lines="1"
-            android:ellipsize="end"
             tools:text="@string/testString" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/album_layout"
-        android:orientation="horizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/leftTextBorder"
-        app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
-        app:layout_constraintTop_toBottomOf="@id/duration_layout"
+        android:orientation="horizontal"
         android:paddingTop="@dimen/audioPlayer_topPadding"
-        android:paddingBottom="@dimen/audioPlayer_bottomPadding">
+        android:paddingBottom="@dimen/audioPlayer_bottomPadding"
+        app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
+        app:layout_constraintStart_toStartOf="@id/leftTextBorder"
+        app:layout_constraintTop_toBottomOf="@id/duration_layout">
+
         <TextView
             style="@style/TrackAdditionalInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/YP_text_gray"
-            android:text="@string/audioPlayer_album"/>
+            android:text="@string/audioPlayer_album"
+            android:textColor="@color/YP_text_gray" />
+
         <TextView
             android:id="@+id/album"
             style="@style/TrackAdditionalInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin"
+            android:ellipsize="end"
             android:gravity="end"
             android:lines="1"
-            android:ellipsize="end"
             tools:text="@string/testString" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/release_layout"
-        android:orientation="horizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/leftTextBorder"
-        app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
-        app:layout_constraintTop_toBottomOf="@id/album_layout"
+        android:orientation="horizontal"
         android:paddingTop="@dimen/audioPlayer_topPadding"
-        android:paddingBottom="@dimen/audioPlayer_bottomPadding">
+        android:paddingBottom="@dimen/audioPlayer_bottomPadding"
+        app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
+        app:layout_constraintStart_toStartOf="@id/leftTextBorder"
+        app:layout_constraintTop_toBottomOf="@id/album_layout">
+
         <TextView
             style="@style/TrackAdditionalInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/YP_text_gray"
-            android:text="@string/audioPlayer_year"/>
+            android:text="@string/audioPlayer_year"
+            android:textColor="@color/YP_text_gray" />
+
         <TextView
             android:id="@+id/release"
             style="@style/TrackAdditionalInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin"
+            android:ellipsize="end"
             android:gravity="end"
             android:lines="1"
-            android:ellipsize="end"
             tools:text="@string/testString" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/genre_layout"
-        android:orientation="horizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/leftTextBorder"
-        app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
-        app:layout_constraintTop_toBottomOf="@id/release_layout"
+        android:orientation="horizontal"
         android:paddingTop="@dimen/audioPlayer_topPadding"
-        android:paddingBottom="@dimen/audioPlayer_bottomPadding">
+        android:paddingBottom="@dimen/audioPlayer_bottomPadding"
+        app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
+        app:layout_constraintStart_toStartOf="@id/leftTextBorder"
+        app:layout_constraintTop_toBottomOf="@id/release_layout">
+
         <TextView
             style="@style/TrackAdditionalInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/YP_text_gray"
-            android:text="@string/audioPlayer_genre"/>
+            android:text="@string/audioPlayer_genre"
+            android:textColor="@color/YP_text_gray" />
+
         <TextView
             android:id="@+id/genre"
             style="@style/TrackAdditionalInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin"
+            android:ellipsize="end"
             android:gravity="end"
             android:lines="1"
-            android:ellipsize="end"
             tools:text="@string/testString" />
     </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/country_layout"
-        android:orientation="horizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/leftTextBorder"
-        app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/genre_layout"
+        android:orientation="horizontal"
         android:paddingTop="@dimen/audioPlayer_topPadding"
-        android:paddingBottom="@dimen/audioPlayer_bottomPadding">
+        android:paddingBottom="@dimen/audioPlayer_bottomPadding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/rightTextBorder"
+        app:layout_constraintStart_toStartOf="@id/leftTextBorder"
+        app:layout_constraintTop_toBottomOf="@id/genre_layout">
+
         <TextView
             style="@style/TrackAdditionalInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/YP_text_gray"
-            android:text="@string/audioPlayer_country"/>
+            android:text="@string/audioPlayer_country"
+            android:textColor="@color/YP_text_gray" />
+
         <TextView
             android:id="@+id/country"
             style="@style/TrackAdditionalInfo"
@@ -267,9 +281,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin"
             android:layout_marginBottom="20dp"
+            android:ellipsize="end"
             android:gravity="end"
             android:lines="1"
-            android:ellipsize="end"
             tools:text="@string/testString" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

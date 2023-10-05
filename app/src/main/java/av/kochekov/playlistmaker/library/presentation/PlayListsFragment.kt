@@ -13,11 +13,19 @@ class PlayListsFragment : Fragment() {
         fun newInstance() = PlayListsFragment()
     }
 
-    private var binding: FragmentPlaylistsBinding? = null
+    private var _binding: FragmentPlaylistsBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
-        return binding?.root
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

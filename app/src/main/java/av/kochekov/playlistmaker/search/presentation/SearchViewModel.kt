@@ -31,7 +31,7 @@ class SearchViewModel(
         fun getSearchModelFactory(
             trackListInteractor: TrackListInteractor,
             searchHistoryInteractor: SearchHistoryInteractor
-        ) : ViewModelProvider.Factory =
+        ): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -50,7 +50,7 @@ class SearchViewModel(
     private var latestSearchText: String? = null
     private var isClickAllowed: Boolean = true
 
-    fun activityState() : LiveData<SearchActivityState> {
+    fun activityState(): LiveData<SearchActivityState> {
         return activityState
     }
 
@@ -67,7 +67,7 @@ class SearchViewModel(
 
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
 
-        if (this.latestSearchText!!.isEmpty()){
+        if (this.latestSearchText!!.isEmpty()) {
             showHistory()
             return
         }
@@ -82,18 +82,22 @@ class SearchViewModel(
         )
     }
 
-    fun search(){
+    fun search() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
         latestSearchText?.let { showTrackList(it) }
     }
 
-    fun addToHistory(track: TrackInfo){
+    fun breakSearch() {
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+    }
+
+    fun addToHistory(track: TrackInfo) {
         searchHistoryInteractor.add(Mapper.fromTrackInfo(track))
         if (activityState.value is SearchActivityState.HistoryList)
             showHistory()
     }
 
-    fun clearHistory(){
+    fun clearHistory() {
         searchHistoryInteractor.clear()
         showHistory()
     }
@@ -119,15 +123,16 @@ class SearchViewModel(
         })
     }
 
-    private fun showErrorMessage(type: ErrorMessageType){
+    private fun showErrorMessage(type: ErrorMessageType) {
         activityState.value = SearchActivityState.Error(type)
     }
 
-    private fun showHistory(){
-        activityState.value = SearchActivityState.HistoryList(searchHistoryInteractor.get().map{ Mapper.toTrackInfo(it) })
+    private fun showHistory() {
+        activityState.value = SearchActivityState.HistoryList(
+            searchHistoryInteractor.get().map { Mapper.toTrackInfo(it) })
     }
 
-    fun clickDebounce() : Boolean {
+    fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
