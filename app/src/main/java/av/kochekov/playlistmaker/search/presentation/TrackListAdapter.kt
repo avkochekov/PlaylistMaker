@@ -42,8 +42,4 @@ class TrackListAdapter(private val itemClickListener: ItemClickListener? = null)
         return data.elementAt(index)
     }
 
-    fun clearData() {
-        data = mutableListOf<TrackInfo>()
-        notifyDataSetChanged()
-    }
 }

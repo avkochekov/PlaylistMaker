@@ -8,15 +8,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.databinding.FragmentSearchBinding
 import av.kochekov.playlistmaker.player.presentation.PlayerActivity
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
 import av.kochekov.playlistmaker.search.domain.model.SearchActivityState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
 
 class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
     private var _binding: FragmentSearchBinding? = null
@@ -26,6 +33,8 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
 
     private var trackListAdapter: TrackListAdapter? = null
     private var historyListAdapter: TrackListAdapter? = null
+
+    var isClickAllowed = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -144,12 +153,24 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
     }
 
     override fun onItemClick(position: Int, adapter: TrackListAdapter) {
-        val track = adapter.getData(position)
-        if (viewModel.clickDebounce()) {
+        if (clickDebounce()){
+            val track = adapter.getData(position)
             viewModel.addToHistory(track)
             startActivity(Intent(activity, PlayerActivity::class.java).apply {
                 putExtra(PlayerActivity.TRACK, track)
             })
         }
+    }
+
+    private fun clickDebounce(): Boolean {
+        if (isClickAllowed){
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
+                isClickAllowed = true
+            }
+            return true
+        }
+        return false
     }
 }

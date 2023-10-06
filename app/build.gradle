@@ -53,7 +53,6 @@ dependencies {
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
 
-    implementation "androidx.core:core-ktx:1.9.0"
     implementation "androidx.activity:activity-ktx:1.6.1"
 
     implementation "io.insert-koin:koin-android:3.3.0"
@@ -62,7 +61,11 @@ dependencies {
 
     def fragment_version = "1.5.6"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    def navigation_version = "2.5.3"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
 
-    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
-    implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }
