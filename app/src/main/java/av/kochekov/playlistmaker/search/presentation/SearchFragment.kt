@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -22,7 +21,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
 private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
 
 class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
@@ -34,7 +32,7 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
     private var trackListAdapter: TrackListAdapter? = null
     private var historyListAdapter: TrackListAdapter? = null
 
-    var isClickAllowed = true
+    private var isClickAllowed = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

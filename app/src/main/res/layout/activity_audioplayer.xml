@@ -99,8 +99,7 @@
             android:layout_gravity="center_vertical|end"
             android:background="@drawable/round_button"
             android:backgroundTint="@color/YP_text_gray"
-            android:src="@drawable/ic_favorite"
-            app:tint="@color/YP_white" />
+            android:src="@drawable/ic_not_favorite" />
     </FrameLayout>
 
     <TextView

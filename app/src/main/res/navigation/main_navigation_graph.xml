@@ -11,7 +11,7 @@
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/favoriteTracksFragment"
-        android:name="av.kochekov.playlistmaker.library.presentation.FavoriteTracksFragment"
+        android:name="av.kochekov.playlistmaker.library.presentation.favorite.FavoriteTracksFragment"
         android:label="fragment_favorite_tracks"
         tools:layout="@layout/fragment_favorite_tracks" />
     <fragment

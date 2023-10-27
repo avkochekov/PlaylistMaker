@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import av.kochekov.playlistmaker.R
+import av.kochekov.playlistmaker.databinding.ActivityAudioplayerBinding
+import av.kochekov.playlistmaker.databinding.FragmentSearchBinding
 import av.kochekov.playlistmaker.search.domain.model.TrackInfo
 import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.player.presentation.utils.Formatter
@@ -26,6 +28,7 @@ class PlayerActivity : AppCompatActivity() {
     private var country: TextView? = null
     private var play: ImageButton? = null
     private var trackTime: TextView? = null
+    private var favoriteButton: ImageButton? = null
 
     private val viewModel by viewModel<PlayerViewModel>()
 
@@ -40,6 +43,26 @@ class PlayerActivity : AppCompatActivity() {
         findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
             onBackPressed()
         }
+
+        play = findViewById(R.id.playButton)
+        artwork = findViewById(R.id.artwork)
+        trackName = findViewById(R.id.trackName)
+        artistName = findViewById(R.id.artistName)
+        duration = findViewById(R.id.duration)
+        album = findViewById(R.id.album)
+        release = findViewById(R.id.release)
+        genre = findViewById(R.id.genre)
+        country = findViewById(R.id.country)
+        trackTime = findViewById(R.id.trackTime)
+        favoriteButton = findViewById(R.id.addToFavoriteButton)
+
+        viewModel.trackInFavorite().observe(this, Observer {
+            if (it){
+                favoriteButton?.setImageResource(R.drawable.ic_favorite)
+            } else {
+                favoriteButton?.setImageResource(R.drawable.ic_not_favorite)
+            }
+        })
 
         viewModel.trackInfo().observe(this, Observer {
             trackName?.text = it.trackName
@@ -83,21 +106,15 @@ class PlayerActivity : AppCompatActivity() {
             trackTime?.text = Formatter.timeToText(it)
         })
 
-        play = findViewById(R.id.playButton)
-        artwork = findViewById(R.id.artwork)
-        trackName = findViewById(R.id.trackName)
-        artistName = findViewById(R.id.artistName)
-        duration = findViewById(R.id.duration)
-        album = findViewById(R.id.album)
-        release = findViewById(R.id.release)
-        genre = findViewById(R.id.genre)
-        country = findViewById(R.id.country)
-        trackTime = findViewById(R.id.trackTime)
         (intent.getSerializableExtra(TRACK) as? TrackInfo)?.let {
             viewModel.setTrack(it)
         }
         play?.setOnClickListener {
             viewModel.onPlayClicked()
+        }
+
+        favoriteButton?.setOnClickListener{
+            viewModel.changeFavoriteState()
         }
     }
 
