@@ -1,20 +1,21 @@
 package av.kochekov.playlistmaker.library.presentation.favorite
 
-import android.content.Context
 import androidx.lifecycle.*
-import av.kochekov.playlistmaker.library.domain.db.FavoriteTrackInteractor
+import av.kochekov.playlistmaker.favorite.domain.FavoriteTrackRepositoryObserver
+import av.kochekov.playlistmaker.favorite.domain.db.FavoriteTrackInteractor
 import av.kochekov.playlistmaker.search.data.utils.Mapper
 import av.kochekov.playlistmaker.search.domain.model.TrackInfo
 import kotlinx.coroutines.launch
 
 class FavoriteTracksViewModel(
     private val interactor: FavoriteTrackInteractor
-) : ViewModel()  {
+) : ViewModel(), FavoriteTrackRepositoryObserver  {
     private val state = MutableLiveData<FavoriteTrackListState>()
 
     fun activityState(): LiveData<FavoriteTrackListState> = state
 
     init {
+        interactor.observe(this)
         load()
     }
 
@@ -40,5 +41,9 @@ class FavoriteTracksViewModel(
 
     private fun renderState(newState: FavoriteTrackListState) {
         state.postValue(newState)
+    }
+
+    override fun update() {
+        load()
     }
 }

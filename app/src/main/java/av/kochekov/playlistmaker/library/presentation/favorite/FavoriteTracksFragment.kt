@@ -16,12 +16,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
-
 class FavoriteTracksFragment : Fragment(), TrackListAdapter.ItemClickListener {
-
     companion object {
         fun newInstance() = FavoriteTracksFragment()
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
     private var _binding: FragmentFavoriteTracksBinding? = null
@@ -50,14 +48,17 @@ class FavoriteTracksFragment : Fragment(), TrackListAdapter.ItemClickListener {
 
         trackListAdapter = TrackListAdapter(this)
 
-        errorPlaceholder.root.visibility = View.GONE
-        errorPlaceholder.errorPlaceholderText.text =
-            getString(R.string.library_error_favoriteTracks)
-        errorPlaceholder.errorPlaceholderImage.setImageResource(R.drawable.search_error)
-        errorPlaceholder.errorPlaceholderButton.visibility = View.GONE
+        with(errorPlaceholder){
+            root.visibility = View.GONE
+            errorPlaceholderText.text = getString(R.string.library_error_favoriteTracks)
+            errorPlaceholderImage.setImageResource(R.drawable.search_error)
+            errorPlaceholderButton.visibility = View.GONE
+        }
 
-        trackList.root.visibility = View.GONE
-        trackList.root.adapter = trackListAdapter
+        with(trackList){
+            root.visibility = View.GONE
+            root.adapter = trackListAdapter
+        }
 
         viewModel.activityState().observe(viewLifecycleOwner, Observer {
             when(it){

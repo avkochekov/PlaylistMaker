@@ -1,6 +1,6 @@
-package av.kochekov.playlistmaker.library.data.converters
+package av.kochekov.playlistmaker.favorite.data.converters
 
-import av.kochekov.playlistmaker.library.data.db.entity.TrackEntity
+import av.kochekov.playlistmaker.favorite.data.db.entity.TrackEntity
 import av.kochekov.playlistmaker.search.data.model.Track
 
 class TrackDbConvertor {

@@ -1,15 +1,10 @@
-package av.kochekov.playlistmaker.library.domain
+package av.kochekov.playlistmaker.favorite.domain
 
-import av.kochekov.playlistmaker.library.domain.db.FavoriteTrackInteractor
+import av.kochekov.playlistmaker.favorite.domain.db.FavoriteTrackInteractor
 import av.kochekov.playlistmaker.search.data.model.Track
-import av.kochekov.playlistmaker.search.domain.model.TrackInfo
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 
 class FavoriteTrackInteractorImpl(
     private val repository: FavoriteTrackRepository
@@ -52,6 +47,10 @@ class FavoriteTrackInteractorImpl(
             trackInfo.previewUrl
         )
         GlobalScope.async { repository.removeTrack(track) }
+    }
+
+    override fun observe(observer: FavoriteTrackRepositoryObserver) {
+        repository.attach(observer)
     }
 
 }

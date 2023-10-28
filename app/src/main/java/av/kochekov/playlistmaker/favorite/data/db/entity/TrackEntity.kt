@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker.library.data.db.entity
+package av.kochekov.playlistmaker.favorite.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

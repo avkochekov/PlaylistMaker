@@ -1,7 +1,7 @@
 package av.kochekov.playlistmaker.player.presentation
 
 import androidx.lifecycle.*
-import av.kochekov.playlistmaker.library.domain.db.FavoriteTrackInteractor
+import av.kochekov.playlistmaker.favorite.domain.db.FavoriteTrackInteractor
 import av.kochekov.playlistmaker.player.domain.MediaPlayerInteractor
 import av.kochekov.playlistmaker.player.domain.MediaPlayerStateListenerInterface
 import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
