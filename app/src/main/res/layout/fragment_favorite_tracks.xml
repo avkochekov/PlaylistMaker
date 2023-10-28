@@ -5,23 +5,26 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/margin"
     android:orientation="vertical"
-    tools:context=".library.presentation.FavoriteTracksFragment">
+    tools:context=".library.presentation.favorite.FavoriteTracksFragment">
 
-    <ImageView
-        android:id="@+id/errorPlaceholderImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="108dp"
-        android:src="@drawable/search_error" />
+    <include
+        android:id="@+id/errorPlaceholderLayout"
+        layout="@layout/error_placeholder"
+        android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/errorPlaceholderText"
-        style="@style/ErrorPlaceholderStyle"
+    <include
+        android:id="@+id/trackList"
+        layout="@layout/track_list"
+        android:layout_marginTop="@dimen/margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
-        android:text="@string/library_error_favoriteTracks" />
+        android:visibility="gone"/>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="140dp"
+        android:visibility="visible" />
 
 </LinearLayout>
