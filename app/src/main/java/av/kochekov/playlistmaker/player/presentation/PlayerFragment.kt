@@ -1,15 +1,18 @@
 package av.kochekov.playlistmaker.player.presentation
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.databinding.ActivityAudioplayerBinding
-import av.kochekov.playlistmaker.databinding.FragmentSearchBinding
+import av.kochekov.playlistmaker.databinding.FragmentPlayerBinding
 import av.kochekov.playlistmaker.search.domain.model.TrackInfo
 import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.player.presentation.utils.Formatter
@@ -17,7 +20,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerFragment : Fragment() {
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding get() = _binding!!
+
     private var artwork: ImageView? = null
     private var trackName: TextView? = null
     private var artistName: TextView? = null
@@ -29,34 +35,47 @@ class PlayerActivity : AppCompatActivity() {
     private var play: ImageButton? = null
     private var trackTime: TextView? = null
     private var favoriteButton: ImageButton? = null
+    private var addToPlaylistButton: ImageButton? = null
 
     private val viewModel by viewModel<PlayerViewModel>()
 
-    companion object {
-        const val TRACK = "CurrentTrackInfo"
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_audioplayer)
+    companion object {
+        const val TRACK = "CurrentTrackInfo"
+        fun createArgs(track: TrackInfo): Bundle =
+            bundleOf(TRACK to track)
+    }
 
-        findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener {
-            onBackPressed()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.setTrack(requireArguments().get(TRACK) as TrackInfo)
+
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
         }
 
-        play = findViewById(R.id.playButton)
-        artwork = findViewById(R.id.artwork)
-        trackName = findViewById(R.id.trackName)
-        artistName = findViewById(R.id.artistName)
-        duration = findViewById(R.id.duration)
-        album = findViewById(R.id.album)
-        release = findViewById(R.id.release)
-        genre = findViewById(R.id.genre)
-        country = findViewById(R.id.country)
-        trackTime = findViewById(R.id.trackTime)
-        favoriteButton = findViewById(R.id.addToFavoriteButton)
+        play = binding.playButton
+        artwork = binding.artwork
+        trackName = binding.trackName
+        artistName = binding.artistName
+        duration = binding.duration
+        album = binding.album
+        release = binding.release
+        genre = binding.genre
+        country = binding.country
+        trackTime = binding.trackTime
+        favoriteButton = binding.addToFavoriteButton
+        addToPlaylistButton = binding.addToPlaylistButton
 
-        viewModel.trackInFavorite().observe(this, Observer {
+        viewModel.trackInFavorite().observe(viewLifecycleOwner, Observer {
             if (it){
                 favoriteButton?.setImageResource(R.drawable.ic_favorite)
             } else {
@@ -64,7 +83,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.trackInfo().observe(this, Observer {
+        viewModel.trackInfo().observe(viewLifecycleOwner, Observer {
             trackName?.text = it.trackName
             artistName?.text = it.artistName
             duration?.text = it.duration
@@ -84,7 +103,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.playerState().observe(this, Observer {
+        viewModel.playerState().observe(viewLifecycleOwner, Observer {
             when (it) {
                 MediaPlayerState.STATE_DEFAULT -> {
                     play?.isEnabled = false
@@ -102,13 +121,10 @@ class PlayerActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.trackPosition().observe(this, Observer {
+        viewModel.trackPosition().observe(viewLifecycleOwner, Observer {
             trackTime?.text = Formatter.timeToText(it)
         })
 
-        (intent.getSerializableExtra(TRACK) as? TrackInfo)?.let {
-            viewModel.setTrack(it)
-        }
         play?.setOnClickListener {
             viewModel.onPlayClicked()
         }

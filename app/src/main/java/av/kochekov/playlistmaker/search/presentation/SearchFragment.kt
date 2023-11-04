@@ -1,6 +1,5 @@
 package av.kochekov.playlistmaker.search.presentation
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,9 +11,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.databinding.FragmentSearchBinding
-import av.kochekov.playlistmaker.player.presentation.PlayerActivity
+import av.kochekov.playlistmaker.player.presentation.PlayerFragment
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
 import av.kochekov.playlistmaker.search.domain.model.SearchActivityState
 import kotlinx.coroutines.delay
@@ -154,9 +154,7 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
         if (clickDebounce()){
             val track = adapter.getData(position)
             viewModel.addToHistory(track)
-            startActivity(Intent(activity, PlayerActivity::class.java).apply {
-                putExtra(PlayerActivity.TRACK, track)
-            })
+            findNavController().navigate(R.id.action_searchFragment_to_playerFragment, PlayerFragment.createArgs(track))
         }
     }
 

@@ -8,7 +8,11 @@
         android:id="@+id/searchFragment"
         android:name="av.kochekov.playlistmaker.search.presentation.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteTracksFragment"
         android:name="av.kochekov.playlistmaker.library.presentation.favorite.FavoriteTracksFragment"
@@ -23,10 +27,19 @@
         android:id="@+id/libraryFragment"
         android:name="av.kochekov.playlistmaker.library.presentation.LibraryFragment"
         android:label="fragment_library"
-        tools:layout="@layout/fragment_library" />
+        tools:layout="@layout/fragment_library" >
+        <action
+            android:id="@+id/action_libraryFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/playListsFragment"
         android:name="av.kochekov.playlistmaker.library.presentation.PlayListsFragment"
         android:label="fragment_playlists"
         tools:layout="@layout/fragment_playlists" />
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="av.kochekov.playlistmaker.player.presentation.PlayerFragment"
+        android:label="fragment_player"
+        tools:layout="@layout/fragment_player" />
 </navigation>
