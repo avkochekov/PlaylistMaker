@@ -29,6 +29,12 @@
 
         <item name="menuSelectedItemColor">@color/YP_blue</item>
         <item name="menuUnselectedItemColor">@color/YP_white</item>
+
+        <item name="snackBarBackgroundColor">@color/YP_white</item>
+        <item name="snackBarTextColor">@color/YP_black</item>
+
+        <item name="dashColor">@color/YP_white</item>
+        <item name="playlist_tracksCount_textColor">@color/YP_white</item>
     </style>
 
     <style name="MenuBackground">

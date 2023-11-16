@@ -2,7 +2,7 @@ package av.kochekov.playlistmaker.search.data
 
 import android.content.SharedPreferences
 import av.kochekov.playlistmaker.search.domain.SearchHistoryRepository
-import av.kochekov.playlistmaker.search.data.model.Track
+import av.kochekov.playlistmaker.common.data.models.Track
 import com.google.gson.Gson
 
 private const val SHARED_PREF_NAME = "TRACK_LIST_HISTORY"

@@ -31,15 +31,27 @@
         <action
             android:id="@+id/action_libraryFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_playlistFragment"
+            app:destination="@id/playlistFragment" />
     </fragment>
     <fragment
         android:id="@+id/playListsFragment"
-        android:name="av.kochekov.playlistmaker.library.presentation.PlayListsFragment"
+        android:name="av.kochekov.playlistmaker.library.presentation.playlists.PlayListsFragment"
         android:label="fragment_playlists"
         tools:layout="@layout/fragment_playlists" />
     <fragment
         android:id="@+id/playerFragment"
         android:name="av.kochekov.playlistmaker.player.presentation.PlayerFragment"
         android:label="fragment_player"
-        tools:layout="@layout/fragment_player" />
+        tools:layout="@layout/fragment_player" >
+        <action
+            android:id="@+id/action_playerFragment_to_playlistFragment"
+            app:destination="@id/playlistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="av.kochekov.playlistmaker.playlist.presentation.PlaylistFragment"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist" />
 </navigation>

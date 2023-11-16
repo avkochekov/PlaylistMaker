@@ -6,20 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import av.kochekov.playlistmaker.player.presentation.PlayerFragment
 import av.kochekov.playlistmaker.search.presentation.TrackListAdapter
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment(), TrackListAdapter.ItemClickListener {
     companion object {
         fun newInstance() = FavoriteTracksFragment()
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
     private var _binding: FragmentFavoriteTracksBinding? = null
@@ -28,8 +24,6 @@ class FavoriteTracksFragment : Fragment(), TrackListAdapter.ItemClickListener {
     private val viewModel by viewModel<FavoriteTracksViewModel>()
 
     private var trackListAdapter: TrackListAdapter? = null
-
-    private var isClickAllowed = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,21 +83,7 @@ class FavoriteTracksFragment : Fragment(), TrackListAdapter.ItemClickListener {
     }
 
     override fun onItemClick(position: Int, adapter: TrackListAdapter) {
-        if (clickDebounce()){
-            val track = adapter.getData(position)
-            findNavController().navigate(R.id.action_libraryFragment_to_playerFragment, PlayerFragment.createArgs(track))
-        }
-    }
-
-    private fun clickDebounce(): Boolean {
-        if (isClickAllowed){
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
-                isClickAllowed = true
-            }
-            return true
-        }
-        return false
+        val data = adapter.getData(position)
+        findNavController().navigate(R.id.action_libraryFragment_to_playerFragment, PlayerFragment.createArgs(data))
     }
 }

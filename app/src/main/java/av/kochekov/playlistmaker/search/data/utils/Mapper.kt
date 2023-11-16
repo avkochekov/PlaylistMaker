@@ -1,11 +1,11 @@
 package av.kochekov.playlistmaker.search.data.utils
 
-import av.kochekov.playlistmaker.search.data.model.Track
-import av.kochekov.playlistmaker.search.domain.model.TrackInfo
+import av.kochekov.playlistmaker.common.data.models.Track
+import av.kochekov.playlistmaker.search.domain.model.TrackModel
 
 object Mapper {
-    fun toTrackInfo(track: Track): TrackInfo {
-        return TrackInfo(
+    fun toModel(track: Track): TrackModel {
+        return TrackModel(
             track.trackId,
             track.trackName,
             track.artistName,
@@ -19,7 +19,7 @@ object Mapper {
         )
     }
 
-    fun fromTrackInfo(track: TrackInfo): Track {
+    fun fromModel(track: TrackModel): Track {
         return Track(
             track.trackId,
             track.trackName,

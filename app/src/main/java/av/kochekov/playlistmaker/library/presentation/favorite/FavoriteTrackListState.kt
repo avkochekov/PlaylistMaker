@@ -1,7 +1,6 @@
 package av.kochekov.playlistmaker.library.presentation.favorite
 
-import av.kochekov.playlistmaker.search.data.model.Track
-import av.kochekov.playlistmaker.search.domain.model.TrackInfo
+import av.kochekov.playlistmaker.search.domain.model.TrackModel
 
 sealed interface FavoriteTrackListState {
     object Loading : FavoriteTrackListState
@@ -9,7 +8,7 @@ sealed interface FavoriteTrackListState {
     object Empty : FavoriteTrackListState
 
     data class Content(
-        val tracks: List<TrackInfo>
+        val tracks: List<TrackModel>
     ) : FavoriteTrackListState
 }
 

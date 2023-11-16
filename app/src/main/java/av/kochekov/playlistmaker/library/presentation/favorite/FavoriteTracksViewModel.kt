@@ -2,9 +2,9 @@ package av.kochekov.playlistmaker.library.presentation.favorite
 
 import androidx.lifecycle.*
 import av.kochekov.playlistmaker.favorite.domain.FavoriteTrackRepositoryObserver
-import av.kochekov.playlistmaker.favorite.domain.db.FavoriteTrackInteractor
+import av.kochekov.playlistmaker.favorite_tracks.domain.FavoriteTrackInteractor
 import av.kochekov.playlistmaker.search.data.utils.Mapper
-import av.kochekov.playlistmaker.search.domain.model.TrackInfo
+import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import kotlinx.coroutines.launch
 
 class FavoriteTracksViewModel(
@@ -25,13 +25,13 @@ class FavoriteTracksViewModel(
             interactor.getTracks()
                 .collect { tracks ->
                     processResult(tracks.map {
-                        Mapper.toTrackInfo(it)
+                        Mapper.toModel(it)
                     })
                 }
         }
     }
 
-    private fun processResult(tracks: List<TrackInfo>) {
+    private fun processResult(tracks: List<TrackModel>) {
         if (tracks.isEmpty()) {
             renderState(FavoriteTrackListState.Empty)
         } else {

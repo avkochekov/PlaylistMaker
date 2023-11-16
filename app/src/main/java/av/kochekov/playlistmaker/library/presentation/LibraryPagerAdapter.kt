@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import av.kochekov.playlistmaker.library.presentation.favorite.FavoriteTracksFragment
+import av.kochekov.playlistmaker.library.presentation.playlists.PlayListsFragment
 
 enum class LibraryTab {
     FAVORITE_TRACKS_TAB,
