@@ -43,7 +43,7 @@ class PlayListsFragment : Fragment() {
         binding.playlistPlaylistView.adapter = playListAdapter
 
         viewModel.state().observe(viewLifecycleOwner, Observer {
-            when(it){
+            when (it) {
                 is PlayListState.Loading -> {
                     binding.playlistPlaylistView.visibility = View.GONE
                     binding.progressBar.visibility = View.VISIBLE

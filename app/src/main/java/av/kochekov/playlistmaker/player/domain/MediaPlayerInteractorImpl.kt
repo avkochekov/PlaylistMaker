@@ -1,9 +1,5 @@
 package av.kochekov.playlistmaker.player.domain
 
-import av.kochekov.playlistmaker.player.domain.MediaPlayerInteractor
-import av.kochekov.playlistmaker.player.domain.MediaPlayer
-import av.kochekov.playlistmaker.player.domain.MediaPlayerStateListenerInterface
-
 class MediaPlayerInteractorImpl(private val player: MediaPlayer) : MediaPlayerInteractor {
     override fun setTrack(track: String) {
         player.setTrack(track)

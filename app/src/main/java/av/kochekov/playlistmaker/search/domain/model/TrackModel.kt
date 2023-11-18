@@ -22,11 +22,11 @@ data class TrackModel(
         get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
 
     val releaseYear: String
-        get() = releaseDate?.let {
-            return@let SimpleDateFormat("yyyy", Locale.getDefault())
+        get() = releaseDate?.let { text ->
+            SimpleDateFormat("yyyy", Locale.getDefault())
                 .format(
                     SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-                        .parse(releaseDate)
+                        .parse(text)
                 )
         } ?: ""
 }

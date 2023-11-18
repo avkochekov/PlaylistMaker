@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker.search.data.utils
+package av.kochekov.playlistmaker.favorite_tracks.data.utils
 
 import av.kochekov.playlistmaker.common.data.models.Track
 import av.kochekov.playlistmaker.search.domain.model.TrackModel

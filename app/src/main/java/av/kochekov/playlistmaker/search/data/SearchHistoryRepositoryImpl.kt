@@ -17,8 +17,8 @@ class SearchHistoryRepositoryImpl(private val sharedPreferences: SharedPreferenc
 
     override fun getTrackList(): List<Track> {
         return sharedPreferences.getString(DATA_KEY, null)
-            ?.let {
-                return Gson().fromJson(it, Array<Track>::class.java).toList()
+            ?.let {text ->
+                return Gson().fromJson(text, Array<Track>::class.java).toList()
             }
             ?: mutableListOf()
     }

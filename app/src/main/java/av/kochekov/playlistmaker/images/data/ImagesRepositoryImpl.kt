@@ -13,12 +13,12 @@ import java.io.FileOutputStream
 import java.util.*
 
 class ImagesRepositoryImpl(private val context: Context) : ImagesRepository {
-    override fun saveImage(path: Uri, dir: String, name: String) : Uri {
+    override fun saveImage(path: Uri, dir: String, name: String): Uri {
         if (path.toString().isEmpty())
             return Uri.EMPTY
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), dir)
         //создаем каталог, если он не создан
-        if (!filePath.exists()){
+        if (!filePath.exists()) {
             filePath.mkdirs()
         }
         //создаём экземпляр класса File, который указывает на файл внутри каталога
@@ -35,12 +35,12 @@ class ImagesRepositoryImpl(private val context: Context) : ImagesRepository {
         return getImage(dir, name)
     }
 
-    override fun getImage(dir: String, name: String) : Uri {
+    override fun getImage(dir: String, name: String): Uri {
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), dir)
         return File(filePath, name).toUri()
     }
 
-    override fun removeImage(dir: String, name: String) : Boolean {
+    override fun removeImage(dir: String, name: String): Boolean {
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), dir)
         return File(filePath, name).delete()
     }

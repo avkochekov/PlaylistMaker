@@ -23,8 +23,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class
 PlaylistFragment : Fragment() {
@@ -38,8 +39,7 @@ PlaylistFragment : Fragment() {
     ) { isGranted ->
         if (isGranted) {
             changeArtwork()
-        }
-        else {
+        } else {
             if (shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 Toast.makeText(activity, R.string.playlist_rationale, Toast.LENGTH_LONG).show()
             }
@@ -52,7 +52,8 @@ PlaylistFragment : Fragment() {
                 viewModel.setArtwork(uri.toString())
                 setArtwork(uri)
             } else {
-                Toast.makeText(activity,R.string.playlist_imageNotSelected, Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, R.string.playlist_imageNotSelected, Toast.LENGTH_LONG)
+                    .show()
             }
         }
 
@@ -101,7 +102,8 @@ PlaylistFragment : Fragment() {
                 s: CharSequence?,
                 start: Int,
                 before: Int,
-                count: Int) {
+                count: Int
+            ) {
                 viewModel.setName(s.toString())
                 binding.createPlaylist.isEnabled = s.toString().isNotEmpty()
             }
@@ -109,25 +111,15 @@ PlaylistFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        binding.playlistName.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus || binding.playlistName.text?.isNotEmpty() == true){
-                binding.playlistNameLayout.setBoxStrokeColorStateList(AppCompatResources.getColorStateList(requireContext(), R.color.box_stroke_color_blue))
-                binding.playlistNameLayout.defaultHintTextColor = AppCompatResources.getColorStateList(requireContext(), R.color.box_stroke_color_blue)
-            } else {
-                binding.playlistNameLayout.setBoxStrokeColorStateList(AppCompatResources.getColorStateList(requireContext(), R.color.box_stroke_color))
-                binding.playlistNameLayout.defaultHintTextColor = AppCompatResources.getColorStateList(requireContext(), R.color.box_stroke_color)
-            }
-        }
+        setInputFieldListener(
+            field = binding.playlistName,
+            fieldLayout = binding.playlistNameLayout
+        )
 
-        binding.playlistDescription.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus || binding.playlistName.text?.isNotEmpty() == true){
-                binding.playlistDescriptionLayout.setBoxStrokeColorStateList(AppCompatResources.getColorStateList(requireContext(), R.color.box_stroke_color_blue))
-                binding.playlistDescriptionLayout.hintTextColor = AppCompatResources.getColorStateList(requireContext(), R.color.box_stroke_color_blue)
-            } else {
-                binding.playlistDescriptionLayout.setBoxStrokeColorStateList(AppCompatResources.getColorStateList(requireContext(), R.color.box_stroke_color))
-                binding.playlistDescriptionLayout.hintTextColor = AppCompatResources.getColorStateList(requireContext(), R.color.box_stroke_color)
-            }
-        }
+        setInputFieldListener(
+            field = binding.playlistDescription,
+            fieldLayout = binding.playlistDescriptionLayout
+        )
 
         binding.playlistDescription.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
@@ -142,7 +134,8 @@ PlaylistFragment : Fragment() {
                 s: CharSequence?,
                 start: Int,
                 before: Int,
-                count: Int) {
+                count: Int
+            ) {
                 viewModel.setDescription(s.toString())
             }
 
@@ -153,32 +146,37 @@ PlaylistFragment : Fragment() {
             pickMediaLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
         }
 
-        binding.createPlaylist.let {
-            it.isEnabled = binding.playlistName.text?.isNotEmpty() ?: false
-            it.setOnClickListener {
+        binding.createPlaylist.let { button ->
+            button.isEnabled = binding.playlistName.text?.isNotEmpty() ?: false
+            button.setOnClickListener {
                 viewModel.savePlayList()
 
-                showSnackBar("Плейлист ${binding.playlistName.text} создан")
+                showSnackBar(
+                    getString(
+                        R.string.playlist_created,
+                        binding.playlistName.text
+                    )
+                )
 
                 findNavController().navigateUp()
             }
         }
     }
 
-    private fun changeArtwork(){
+    private fun changeArtwork() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
-    private fun confirmExit(){
+    private fun confirmExit() {
         if (viewModel.isChanged()) {
-            activity?.let {
-                MaterialAlertDialogBuilder(it)
+            activity?.let {activity ->
+                MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.playlist_confirmExit_title)
                     .setMessage(R.string.playlist_confirmExit_message)
-                    .setPositiveButton(R.string.playlist_confirmExit_positiveButton) { dialog, which ->
+                    .setPositiveButton(R.string.playlist_confirmExit_positiveButton) { _, _ ->
                         findNavController().navigateUp()
                     }
-                    .setNegativeButton(R.string.playlist_confirmExit_negativeButton) { dialog, which ->
+                    .setNegativeButton(R.string.playlist_confirmExit_negativeButton) { _, _ ->
                         // Do nothing
                     }
                     .show()
@@ -188,30 +186,54 @@ PlaylistFragment : Fragment() {
         }
     }
 
-    private fun setArtwork(uri: Uri){
-        binding.artwork?.let { it ->
+    private fun setArtwork(uri: Uri) {
+        binding.artwork.let { artwork ->
             Glide.with(this)
                 .load(uri)
-                .transform(RoundedCorners(it.resources.getDimensionPixelSize(R.dimen.playlist_artworkRadius)))
+                .transform(RoundedCorners(artwork.resources.getDimensionPixelSize(R.dimen.playlist_artworkRadius)))
                 .fitCenter()
-                .into(it)
+                .into(artwork)
         }
-        binding.artwork?.tag = uri.toString()
+        binding.artwork.tag = uri.toString()
     }
 
-    private fun showSnackBar(text: String){
+    private fun showSnackBar(text: String) {
         var snackbar = Snackbar.make(requireView(), text, Snackbar.LENGTH_LONG)
-//        snackbar.view.setBackgroundColor(resources.getColor(R.color.snackbarBgColor))
-//        snackbar.setTextColor(resources.getColor(R.color.snackbarTextColor))
         snackbar.show()
     }
 
-    private fun getFieldColor(isEmpty: Boolean): ColorStateList {
-        val colorRes = if (isEmpty){
-            R.color.YP_black
-        } else {
-            R.color.YP_blue
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun setInputFieldListener(
+        field: TextInputEditText,
+        fieldLayout: TextInputLayout
+    ) {
+        field.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus || field.text?.isNotEmpty() == true) {
+                fieldLayout.setBoxStrokeColorStateList(
+                    AppCompatResources.getColorStateList(
+                        requireContext(),
+                        R.color.box_stroke_color_blue
+                    )
+                )
+                fieldLayout.hintTextColor =
+                    AppCompatResources.getColorStateList(
+                        requireContext(),
+                        R.color.box_stroke_color_blue
+                    )
+            } else {
+                fieldLayout.setBoxStrokeColorStateList(
+                    AppCompatResources.getColorStateList(
+                        requireContext(),
+                        R.color.box_stroke_color
+                    )
+                )
+                fieldLayout.hintTextColor =
+                    AppCompatResources.getColorStateList(requireContext(), R.color.box_stroke_color)
+            }
         }
-        return AppCompatResources.getColorStateList(requireContext(), colorRes)
     }
 }

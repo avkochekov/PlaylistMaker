@@ -9,7 +9,8 @@ import av.kochekov.playlistmaker.search.data.network_client.NetworkClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ITunesNetworkClient(private val service: ITunesApi, private val context: Context) : NetworkClient {
+class ITunesNetworkClient(private val service: ITunesApi, private val context: Context) :
+    NetworkClient {
 
     override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
@@ -32,8 +33,10 @@ class ITunesNetworkClient(private val service: ITunesApi, private val context: C
 
     private fun isConnected(): Boolean {
         val connectivityManager = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         if (capabilities != null) {
             when {
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true

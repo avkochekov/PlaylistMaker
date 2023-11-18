@@ -6,6 +6,7 @@ import av.kochekov.playlistmaker.common.data.converters.PlaylistDbConvertor
 import av.kochekov.playlistmaker.playlist.domain.PlaylistRepository
 import av.kochekov.playlistmaker.common.data.models.Playlist
 import av.kochekov.playlistmaker.common.data.models.Track
+import av.kochekov.playlistmaker.playlist.domain.PlaylistRepositoryObserver
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -13,7 +14,7 @@ class PlaylistRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val playlistConvertor: PlaylistDbConvertor,
     private val trackConvertor: TrackDbConvertor,
-    ) : PlaylistRepository {
+) : PlaylistRepository {
 
     override suspend fun addPlaylist(playlist: Playlist) {
         appDatabase.playlistDao().insertPlaylist(playlistConvertor.map(playlist))
@@ -30,7 +31,7 @@ class PlaylistRepositoryImpl(
         update()
     }
 
-    override fun getPlaylists(): Flow<List<Playlist>> = flow{
+    override fun getPlaylists(): Flow<List<Playlist>> = flow {
         val list = appDatabase.playlistDao().getPlaylistsWithTracks()
         emit(list.map { model -> playlistConvertor.map(model) })
     }
@@ -47,7 +48,7 @@ class PlaylistRepositoryImpl(
         emit(appDatabase.playlistDao().containsPlaylist(udi) > 0)
     }
 
-    override fun contains(udi: String, id: Int): Flow<Boolean> = flow{
+    override fun contains(udi: String, id: Int): Flow<Boolean> = flow {
 
         val count = appDatabase.playlistDao().containsTrack(udi, id)
         emit(count > 0)

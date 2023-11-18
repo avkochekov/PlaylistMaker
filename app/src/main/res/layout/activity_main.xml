@@ -32,6 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
 
         app:menu="@menu/bottom_navigation_menu">
+
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"

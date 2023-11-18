@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -44,10 +43,10 @@
             android:layout_height="0dp"
             android:layout_marginTop="26dp"
             android:background="@drawable/placeholder"
+            app:layout_constraintBottom_toTopOf="@id/trackName"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/rightImageBorder"
             app:layout_constraintStart_toStartOf="@id/leftImageBorder"
-            app:layout_constraintBottom_toTopOf="@id/trackName"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <TextView
@@ -87,7 +86,7 @@
                 android:layout_height="51dp"
                 android:layout_gravity="center_vertical|start"
                 android:background="@drawable/round_button"
-                android:backgroundTint="@color/YP_text_gray"
+                android:backgroundTint="?attr/grayControlsBackgroundColor"
                 android:src="@drawable/ic_24x24_add_to_playlist"
                 app:tint="@color/YP_white" />
 
@@ -106,7 +105,7 @@
                 android:layout_height="51dp"
                 android:layout_gravity="center_vertical|end"
                 android:background="@drawable/round_button"
-                android:backgroundTint="@color/YP_text_gray"
+                android:backgroundTint="?attr/grayControlsBackgroundColor"
                 android:src="@drawable/ic_not_favorite" />
         </FrameLayout>
 
@@ -297,11 +296,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View android:id="@+id/overlay"
+    <View
+        android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#99000000"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/player_bottom_sheet"

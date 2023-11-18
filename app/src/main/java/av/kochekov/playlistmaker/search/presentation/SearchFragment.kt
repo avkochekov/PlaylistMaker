@@ -129,7 +129,8 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
                     s: CharSequence?,
                     start: Int,
                     before: Int,
-                    count: Int) {
+                    count: Int
+                ) {
                     viewModel.search(s.toString())
                     binding.searchClear.isVisible = s.toString().isNotEmpty()
                 }
@@ -155,6 +156,9 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
     override fun onItemClick(position: Int, adapter: TrackListAdapter) {
         val track = adapter.getData(position)
         viewModel.addToHistory(track)
-        findNavController().navigate(R.id.action_searchFragment_to_playerFragment, PlayerFragment.createArgs(track))
+        findNavController().navigate(
+            R.id.action_searchFragment_to_playerFragment,
+            PlayerFragment.createArgs(track)
+        )
     }
 }

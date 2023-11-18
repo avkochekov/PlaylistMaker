@@ -4,21 +4,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.common.data.models.Playlist
+import av.kochekov.playlistmaker.playlist.domain.models.PlaylistModel
 
-class PlaylistAdapter (private val itemClickListener: PlaylistAdapter.ItemClickListener? = null)
-    : RecyclerView.Adapter<PlaylistHolder>() {
+class PlaylistAdapter(private val itemClickListener: PlaylistAdapter.ItemClickListener? = null) :
+    RecyclerView.Adapter<PlaylistHolder>() {
 
     lateinit var holder: PlaylistHolder
 
-    private var data = mutableListOf<Playlist>()
+    private var data = mutableListOf<PlaylistModel>()
 
     interface ItemClickListener {
         fun onItemClick(position: Int, adapter: PlaylistAdapter)
     }
 
-    fun setData(list: List<Playlist>) {
-        data = list as MutableList<Playlist>
+    fun setData(list: List<PlaylistModel>) {
+        data = list as MutableList<PlaylistModel>
         notifyDataSetChanged()
     }
 
@@ -40,7 +40,7 @@ class PlaylistAdapter (private val itemClickListener: PlaylistAdapter.ItemClickL
         }
     }
 
-    fun getData(index: Int): Playlist {
+    fun getData(index: Int): PlaylistModel {
         return data.elementAt(index)
     }
 }

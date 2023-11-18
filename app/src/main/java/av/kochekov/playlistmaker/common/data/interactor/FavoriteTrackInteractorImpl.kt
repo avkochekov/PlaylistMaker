@@ -2,17 +2,21 @@ package av.kochekov.playlistmaker.common.data.interactor
 
 import av.kochekov.playlistmaker.favorite.domain.FavoriteTrackRepository
 import av.kochekov.playlistmaker.favorite.domain.FavoriteTrackRepositoryObserver
+import av.kochekov.playlistmaker.favorite_tracks.data.utils.Mapper
 import av.kochekov.playlistmaker.favorite_tracks.domain.FavoriteTrackInteractor
-import av.kochekov.playlistmaker.common.data.models.Track
+import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class FavoriteTrackInteractorImpl(
     private val repository: FavoriteTrackRepository
 ) : FavoriteTrackInteractor {
-    override fun getTracks(): Flow<List<Track>> {
-        return repository.getTracks()
+    override fun getTracks(): Flow<List<TrackModel>> = flow {
+        repository.getTracks().collect { list ->
+            emit(list.map { data -> Mapper.toModel(data) })
+        }
     }
 
     override fun getTrackIds(): Flow<List<Int>> {
@@ -23,36 +27,12 @@ class FavoriteTrackInteractorImpl(
         return repository.containsTrack(track)
     }
 
-    override fun addTrack(trackInfo: Track) {
-        val track = Track(
-            trackInfo.trackId,
-            trackInfo.trackName,
-            trackInfo.artistName,
-            trackInfo.trackTimeMillis,
-            trackInfo.artworkUrl100,
-            trackInfo.collectionName,
-            trackInfo.releaseDate,
-            trackInfo.primaryGenreName,
-            trackInfo.country,
-            trackInfo.previewUrl
-        )
-        GlobalScope.async { repository.addTrack(track) }
+    override fun addTrack(data: TrackModel) {
+        GlobalScope.async { repository.addTrack(Mapper.fromModel(data)) }
     }
 
-    override fun removeTrack(trackInfo: Track) {
-        val track = Track(
-            trackInfo.trackId,
-            trackInfo.trackName,
-            trackInfo.artistName,
-            trackInfo.trackTimeMillis,
-            trackInfo.artworkUrl100,
-            trackInfo.collectionName,
-            trackInfo.releaseDate,
-            trackInfo.primaryGenreName,
-            trackInfo.country,
-            trackInfo.previewUrl
-        )
-        GlobalScope.async { repository.removeTrack(track) }
+    override fun removeTrack(data: TrackModel) {
+        GlobalScope.async { repository.removeTrack(Mapper.fromModel(data)) }
     }
 
     override fun observe(observer: FavoriteTrackRepositoryObserver) {

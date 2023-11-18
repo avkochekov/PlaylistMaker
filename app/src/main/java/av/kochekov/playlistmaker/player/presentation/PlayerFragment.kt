@@ -90,7 +90,8 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
 
@@ -110,7 +111,7 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
         })
 
         viewModel.playlistState().observe(viewLifecycleOwner, Observer {
-            when (it){
+            when (it) {
                 is PlaylistListState.Empty -> {
                     // Do nothing
                 }
@@ -121,7 +122,7 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
         })
 
         viewModel.trackInFavorite().observe(viewLifecycleOwner, Observer {
-            if (it){
+            if (it) {
                 favoriteButton?.setImageResource(R.drawable.ic_favorite)
             } else {
                 favoriteButton?.setImageResource(R.drawable.ic_not_favorite)
@@ -171,13 +172,21 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
         })
 
         viewModel.message().observe(viewLifecycleOwner, Observer {
-            when(it){
+            when (it) {
                 is MessageState.TrackAlreadyInPlaylist -> {
-                    Toast.makeText(context, getString(R.string.addToPlaylist_alreadyContains) + it.playlist, Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        getString(R.string.addToPlaylist_alreadyContains, it.playlist),
+                        Toast.LENGTH_LONG
+                    ).show()
                     viewModel.clearMessage()
                 }
                 is MessageState.AddTrackToPlaylistSuccess -> {
-                    Toast.makeText(context, getString(R.string.addToPlaylist_success) + it.playlist, Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        getString(R.string.addToPlaylist_success, it.playlist),
+                        Toast.LENGTH_LONG
+                    ).show()
                     viewModel.clearMessage()
                 }
                 else -> {}
@@ -189,11 +198,11 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
             viewModel.onPlayClicked()
         }
 
-        favoriteButton?.setOnClickListener{
+        favoriteButton?.setOnClickListener {
             viewModel.changeFavoriteState()
         }
 
-        addToPlaylistButton?.setOnClickListener{
+        addToPlaylistButton?.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
@@ -206,6 +215,7 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.stopPlayer()
+        _binding = null
     }
 
     override fun onItemClick(position: Int, adapter: PlaylistAdapter) {

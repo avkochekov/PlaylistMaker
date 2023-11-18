@@ -23,4 +23,7 @@
     <color name="YP_background">#7F1A1B22</color>
     <color name="YP_red">#F56B6C</color>
     <color name="YP_blue">#3772E7</color>
+
+    <color name="YP_button_light_gray">#AEAFB4</color>
+    <color name="YP_button_dark_gray">#535459</color>
 </resources>

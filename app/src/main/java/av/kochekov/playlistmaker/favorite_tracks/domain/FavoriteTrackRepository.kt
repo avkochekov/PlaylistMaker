@@ -3,12 +3,13 @@ package av.kochekov.playlistmaker.favorite.domain
 import av.kochekov.playlistmaker.common.data.models.Track
 import kotlinx.coroutines.flow.Flow
 
-interface FavoriteTrackRepositoryObserver{
+interface FavoriteTrackRepositoryObserver {
     fun update()
 }
+
 interface FavoriteTrackRepository {
-    companion object{
-        var observerList: MutableList<FavoriteTrackRepositoryObserver> = mutableListOf()
+    companion object {
+        private var observerList: MutableList<FavoriteTrackRepositoryObserver> = mutableListOf()
     }
 
     fun getTracks(): Flow<List<Track>>;
@@ -24,11 +25,11 @@ interface FavoriteTrackRepository {
     suspend fun removeTrack(track: Track)
 
     suspend fun removeTrack(trackId: Int)
-    fun attach(observer: FavoriteTrackRepositoryObserver){
+    fun attach(observer: FavoriteTrackRepositoryObserver) {
         observerList.add(observer)
     }
 
-    fun update(){
+    fun update() {
         observerList.map {
             it.update()
         }

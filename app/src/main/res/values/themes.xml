@@ -25,6 +25,8 @@
     <attr name="dashColor" format="color" />
     <attr name="playlist_tracksCount_textColor" format="color" />
 
+    <attr name="grayControlsBackgroundColor" format="color" />
+
     <!-- Base application theme. -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -63,6 +65,8 @@
 
         <item name="dashColor">@color/YP_light_gray</item>
         <item name="playlist_tracksCount_textColor">@color/YP_text_gray</item>
+
+        <item name="grayControlsBackgroundColor">@color/YP_button_light_gray</item>
     </style>
 
     <style name="MenuBackground">

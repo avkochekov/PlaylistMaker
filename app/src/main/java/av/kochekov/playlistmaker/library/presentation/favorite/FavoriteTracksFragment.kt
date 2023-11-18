@@ -42,20 +42,20 @@ class FavoriteTracksFragment : Fragment(), TrackListAdapter.ItemClickListener {
 
         trackListAdapter = TrackListAdapter(this)
 
-        with(errorPlaceholder){
+        with(errorPlaceholder) {
             root.visibility = View.GONE
             errorPlaceholderText.text = getString(R.string.library_error_favoriteTracks)
             errorPlaceholderImage.setImageResource(R.drawable.search_error)
             errorPlaceholderButton.visibility = View.GONE
         }
 
-        with(trackList){
+        with(trackList) {
             root.visibility = View.GONE
             root.adapter = trackListAdapter
         }
 
         viewModel.activityState().observe(viewLifecycleOwner, Observer {
-            when(it){
+            when (it) {
                 is FavoriteTrackListState.Empty -> {
                     errorPlaceholder.root.visibility = View.VISIBLE
                     trackList.root.visibility = View.GONE
@@ -84,6 +84,9 @@ class FavoriteTracksFragment : Fragment(), TrackListAdapter.ItemClickListener {
 
     override fun onItemClick(position: Int, adapter: TrackListAdapter) {
         val data = adapter.getData(position)
-        findNavController().navigate(R.id.action_libraryFragment_to_playerFragment, PlayerFragment.createArgs(data))
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playerFragment,
+            PlayerFragment.createArgs(data)
+        )
     }
 }

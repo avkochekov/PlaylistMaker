@@ -1,16 +1,16 @@
 package av.kochekov.playlistmaker.playlist.domain
 
-import av.kochekov.playlistmaker.common.data.models.Playlist
-import av.kochekov.playlistmaker.common.data.models.Track
+import av.kochekov.playlistmaker.playlist.domain.models.PlaylistModel
+import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistInteractor {
 
-    fun savePlaylist(data: Playlist)
+    fun savePlaylist(data: PlaylistModel)
 
-    fun getPlaylists() : Flow<List<Playlist>>
+    fun getPlaylists(): Flow<List<PlaylistModel>>
 
-    fun addToPlaylist(udi: String, track: Track)
+    fun addToPlaylist(udi: String, track: TrackModel)
 
     fun contains(udi: String, id: Int): Flow<Boolean>
 

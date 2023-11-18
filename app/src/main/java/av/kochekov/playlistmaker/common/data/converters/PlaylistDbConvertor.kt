@@ -7,28 +7,28 @@ import av.kochekov.playlistmaker.common.data.models.Track
 import av.kochekov.playlistmaker.favorite.data.converters.TrackDbConvertor
 
 class PlaylistDbConvertor {
-    fun map(data: Playlist) : PlaylistEntity {
+    fun map(data: Playlist): PlaylistEntity {
         return PlaylistEntity(
-            udi = data.udi,
+            udi = data.uuid,
             name = data.name,
             description = data.description,
             image = data.artwork
         )
     }
 
-    fun map(data: PlaylistEntity) : Playlist {
+    fun map(data: PlaylistEntity): Playlist {
         return Playlist(
-            udi = data.udi,
+            uuid = data.udi,
             name = data.name,
             artwork = data.image,
             description = data.description
         )
     }
 
-    fun map(data: PlaylistTracksRelation) : Playlist {
+    fun map(data: PlaylistTracksRelation): Playlist {
         val converter = TrackDbConvertor()
         return Playlist(
-            udi = data.playlist.udi,
+            uuid = data.playlist.udi,
             name = data.playlist.name,
             artwork = data.playlist.image,
             description = data.playlist.description,

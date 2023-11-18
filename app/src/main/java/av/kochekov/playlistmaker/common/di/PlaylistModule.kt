@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker.playlist.di
+package av.kochekov.playlistmaker.common.di
 
 import androidx.room.Room
 import av.kochekov.playlistmaker.common.data.db.AppDatabase
@@ -37,13 +37,13 @@ val playlistModule = module {
 
     single<PlaylistInteractor> {
         PlaylistInteractorImpl(
-            repository = get()
+            playlistRepository = get(),
+            imagesRepository = get(),
         )
     }
 
     viewModel<PlaylistViewModel> {
         PlaylistViewModel(
-            imagesRepository = get(),
             interactor = get()
         )
     }

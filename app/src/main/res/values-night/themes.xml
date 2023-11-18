@@ -35,6 +35,8 @@
 
         <item name="dashColor">@color/YP_white</item>
         <item name="playlist_tracksCount_textColor">@color/YP_white</item>
+
+        <item name="grayControlsBackgroundColor">@color/YP_button_dark_gray</item>
     </style>
 
     <style name="MenuBackground">

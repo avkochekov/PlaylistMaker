@@ -6,7 +6,7 @@ interface SearchHistoryRepository {
 
     fun setTrackList(list: List<Track>)
 
-    fun getTrackList() : List<Track>
+    fun getTrackList(): List<Track>
 
     fun clear();
 }

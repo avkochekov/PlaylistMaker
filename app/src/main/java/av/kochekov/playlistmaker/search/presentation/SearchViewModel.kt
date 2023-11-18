@@ -6,11 +6,9 @@ import android.os.SystemClock
 import androidx.lifecycle.*
 import av.kochekov.playlistmaker.search.domain.SearchHistoryInteractor
 import av.kochekov.playlistmaker.search.domain.TrackListInteractor
-import av.kochekov.playlistmaker.common.data.models.Track
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
 import av.kochekov.playlistmaker.search.domain.model.SearchFragmentState
 import av.kochekov.playlistmaker.search.domain.model.TrackModel
-import av.kochekov.playlistmaker.search.data.utils.Mapper
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -63,7 +61,7 @@ class SearchViewModel(
 
     fun search() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        latestSearchText?.let { showTrackList(it) }
+        latestSearchText?.let { text -> showTrackList(text) }
     }
 
     fun breakSearch() {
@@ -71,7 +69,7 @@ class SearchViewModel(
     }
 
     fun addToHistory(track: TrackModel) {
-        searchHistoryInteractor.add(Mapper.fromModel(track))
+        searchHistoryInteractor.add(track)
         if (fragmentState.value is SearchFragmentState.HistoryList)
             showHistory()
     }
@@ -86,16 +84,16 @@ class SearchViewModel(
         viewModelScope.launch {
             trackListInteractor
                 .searchTracks(text)
-                .collect{
+                .collect {
                     processResult(it.first, it.second)
                 }
         }
     }
 
-    private fun processResult(result: List<Track>?, errorMessage: String?) {
+    private fun processResult(result: List<TrackModel>?, errorMessage: String?) {
         if (!errorMessage.isNullOrEmpty()) {
             showErrorMessage(ErrorMessageType.NO_CONNECTION)
-        } else if (result.isNullOrEmpty()){
+        } else if (result.isNullOrEmpty()) {
             showErrorMessage(ErrorMessageType.NO_DATA)
         } else {
             showTracks(result)
@@ -108,14 +106,11 @@ class SearchViewModel(
     }
 
     private fun showHistory() {
-        fragmentState.value = SearchFragmentState.HistoryList(
-            searchHistoryInteractor.get().map { Mapper.toModel(it) })
+        fragmentState.value = SearchFragmentState.HistoryList(searchHistoryInteractor.get())
     }
 
-    private fun showTracks(list: List<Track>) {
+    private fun showTracks(list: List<TrackModel>) {
         fragmentState.value =
-            SearchFragmentState.SearchResultList(list.map {
-                Mapper.toModel(it)
-            })
+            SearchFragmentState.SearchResultList(list)
     }
 }

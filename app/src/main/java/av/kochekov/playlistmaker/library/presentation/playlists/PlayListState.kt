@@ -1,15 +1,15 @@
 package av.kochekov.playlistmaker.library.presentation.playlists
 
-import av.kochekov.playlistmaker.common.data.models.Playlist
+import av.kochekov.playlistmaker.playlist.domain.models.PlaylistModel
 
-sealed interface  PlayListState {
+sealed interface PlayListState {
 
     object Loading : PlayListState
 
     object Empty : PlayListState
 
     data class Content(
-        val list: List<Playlist>
+        val list: List<PlaylistModel>
     ) : PlayListState
 
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import av.kochekov.playlistmaker.playlist.domain.PlaylistInteractor
 import av.kochekov.playlistmaker.playlist.domain.PlaylistRepositoryObserver
-import av.kochekov.playlistmaker.common.data.models.Playlist
+import av.kochekov.playlistmaker.playlist.domain.models.PlaylistModel
 import kotlinx.coroutines.launch
 
 class PlayListsViewModel(
@@ -22,7 +22,7 @@ class PlayListsViewModel(
         load()
     }
 
-    fun load(){
+    fun load() {
         renderState(PlayListState.Loading)
         viewModelScope.launch {
             interactor.getPlaylists()
@@ -32,13 +32,14 @@ class PlayListsViewModel(
         }
     }
 
-    private fun processResult(list: List<Playlist>) {
+    private fun processResult(list: List<PlaylistModel>) {
         if (list.isEmpty()) {
             renderState(PlayListState.Empty)
         } else {
             renderState(PlayListState.Content(list))
         }
     }
+
     private fun renderState(newState: PlayListState) {
         state.postValue(newState)
     }

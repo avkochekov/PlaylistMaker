@@ -31,11 +31,13 @@ val libraryModule = module {
 
     viewModel<FavoriteTracksViewModel> {
         FavoriteTracksViewModel(
-            interactor = get())
+            interactor = get()
+        )
     }
 
     viewModel<PlayListsViewModel> {
         PlayListsViewModel(
-            interactor = get())
+            interactor = get()
+        )
     }
 }
