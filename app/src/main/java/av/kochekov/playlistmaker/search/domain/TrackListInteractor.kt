@@ -1,8 +1,8 @@
 package av.kochekov.playlistmaker.search.domain
 
-import av.kochekov.playlistmaker.search.data.model.Track
+import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import kotlinx.coroutines.flow.Flow
 
 interface TrackListInteractor {
-    fun searchTracks(expression: String): Flow<Pair<List<Track>?, String?>>
+    fun searchTracks(expression: String): Flow<Pair<List<TrackModel>?, String?>>
 }

@@ -4,7 +4,7 @@ import av.kochekov.playlistmaker.search.domain.TrackListRepository
 import av.kochekov.playlistmaker.search.data.model.TrackListRequest
 import av.kochekov.playlistmaker.search.data.model.TrackListResponse
 import av.kochekov.playlistmaker.search.data.network_client.NetworkClient
-import av.kochekov.playlistmaker.search.data.model.Track
+import av.kochekov.playlistmaker.common.data.models.Track
 import av.kochekov.playlistmaker.search.domain.model.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

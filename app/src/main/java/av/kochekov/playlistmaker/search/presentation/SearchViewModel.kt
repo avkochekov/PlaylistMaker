@@ -6,11 +6,9 @@ import android.os.SystemClock
 import androidx.lifecycle.*
 import av.kochekov.playlistmaker.search.domain.SearchHistoryInteractor
 import av.kochekov.playlistmaker.search.domain.TrackListInteractor
-import av.kochekov.playlistmaker.search.data.model.Track
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
-import av.kochekov.playlistmaker.search.domain.model.SearchActivityState
-import av.kochekov.playlistmaker.search.domain.model.TrackInfo
-import av.kochekov.playlistmaker.search.data.utils.Mapper
+import av.kochekov.playlistmaker.search.domain.model.SearchFragmentState
+import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -18,34 +16,19 @@ class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor
 ) : ViewModel() {
 
-
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-
-        fun getSearchModelFactory(
-            trackListInteractor: TrackListInteractor,
-            searchHistoryInteractor: SearchHistoryInteractor
-        ): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(
-                        trackListInteractor = trackListInteractor,
-                        searchHistoryInteractor = searchHistoryInteractor
-                    ) as T
-                }
-            }
     }
 
-    private val activityState = MutableLiveData<SearchActivityState>()
+    private val fragmentState = MutableLiveData<SearchFragmentState>()
 
     private val handler = Handler(Looper.getMainLooper())
 
     private var latestSearchText: String? = null
 
-    fun activityState(): LiveData<SearchActivityState> {
-        return activityState
+    fun fragmentState(): LiveData<SearchFragmentState> {
+        return fragmentState
     }
 
     init {
@@ -78,16 +61,16 @@ class SearchViewModel(
 
     fun search() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        latestSearchText?.let { showTrackList(it) }
+        latestSearchText?.let { text -> showTrackList(text) }
     }
 
     fun breakSearch() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
-    fun addToHistory(track: TrackInfo) {
-        searchHistoryInteractor.add(Mapper.fromTrackInfo(track))
-        if (activityState.value is SearchActivityState.HistoryList)
+    fun addToHistory(track: TrackModel) {
+        searchHistoryInteractor.add(track)
+        if (fragmentState.value is SearchFragmentState.HistoryList)
             showHistory()
     }
 
@@ -97,20 +80,20 @@ class SearchViewModel(
     }
 
     private fun showTrackList(text: String) {
-        activityState.value = SearchActivityState.InSearchActivity
+        fragmentState.value = SearchFragmentState.InSearchActivity
         viewModelScope.launch {
             trackListInteractor
                 .searchTracks(text)
-                .collect{
+                .collect {
                     processResult(it.first, it.second)
                 }
         }
     }
 
-    private fun processResult(result: List<Track>?, errorMessage: String?) {
+    private fun processResult(result: List<TrackModel>?, errorMessage: String?) {
         if (!errorMessage.isNullOrEmpty()) {
             showErrorMessage(ErrorMessageType.NO_CONNECTION)
-        } else if (result.isNullOrEmpty()){
+        } else if (result.isNullOrEmpty()) {
             showErrorMessage(ErrorMessageType.NO_DATA)
         } else {
             showTracks(result)
@@ -119,18 +102,15 @@ class SearchViewModel(
 
 
     private fun showErrorMessage(type: ErrorMessageType) {
-        activityState.value = SearchActivityState.Error(type)
+        fragmentState.value = SearchFragmentState.Error(type)
     }
 
     private fun showHistory() {
-        activityState.value = SearchActivityState.HistoryList(
-            searchHistoryInteractor.get().map { Mapper.toTrackInfo(it) })
+        fragmentState.value = SearchFragmentState.HistoryList(searchHistoryInteractor.get())
     }
 
-    private fun showTracks(list: List<Track>) {
-        activityState.value =
-            SearchActivityState.SearchResultList(list.map {
-                Mapper.toTrackInfo(it)
-            })
+    private fun showTracks(list: List<TrackModel>) {
+        fragmentState.value =
+            SearchFragmentState.SearchResultList(list)
     }
 }

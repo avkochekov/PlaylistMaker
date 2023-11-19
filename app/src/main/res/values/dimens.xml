@@ -33,6 +33,7 @@
     <dimen name="trackItemInfo_padding_horizontal">8dp</dimen>
 
     <dimen name="trackItemImage_round">2dp</dimen>
+    <dimen name="playlistItemImage_round">8dp</dimen>
 
     <dimen name="searchMessageTopMargin">102dp</dimen>
     <dimen name="updateButtonTextSize">14sp</dimen>
@@ -44,5 +45,11 @@
     <dimen name="audioPlayer_topPadding">9dp</dimen>
     <dimen name="audioPlayer_bottomPadding">8dp</dimen>
     <dimen name="audioPlayer_artworkRadius">8dp</dimen>
+
+    <dimen name="playlist_artworkPadding">8dp</dimen>
+    <dimen name="playlist_artworkRadius">8dp</dimen>
+    <dimen name="playlist_artworkMargins">24dp</dimen>
+    <dimen name="playlist_controlMargins">16dp</dimen>
+    <dimen name="playlist_controlTextSize">16dp</dimen>
 
 </resources>

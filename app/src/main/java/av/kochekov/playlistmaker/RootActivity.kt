@@ -2,6 +2,7 @@ package av.kochekov.playlistmaker
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import av.kochekov.playlistmaker.databinding.ActivityMainBinding
@@ -20,5 +21,19 @@ class RootActivity : AppCompatActivity() {
 
         val bottomNavigationView = binding.bottomNavigationView
         bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.playerFragment -> {
+                    bottomNavigationView.visibility = View.GONE
+                }
+                R.id.playlistFragment -> {
+                    bottomNavigationView.visibility = View.GONE
+                }
+                else -> {
+                    bottomNavigationView.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 }

@@ -32,6 +32,7 @@
     <string name="audioPlayer_year">Год</string>
     <string name="audioPlayer_genre">Жанр</string>
     <string name="audioPlayer_country">Страна</string>
+    <string name="audioPlayer_addToPlayLists">Добавить в плейлист</string>
 
     <string name="library_favoriteTracks">Избранные треки</string>
     <string name="library_playLists">Плейлисты</string>
@@ -39,5 +40,21 @@
 
     <string name="library_error_favoriteTracks">Ваша медиатека пуста</string>
     <string name="library_error_playLists">Вы не создали\nни одного плейлиста</string>
+
+    <string name="playlist_title_create">Новый плейлист</string>
+    <string name="playlist_name">Название *</string>
+    <string name="playlist_description">Описание</string>
+    <string name="playlist_create">Создать</string>
+    <string name="playlist_imageNotSelected">"Изображение не выбрано"</string>
+    <string name="playlist_rationale">"Разрешение на доступ к хранилищу необходимо, чтобы указать изображение плейлиста"</string>
+    <string name="playlist_created">"Плейлист %1$s создан"</string>
+
+    <string name="playlist_confirmExit_title">"Завершить создание плейлиста?"</string>
+    <string name="playlist_confirmExit_message">"Все несохраненные данные будут потеряны"</string>
+    <string name="playlist_confirmExit_positiveButton">"Завершить"</string>
+    <string name="playlist_confirmExit_negativeButton">"Отмена"</string>
+
+    <string name="addToPlaylist_success">"Добавлено в плейлист %1s"</string>
+    <string name="addToPlaylist_alreadyContains">"Трек уже добавлен в плейлист %1s"</string>
 
 </resources>

@@ -1,36 +1,36 @@
 package av.kochekov.playlistmaker.search.data.utils
 
-import av.kochekov.playlistmaker.search.data.model.Track
-import av.kochekov.playlistmaker.search.domain.model.TrackInfo
+import av.kochekov.playlistmaker.common.data.models.Track
+import av.kochekov.playlistmaker.search.domain.model.TrackModel
 
 object Mapper {
-    fun toTrackInfo(track: Track): TrackInfo {
-        return TrackInfo(
-            track.trackId,
-            track.trackName,
-            track.artistName,
-            track.trackTimeMillis,
-            track.artworkUrl100,
-            track.collectionName,
-            track.releaseDate,
-            track.primaryGenreName,
-            track.country,
-            track.previewUrl
+    fun toModel(data: Track): TrackModel {
+        return TrackModel(
+            data.trackId,
+            data.trackName,
+            data.artistName,
+            data.trackTimeMillis,
+            data.artworkUrl100,
+            data.collectionName,
+            data.releaseDate,
+            data.primaryGenreName,
+            data.country,
+            data.previewUrl
         )
     }
 
-    fun fromTrackInfo(track: TrackInfo): Track {
+    fun fromModel(data: TrackModel): Track {
         return Track(
-            track.trackId,
-            track.trackName,
-            track.artistName,
-            track.trackTimeMillis,
-            track.artworkUrl100,
-            track.collectionName,
-            track.releaseDate,
-            track.primaryGenreName,
-            track.country,
-            track.previewUrl
+            data.trackId,
+            data.trackName,
+            data.artistName,
+            data.trackTimeMillis,
+            data.artworkUrl100,
+            data.collectionName,
+            data.releaseDate,
+            data.primaryGenreName,
+            data.country,
+            data.previewUrl
         )
     }
 }

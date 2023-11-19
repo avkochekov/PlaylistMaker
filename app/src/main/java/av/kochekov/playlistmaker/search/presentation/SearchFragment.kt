@@ -1,6 +1,5 @@
 package av.kochekov.playlistmaker.search.presentation
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,11 +11,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.databinding.FragmentSearchBinding
-import av.kochekov.playlistmaker.player.presentation.PlayerActivity
+import av.kochekov.playlistmaker.player.presentation.PlayerFragment
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
-import av.kochekov.playlistmaker.search.domain.model.SearchActivityState
+import av.kochekov.playlistmaker.search.domain.model.SearchFragmentState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,8 +31,6 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
 
     private var trackListAdapter: TrackListAdapter? = null
     private var historyListAdapter: TrackListAdapter? = null
-
-    private var isClickAllowed = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,29 +55,29 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
         trackList.root.adapter = trackListAdapter
         historyList.trackList.root.adapter = historyListAdapter
 
-        viewModel.activityState().observe(viewLifecycleOwner, Observer {
+        viewModel.fragmentState().observe(viewLifecycleOwner, Observer {
             when (it) {
-                is SearchActivityState.HistoryList -> {
+                is SearchFragmentState.HistoryList -> {
                     historyListAdapter?.setData(it.trackList)
                     historyList.root.isVisible = it.trackList.isNotEmpty()
                     trackList.root.isVisible = false
                     progressBar.isVisible = false
                     errorPlaceholder.root.isVisible = false
                 }
-                is SearchActivityState.SearchResultList -> {
+                is SearchFragmentState.SearchResultList -> {
                     trackListAdapter?.setData(it.trackList)
                     trackList.root.isVisible = true
                     historyList.root.isVisible = false
                     progressBar.isVisible = false
                     errorPlaceholder.root.isVisible = false
                 }
-                is SearchActivityState.InSearchActivity -> {
+                is SearchFragmentState.InSearchActivity -> {
                     progressBar.isVisible = true
                     trackList.root.isVisible = false
                     historyList.root.isVisible = false
                     errorPlaceholder.root.isVisible = false
                 }
-                is SearchActivityState.Error -> {
+                is SearchFragmentState.Error -> {
                     binding.progressBar.isVisible = false
                     trackList.root.isVisible = false
                     historyList.root.isVisible = false
@@ -127,7 +125,12 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
                 ) {
                 }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
                     viewModel.search(s.toString())
                     binding.searchClear.isVisible = s.toString().isNotEmpty()
                 }
@@ -151,24 +154,11 @@ class SearchFragment : Fragment(), TrackListAdapter.ItemClickListener {
     }
 
     override fun onItemClick(position: Int, adapter: TrackListAdapter) {
-        if (clickDebounce()){
-            val track = adapter.getData(position)
-            viewModel.addToHistory(track)
-            startActivity(Intent(activity, PlayerActivity::class.java).apply {
-                putExtra(PlayerActivity.TRACK, track)
-            })
-        }
-    }
-
-    private fun clickDebounce(): Boolean {
-        if (isClickAllowed){
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
-                isClickAllowed = true
-            }
-            return true
-        }
-        return false
+        val track = adapter.getData(position)
+        viewModel.addToHistory(track)
+        findNavController().navigate(
+            R.id.action_searchFragment_to_playerFragment,
+            PlayerFragment.createArgs(track)
+        )
     }
 }

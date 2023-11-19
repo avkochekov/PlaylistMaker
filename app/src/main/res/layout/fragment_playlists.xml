@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginHorizontal="@dimen/margin"
     android:orientation="vertical"
-    tools:context=".library.presentation.PlayListsFragment">
+    tools:context=".library.presentation.playlists.PlayListsFragment">
 
     <Button
-        android:id="@+id/newPlayList"
+        android:id="@+id/new_playlist_button"
         style="@style/RoundedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +18,7 @@
         android:text="@string/library_newPlayList" />
 
     <ImageView
-        android:id="@+id/errorImage"
+        android:id="@+id/error_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -26,7 +27,7 @@
         android:visibility="visible" />
 
     <TextView
-        android:id="@+id/errorText"
+        android:id="@+id/error_text"
         style="@style/ErrorPlaceholderStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,5 +35,24 @@
         android:gravity="center_horizontal"
         android:text="@string/library_error_playLists"
         android:visibility="visible" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlist_playlist_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin"
+        android:paddingHorizontal="@dimen/padding"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:reverseLayout="false"
+        tools:listitem="@layout/playlist_grid_item" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="140dp"
+        android:visibility="gone" />
+
 
 </LinearLayout>

@@ -15,10 +15,11 @@
     <include
         android:id="@+id/trackList"
         layout="@layout/track_list"
-        android:layout_marginTop="@dimen/margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:layout_marginTop="@dimen/margin"
+        android:visibility="gone" />
+
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="44dp"

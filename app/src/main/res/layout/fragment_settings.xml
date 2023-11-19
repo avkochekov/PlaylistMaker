@@ -20,6 +20,7 @@
         <TextView
             style="@style/ToolBarTextStyle"
             android:text="@string/menu_settings" />
+
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
