@@ -3,10 +3,9 @@ package av.kochekov.playlistmaker.common.data.repository
 import av.kochekov.playlistmaker.common.data.db.AppDatabase
 import av.kochekov.playlistmaker.favorite.data.converters.TrackDbConvertor
 import av.kochekov.playlistmaker.common.data.converters.PlaylistDbConvertor
-import av.kochekov.playlistmaker.playlist.domain.PlaylistRepository
+import av.kochekov.playlistmaker.common.domain.PlaylistRepository
 import av.kochekov.playlistmaker.common.data.models.Playlist
 import av.kochekov.playlistmaker.common.data.models.Track
-import av.kochekov.playlistmaker.playlist.domain.PlaylistRepositoryObserver
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -28,6 +27,13 @@ class PlaylistRepositoryImpl(
 
     override suspend fun removePlaylist(playlist: Playlist) {
         appDatabase.playlistDao().removePlaylist(playlistConvertor.map(playlist))
+        appDatabase.garbageCollectorDao().clearTracks()
+        update()
+    }
+
+    override suspend fun removePlaylist(uuid: String) {
+        appDatabase.playlistDao().removePlaylist(uuid)
+        appDatabase.garbageCollectorDao().clearTracks()
         update()
     }
 
@@ -36,27 +42,35 @@ class PlaylistRepositoryImpl(
         emit(list.map { model -> playlistConvertor.map(model) })
     }
 
-    override fun getPlaylist(udi: String): Flow<Playlist?> = flow {
-        val list = appDatabase.playlistDao().getPlaylist(udi)
-        if (list.isEmpty() || list.size > 1)
-            emit(null)
-        else
-            emit(playlistConvertor.map(list.first()))
+    override fun getPlaylist(uuid: String): Flow<Playlist?> = flow {
+        appDatabase.playlistDao().getPlaylistWithTracks(uuid)
+            ?.let { data -> emit(playlistConvertor.map(data)) }
     }
 
-    override fun containsPlaylists(udi: String): Flow<Boolean> = flow {
-        emit(appDatabase.playlistDao().containsPlaylist(udi) > 0)
+    override fun containsPlaylists(uuid: String): Flow<Boolean> = flow {
+        emit(appDatabase.playlistDao().containsPlaylist(uuid) > 0)
     }
 
-    override fun contains(udi: String, id: Int): Flow<Boolean> = flow {
+    override fun containsTrack(uuid: String, id: Int): Flow<Boolean> = flow {
 
-        val count = appDatabase.playlistDao().containsTrack(udi, id)
+        val count = appDatabase.playlistDao().containsTrack(uuid, id)
         emit(count > 0)
     }
 
-    override suspend fun addToPlaylist(udi: String, track: Track) {
+    override fun containsTrack(id: Int): Flow<Boolean> = flow {
+        val count = appDatabase.playlistDao().containsTrack(id)
+        emit(count > 0)
+    }
+
+    override suspend fun addTrack(udi: String, track: Track) {
         appDatabase.trackDao().insertTrack(trackConvertor.map(track))
         appDatabase.playlistDao().addTrack(udi, track.trackId)
+        update()
+    }
+
+    override suspend fun removeTrack(udi: String, id: Int) {
+        appDatabase.playlistDao().removeTrack(udi, id)
+        appDatabase.garbageCollectorDao().clearTracks()
         update()
     }
 }

@@ -2,6 +2,7 @@ package av.kochekov.playlistmaker.common.data.db
 
 import androidx.room.*
 import av.kochekov.playlistmaker.common.data.db.dao.FavoriteTracksDao
+import av.kochekov.playlistmaker.common.data.db.dao.GarbageCollectorDao
 import av.kochekov.playlistmaker.common.data.db.dao.PlayListDao
 import av.kochekov.playlistmaker.common.data.db.dao.TrackDao
 import av.kochekov.playlistmaker.common.data.db.entity.FavoriteTrackEntity
@@ -23,4 +24,5 @@ abstract class AppDatabase : RoomDatabase(){
     abstract fun trackDao(): TrackDao
     abstract fun favoriteTracks(): FavoriteTracksDao
     abstract fun playlistDao(): PlayListDao
+    abstract fun garbageCollectorDao() : GarbageCollectorDao
 }

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.playlist.domain.models.PlaylistModel
+import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
 
 class PlaylistAdapter(private val itemClickListener: PlaylistAdapter.ItemClickListener? = null) :
     RecyclerView.Adapter<PlaylistHolder>() {

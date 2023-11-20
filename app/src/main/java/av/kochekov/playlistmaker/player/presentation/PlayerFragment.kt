@@ -54,14 +54,22 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
 
     companion object {
         const val TRACK = "CurrentTrackInfo"
+        const val TRACK_ID = "CurrentTrackId"
         fun createArgs(track: TrackModel): Bundle =
             bundleOf(TRACK to track)
+        fun createArgs(track: Int): Bundle =
+            bundleOf(TRACK_ID to track)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.setTrack(requireArguments().get(TRACK) as TrackModel)
+        requireArguments().get(TRACK)?.let {data ->
+            viewModel.setTrack(data as TrackModel)
+        }
+        requireArguments().get(TRACK_ID)?.let { data ->
+            viewModel.setTrack(data as Int)
+        }
         playListAdapter = PlaylistAdapter(this)
 
         binding.toolbar.setNavigationOnClickListener {

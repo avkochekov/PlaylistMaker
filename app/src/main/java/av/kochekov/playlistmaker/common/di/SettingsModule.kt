@@ -2,7 +2,7 @@ package av.kochekov.playlistmaker.settings.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import av.kochekov.playlistmaker.settings.data.ExternalNavigator
+import av.kochekov.playlistmaker.common.data.ExternalNavigator
 import av.kochekov.playlistmaker.settings.data.SettingsRepositoryImpl
 import av.kochekov.playlistmaker.settings.domain.*
 import av.kochekov.playlistmaker.settings.presentation.SettingsViewModel

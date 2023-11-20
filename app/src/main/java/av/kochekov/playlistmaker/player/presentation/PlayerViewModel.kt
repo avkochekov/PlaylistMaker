@@ -2,17 +2,18 @@ package av.kochekov.playlistmaker.player.presentation
 
 import android.util.Log
 import androidx.lifecycle.*
-import av.kochekov.playlistmaker.favorite_tracks.domain.FavoriteTrackInteractor
+import av.kochekov.playlistmaker.favorite_tracks.domain.TrackInteractor
 import av.kochekov.playlistmaker.player.domain.MediaPlayerInteractor
 import av.kochekov.playlistmaker.player.domain.MediaPlayerStateListenerInterface
 import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
-import av.kochekov.playlistmaker.playlist.domain.PlaylistInteractor
-import av.kochekov.playlistmaker.playlist.domain.PlaylistRepositoryObserver
-import av.kochekov.playlistmaker.playlist.domain.models.PlaylistModel
+import av.kochekov.playlistmaker.playlist_editor.domain.PlaylistInteractor
+import av.kochekov.playlistmaker.common.domain.PlaylistRepositoryObserver
+import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
 import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 
 private const val TIME_UPDATE_VALUE_MILLIS = 300L
@@ -20,8 +21,9 @@ private const val DEFAULT_TRACK_POSITION = 0
 
 class PlayerViewModel(
     private val mediaPlayerInteractor: MediaPlayerInteractor,
-    private val favoriteTrackInteractor: FavoriteTrackInteractor,
-    private val playlistInteractor: PlaylistInteractor
+    private val favoriteTrackInteractor: TrackInteractor,
+    private val playlistInteractor: PlaylistInteractor,
+    private val trackInteractor: TrackInteractor
 ) : ViewModel(), PlaylistRepositoryObserver {
 
     private var trackModel = MutableLiveData<TrackModel>()
@@ -39,7 +41,7 @@ class PlayerViewModel(
         playlistInteractor.observe(this)
         mediaPlayerInteractor.setListener(object : MediaPlayerStateListenerInterface {
             override fun onStateChanged(state: MediaPlayerState) {
-                playerState.value = state
+                playerState.postValue(state)
             }
         })
         checkTrackInFavorite()
@@ -71,10 +73,18 @@ class PlayerViewModel(
     }
 
     fun setTrack(track: TrackModel) {
-        trackModel.value = track
-        trackPosition.value = DEFAULT_TRACK_POSITION
+        trackModel.postValue(track)
+        trackPosition.postValue(DEFAULT_TRACK_POSITION)
         mediaPlayerInteractor.setTrack(track.previewUrl.toString())
-        checkTrackInFavorite()
+        checkTrackInFavorite(track.trackId)
+    }
+
+    fun setTrack(track: Int) {
+        GlobalScope.async {
+            trackInteractor.getTrack(track).collect { data ->
+                data?.let { setTrack(it) }
+            }
+        }
     }
 
     fun onPlayClicked() {
@@ -139,13 +149,16 @@ class PlayerViewModel(
         loadPlaylists()
     }
 
+    private fun checkTrackInFavorite(id: Int) {
+        viewModelScope.launch {
+            favoriteTrackInteractor.getInFavorites(id).collect{inFavorite ->
+                trackInFavorite.postValue(inFavorite)
+            }
+        }
+    }
     private fun checkTrackInFavorite() {
         trackModel.value?.let { track ->
-            viewModelScope.launch {
-                trackInFavorite.postValue(
-                    favoriteTrackInteractor.getInFavorites(track.trackId).equals(true)
-                )
-            }
+            checkTrackInFavorite(track.trackId)
         }
     }
 

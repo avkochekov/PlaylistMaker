@@ -1,14 +1,16 @@
 package av.kochekov.playlistmaker.player.di
 
 import androidx.room.Room
-import av.kochekov.playlistmaker.common.data.repository.FavoriteTrackRepositoryImpl
+import av.kochekov.playlistmaker.common.data.repository.TrackRepositoryImpl
 import av.kochekov.playlistmaker.favorite.data.converters.TrackDbConvertor
 import av.kochekov.playlistmaker.common.data.db.AppDatabase
-import av.kochekov.playlistmaker.common.data.interactor.FavoriteTrackInteractorImpl
-import av.kochekov.playlistmaker.favorite.domain.FavoriteTrackRepository
-import av.kochekov.playlistmaker.favorite_tracks.domain.FavoriteTrackInteractor
+import av.kochekov.playlistmaker.common.data.interactor.TrackInteractorImpl
+import av.kochekov.playlistmaker.favorite.domain.TrackRepository
+import av.kochekov.playlistmaker.favorite_tracks.domain.TrackInteractor
+import av.kochekov.playlistmaker.library.domain.favorite.FavoriteTracksInteractor
+import av.kochekov.playlistmaker.library.domain.favorite.FavoriteTracksInteractorImpl
 import av.kochekov.playlistmaker.library.presentation.favorite.FavoriteTracksViewModel
-import av.kochekov.playlistmaker.library.presentation.playlists.PlayListsViewModel
+import av.kochekov.playlistmaker.library.presentation.playlists.PlaylistsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -21,12 +23,16 @@ val libraryModule = module {
 
     factory { TrackDbConvertor() }
 
-    single<FavoriteTrackRepository> {
-        FavoriteTrackRepositoryImpl(get(), get())
+    single<TrackRepository> {
+        TrackRepositoryImpl(get(), get())
     }
 
-    single<FavoriteTrackInteractor> {
-        FavoriteTrackInteractorImpl(get())
+    single<TrackInteractor> {
+        TrackInteractorImpl(get())
+    }
+
+    single<FavoriteTracksInteractor> {
+        FavoriteTracksInteractorImpl(get())
     }
 
     viewModel<FavoriteTracksViewModel> {
@@ -35,8 +41,8 @@ val libraryModule = module {
         )
     }
 
-    viewModel<PlayListsViewModel> {
-        PlayListsViewModel(
+    viewModel<PlaylistsViewModel> {
+        PlaylistsViewModel(
             interactor = get()
         )
     }

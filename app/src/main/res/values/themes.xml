@@ -89,8 +89,8 @@
         <item name="android:textColor">?attr/textColor</item>
         <item name="android:textSize">@dimen/settings_btn_text_size</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/settings_btn_margin</item>
-        <item name="android:layout_marginBottom">@dimen/settings_btn_margin</item>
+        <item name="android:paddingBottom">@dimen/settings_btn_margin</item>
+        <item name="android:paddingTop">@dimen/settings_btn_margin</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
@@ -239,4 +239,16 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
+    <style name="PlaylistViewText">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textColor">@color/YP_black</item>
+    </style>
+
+    <style name="PlaylistViewText.Title">
+        <item name="android:fontFamily">@font/ys_display_bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontWeight">700</item>
+    </style>
 </resources>

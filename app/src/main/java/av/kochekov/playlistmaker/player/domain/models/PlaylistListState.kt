@@ -1,6 +1,6 @@
 package av.kochekov.playlistmaker.player.domain.models
 
-import av.kochekov.playlistmaker.playlist.domain.models.PlaylistModel
+import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
 
 sealed class PlaylistListState {
     object Empty : PlaylistListState()

@@ -50,22 +50,6 @@ class SettingsViewModel(
         )
     }
 
-    companion object {
-        fun getViewModelFactory(
-            sharingInteractor: SharingInteractor,
-            settingsInteractor: SettingsInteractor
-        ): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SettingsViewModel(
-                        sharingInteractor = sharingInteractor,
-                        settingsInteractor = settingsInteractor
-                    ) as T
-                }
-            }
-    }
-
     private fun updateTheme() {
         AppCompatDelegate.setDefaultNightMode(
             if (isDarkTheme.value == true) {

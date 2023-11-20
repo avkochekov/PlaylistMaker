@@ -14,13 +14,9 @@ import java.util.*
 
 class TrackListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val trackName: TextView = itemView.findViewById(R.id.trackName)
-    private val artistName: TextView = itemView.findViewById(R.id.artistName)
-    private val trackTime: TextView = itemView.findViewById(R.id.trackTime)
-    private val artwork: ImageView = itemView.findViewById(R.id.artwork)
-
-    companion object {
-        const val TRACK = "CurrentTrackInfo"
-    }
+    private val artistName: TextView = itemView.findViewById(R.id.playlistTotalTime)
+    private val trackTime: TextView = itemView.findViewById(R.id.playlistTotalTracks)
+    private val artwork: ImageView = itemView.findViewById(R.id.playlistArtwork)
 
     fun bind(item: TrackModel) {
         trackName.text = item.trackName
