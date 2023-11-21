@@ -4,8 +4,8 @@ import androidx.room.Room
 import av.kochekov.playlistmaker.common.data.repository.TrackRepositoryImpl
 import av.kochekov.playlistmaker.favorite.data.converters.TrackDbConvertor
 import av.kochekov.playlistmaker.common.data.db.AppDatabase
-import av.kochekov.playlistmaker.common.data.interactor.TrackInteractorImpl
-import av.kochekov.playlistmaker.favorite.domain.TrackRepository
+import av.kochekov.playlistmaker.common.domain.interactor.TrackInteractorImpl
+import av.kochekov.playlistmaker.favorite_tracks.domain.TrackRepository
 import av.kochekov.playlistmaker.favorite_tracks.domain.TrackInteractor
 import av.kochekov.playlistmaker.library.domain.favorite.FavoriteTracksInteractor
 import av.kochekov.playlistmaker.library.domain.favorite.FavoriteTracksInteractorImpl

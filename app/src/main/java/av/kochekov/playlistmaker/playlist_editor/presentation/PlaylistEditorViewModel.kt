@@ -3,16 +3,16 @@ package av.kochekov.playlistmaker.playlist_editor.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import av.kochekov.playlistmaker.playlist_editor.domain.PlaylistInteractor
 import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
-import kotlinx.coroutines.GlobalScope
+import av.kochekov.playlistmaker.playlist_editor.presentation.models.PlaylistEditorState
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.collect
 
 class PlaylistEditorViewModel(
     private val interactor: PlaylistInteractor
 ) : ViewModel() {
-    private val fragmentState = MutableLiveData<PlaylistModel>()
+    private val fragmentState = MutableLiveData<PlaylistEditorState>()
     private var initState: PlaylistModel? = null
 
     init {
@@ -24,58 +24,105 @@ class PlaylistEditorViewModel(
             tracksCount = 0
         )
         fragmentState.postValue(
-            initState?.copy()
+            PlaylistEditorState.Data(initState!!.copy())
         )
     }
 
-    fun setPlaylist(uuid: String){
-        GlobalScope.async {
-            interactor.getPlaylist(uuid).collect{
+    fun load(uuid: String) {
+        viewModelScope.async {
+            interactor.getPlaylist(uuid).collect {
                 it?.let {
+                    fragmentState.postValue(PlaylistEditorState.Data(it))
                     initState = it.copy()
-                    fragmentState.postValue(it)
                 }
             }
         }
     }
 
     fun setArtwork(path: String) {
-        if (path != fragmentState.value?.artwork)
-            fragmentState.value?.artwork = path
+        with(fragmentState.value as PlaylistEditorState.Data){
+            if (path != data.artwork)
+                data.artwork = path
+        }
     }
 
     fun setName(text: String) {
-        if (text != fragmentState.value?.name)
-            fragmentState.value?.name = text
+         with(fragmentState.value as PlaylistEditorState.Data){
+            if (text != data.name)
+                data.name = text
+        }
     }
 
     fun setDescription(text: String) {
-        if (text != fragmentState.value?.description)
-            fragmentState.value?.description = text
+        with(fragmentState.value as PlaylistEditorState.Data){
+            if (text != data.description)
+                data.description = text
+        }
     }
 
-    fun fragmentState(): LiveData<PlaylistModel> {
+    fun fragmentState(): LiveData<PlaylistEditorState> {
         return fragmentState
     }
 
     fun savePlayList() {
-        fragmentState.value?.apply {
-            interactor.savePlaylist(this)
+        when (fragmentState.value) {
+            is PlaylistEditorState.Data -> {
+                val data = fragmentState.value as PlaylistEditorState.Data
+                viewModelScope.async {
+                    interactor.savePlaylist(data.data).collect { data ->
+                        data?.let {
+                            fragmentState.postValue(PlaylistEditorState.Saved(it))
+                            initState = data.copy()
+                        }
+                    }
+                }
+            }
+            else -> {
+                // Do nothing
+            }
+
         }
-        initState = fragmentState.value?.copy()
+        fragmentState.value?.let { data ->
+
+        }
     }
 
     fun isChanged(): Boolean {
-        if (fragmentState.value?.artwork != initState?.artwork)
+        return when (val data = fragmentState.value) {
+            is PlaylistEditorState.Data -> {
+                isChanged((data as PlaylistEditorState.Data).data)
+            }
+            is PlaylistEditorState.Saved -> {
+                isChanged((data as PlaylistEditorState.Saved).data)
+            }
+            else -> {
+                false
+            }
+
+        }
+    }
+
+    private fun isChanged(data: PlaylistModel): Boolean {
+        if (data.artwork != initState?.artwork)
             return true
-        if (fragmentState.value?.name != initState?.name)
+        if (data.name != initState?.name)
             return true
-        if (fragmentState.value?.description != initState?.description)
+        if (data.description != initState?.description)
             return true
         return false
     }
 
-    fun isNewPlaylist() : Boolean{
-        return fragmentState.value?.uuid?.isEmpty()?:true
+    fun isNewPlaylist(): Boolean {
+        return when(fragmentState.value){
+            is PlaylistEditorState.Data -> {
+                (fragmentState.value as PlaylistEditorState.Data).data.uuid.isEmpty()
+            }
+            is PlaylistEditorState.Saved -> {
+                (fragmentState.value as PlaylistEditorState.Saved).data.uuid.isEmpty()
+            }
+            else -> {
+                true
+            }
+        }
     }
 }

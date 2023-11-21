@@ -6,24 +6,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import av.kochekov.playlistmaker.library.domain.playlists.models.PlaylistModel
 import av.kochekov.playlistmaker.library.presentation.playlists.models.PlaylistState
-import av.kochekov.playlistmaker.common.domain.PlaylistRepositoryObserver
 import av.kochekov.playlistmaker.library.domain.playlists.PlaylistsInteractor
 import kotlinx.coroutines.launch
 
 class PlaylistsViewModel(
     private val interactor: PlaylistsInteractor
-) : ViewModel(), PlaylistRepositoryObserver {
+) : ViewModel(){
 
     private val state = MutableLiveData<PlaylistState>()
 
     fun state(): LiveData<PlaylistState> = state
 
     init {
-        interactor.observe(this)
         load()
     }
 
-    private fun load() {
+    fun load() {
         renderState(PlaylistState.Loading)
         viewModelScope.launch {
             interactor.getPlaylists()
@@ -43,9 +41,5 @@ class PlaylistsViewModel(
 
     private fun renderState(newState: PlaylistState) {
         state.postValue(newState)
-    }
-
-    override fun update() {
-        load()
     }
 }

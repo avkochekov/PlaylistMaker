@@ -24,7 +24,7 @@ class TrackListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(item.trackTimeMillis)
 
         Glide.with(itemView)
-            .load(item.artwork)
+            .load(item.artwork60)
             .placeholder(R.drawable.placeholder)
             .fitCenter()
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.trackItemImage_round)))

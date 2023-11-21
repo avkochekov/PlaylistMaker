@@ -1,7 +1,6 @@
-package av.kochekov.playlistmaker.common.data.interactor
+package av.kochekov.playlistmaker.common.domain.interactor
 
-import av.kochekov.playlistmaker.favorite.domain.TrackRepository
-import av.kochekov.playlistmaker.favorite.domain.TrackRepositoryObserver
+import av.kochekov.playlistmaker.favorite_tracks.domain.TrackRepository
 import av.kochekov.playlistmaker.favorite_tracks.data.utils.Mapper
 import av.kochekov.playlistmaker.favorite_tracks.domain.TrackInteractor
 import av.kochekov.playlistmaker.search.domain.model.TrackModel
@@ -42,9 +41,4 @@ class TrackInteractorImpl(
     override fun removeTrack(data: TrackModel) {
         GlobalScope.async { repository.removeFromFavorite(Mapper.fromModel(data)) }
     }
-
-    override fun observe(observer: TrackRepositoryObserver) {
-        repository.attach(observer)
-    }
-
 }

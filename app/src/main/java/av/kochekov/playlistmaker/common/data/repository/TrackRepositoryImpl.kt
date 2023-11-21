@@ -2,8 +2,7 @@ package av.kochekov.playlistmaker.common.data.repository
 
 import av.kochekov.playlistmaker.favorite.data.converters.TrackDbConvertor
 import av.kochekov.playlistmaker.common.data.db.AppDatabase
-import av.kochekov.playlistmaker.common.data.db.relationships.FavoriteTrackRelation
-import av.kochekov.playlistmaker.favorite.domain.TrackRepository
+import av.kochekov.playlistmaker.favorite_tracks.domain.TrackRepository
 import av.kochekov.playlistmaker.common.data.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -49,7 +48,6 @@ class TrackRepositoryImpl(
     override suspend fun addToFavorite(track: Track) {
         appDatabase.trackDao().insertTrack(convertor.map(track))
         appDatabase.favoriteTracks().insertTrack(track.trackId)
-        update()
     }
 
     override suspend fun removeFromFavorite(track: Track) {
@@ -59,6 +57,5 @@ class TrackRepositoryImpl(
     override suspend fun removeFromFavorite(trackId: Int) {
         appDatabase.favoriteTracks().deleteTrack(trackId)
         appDatabase.garbageCollectorDao().clearTracks()
-        update()
     }
 }

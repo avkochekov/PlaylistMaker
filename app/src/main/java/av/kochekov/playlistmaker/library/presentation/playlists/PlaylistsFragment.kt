@@ -68,6 +68,8 @@ class PlaylistsFragment : Fragment(), PlaylistAdapter.ItemClickListener {
             }
         })
 
+        viewModel.load()
+
         binding.newPlaylistButton.setOnClickListener {
             findNavController().navigate(
                 R.id.action_libraryFragment_to_playlistFragment,

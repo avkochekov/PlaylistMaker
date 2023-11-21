@@ -9,11 +9,9 @@ import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
 import av.kochekov.playlistmaker.playlist_editor.domain.PlaylistInteractor
-import av.kochekov.playlistmaker.common.domain.PlaylistRepositoryObserver
 import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
 import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 
 private const val TIME_UPDATE_VALUE_MILLIS = 300L
@@ -24,7 +22,7 @@ class PlayerViewModel(
     private val favoriteTrackInteractor: TrackInteractor,
     private val playlistInteractor: PlaylistInteractor,
     private val trackInteractor: TrackInteractor
-) : ViewModel(), PlaylistRepositoryObserver {
+) : ViewModel() {
 
     private var trackModel = MutableLiveData<TrackModel>()
     private var trackPosition = MutableLiveData<Int>()
@@ -38,7 +36,6 @@ class PlayerViewModel(
     private var timerJob: Job? = null
 
     init {
-        playlistInteractor.observe(this)
         mediaPlayerInteractor.setListener(object : MediaPlayerStateListenerInterface {
             override fun onStateChanged(state: MediaPlayerState) {
                 playerState.postValue(state)
@@ -80,7 +77,7 @@ class PlayerViewModel(
     }
 
     fun setTrack(track: Int) {
-        GlobalScope.async {
+        viewModelScope.async {
             trackInteractor.getTrack(track).collect { data ->
                 data?.let { setTrack(it) }
             }
@@ -125,37 +122,38 @@ class PlayerViewModel(
     }
 
     fun changeFavoriteState() {
-        if (trackInFavorite.value == true) {
-            trackModel.value?.let { favoriteTrackInteractor.removeTrack(it) }
-        } else {
-            trackModel.value?.let { favoriteTrackInteractor.addTrack(it) }
+        trackModel.value?.let { data ->
+            val inFavorite = trackInFavorite.value == true
+            if (inFavorite) {
+                favoriteTrackInteractor.removeTrack(data)
+            } else {
+                favoriteTrackInteractor.addTrack(data)
+            }
+            trackInFavorite.postValue(inFavorite.not())
         }
-        trackInFavorite.postValue(trackInFavorite.value?.not())
     }
 
     fun loadPlaylists() {
         viewModelScope.launch {
-            playlistInteractor.getPlaylists()
-                .collect { list ->
-                    if (list.isNullOrEmpty())
-                        playlistState.postValue(PlaylistListState.Empty)
-                    else
-                        playlistState.postValue(PlaylistListState.Data(list))
-                }
+            playlistInteractor.getPlaylists().collect { setPlaylists(it) }
         }
     }
 
-    override fun update() {
-        loadPlaylists()
+    private fun setPlaylists(list: List<PlaylistModel>) {
+        if (list.isNullOrEmpty())
+            playlistState.postValue(PlaylistListState.Empty)
+        else
+            playlistState.postValue(PlaylistListState.Data(list))
     }
 
     private fun checkTrackInFavorite(id: Int) {
         viewModelScope.launch {
-            favoriteTrackInteractor.getInFavorites(id).collect{inFavorite ->
+            favoriteTrackInteractor.getInFavorites(id).collect { inFavorite ->
                 trackInFavorite.postValue(inFavorite)
             }
         }
     }
+
     private fun checkTrackInFavorite() {
         trackModel.value?.let { track ->
             checkTrackInFavorite(track.trackId)
@@ -170,22 +168,11 @@ class PlayerViewModel(
         trackModel.value?.let { track ->
             viewModelScope.launch {
                 val contains = playlistInteractor.contains(playlist.uuid, track.trackId).first()
-                Log.w(
-                    "TAGGED",
-                    "TRACK: ${playlist.name}, ${playlist.uuid}, ${trackModel.value?.trackId ?: "UNDEF"}, CONTAINS: $contains "
-                )
                 if (contains) {
-                    Log.w(
-                        "TAGGED",
-                        "NEW TRACK: ${playlist.name}, ${playlist.uuid}, ${trackModel.value?.trackId ?: "UNDEF"}"
-                    )
                     message.postValue(MessageState.TrackAlreadyInPlaylist(playlist.name))
                 } else {
-                    Log.w(
-                        "TAGGED",
-                        "TRACK EXISTS: ${playlist.name}, ${playlist.uuid}, ${trackModel.value?.trackId ?: "UNDEF"}"
-                    )
                     playlistInteractor.addToPlaylist(playlist.uuid, track)
+                        .collect { setPlaylists(it) }
                     message.postValue(MessageState.AddTrackToPlaylistSuccess(playlist.name))
                 }
             }

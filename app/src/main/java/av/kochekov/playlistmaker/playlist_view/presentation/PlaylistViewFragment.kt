@@ -81,78 +81,84 @@ class PlaylistViewFragment : Fragment(), TrackListAdapter.ItemClickListener {
                 .into(binding.playlistArtwork)
 
             binding.menuPlaylistInfo.name.text = data.name
-            binding.menuPlaylistInfo.tracksCount.text = view.context.applicationContext.resources.getQuantityString(
-                R.plurals.tracks,
-                data.tracks.size,
-                data.tracks.size
-            )
+            binding.menuPlaylistInfo.tracksCount.text =
+                view.context.applicationContext.resources.getQuantityString(
+                    R.plurals.tracks,
+                    data.tracks.size,
+                    data.tracks.size
+                )
 
             Glide.with(view)
                 .load(data.artwork)
                 .placeholder(R.drawable.placeholder)
                 .into(binding.menuPlaylistInfo.playlistArtwork)
 
+            if (data.tracks.isEmpty())
+                Toast.makeText(context, getString(R.string.playlist_noTracks), Toast.LENGTH_LONG)
+                    .show()
         })
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.menuBottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        with(binding) {
+            val bottomSheetBehavior = BottomSheetBehavior.from(binding.menuBottomSheet)
 
-        bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
+            bottomSheetBehavior.addBottomSheetCallback(object :
+                BottomSheetBehavior.BottomSheetCallback() {
 
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.overlay.visibility = View.GONE
-                    }
-                    else -> {
-                        binding.overlay.visibility = View.VISIBLE
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            binding.overlay.visibility = View.GONE
+                        }
+                        else -> {
+                            binding.overlay.visibility = View.VISIBLE
+                        }
                     }
                 }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    binding.overlay.alpha = 1 + slideOffset
+                }
+            })
+
+            menuButton.setOnClickListener {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.overlay.alpha = 1 + slideOffset
+            shareButton.setOnClickListener {
+                sharePlaylist()
             }
-        })
-
-        binding.menuButton.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
-
-        binding.shareButton.setOnClickListener {
-            sharePlaylist()
-        }
-
-        binding.menuShareButton.setOnClickListener {
-            sharePlaylist()
-        }
-
-        binding.menuEditeButton.setOnClickListener{
-            viewModel.playlistData().value?.let {playlist ->
-                findNavController().navigate(
-                    R.id.action_playlistViewFragment_to_playlistEditorFragment,
-                    PlaylistEditorFragment.createArgs(playlist.uuid)
-                )
+            menuShareButton.setOnClickListener {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                sharePlaylist()
             }
-        }
-
-        binding.menuRemoveButton.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            activity?.let { activity ->
-                MaterialAlertDialogBuilder(activity)
-                    .setMessage(R.string.playlist_confirmDeletePlaylist_message)
-                    .setPositiveButton(R.string.playlist_confirmDeletePlaylist_positiveButton) { _, _ ->
-                        viewModel.removePlaylist()
-                        findNavController().navigateUp()
-                    }
-                    .setNegativeButton(R.string.playlist_confirmDeletePlaylist_negativeButton) { _, _ ->
-                        // Do nothing
-                    }
-                    .show()
+            menuEditeButton.setOnClickListener {
+                viewModel.playlistData().value?.let { playlist ->
+                    findNavController().navigate(
+                        R.id.action_playlistViewFragment_to_playlistEditorFragment,
+                        PlaylistEditorFragment.createArgs(playlist.uuid)
+                    )
+                }
+            }
+            menuRemoveButton.setOnClickListener {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                activity?.let { activity ->
+                    MaterialAlertDialogBuilder(activity)
+                        .setMessage(R.string.playlist_confirmDeletePlaylist_message)
+                        .setPositiveButton(R.string.playlist_confirmDeletePlaylist_positiveButton) { _, _ ->
+                            viewModel.removePlaylist()
+                            findNavController().navigateUp()
+                        }
+                        .setNegativeButton(R.string.playlist_confirmDeletePlaylist_negativeButton) { _, _ ->
+                            // Do nothing
+                        }
+                        .show()
+                }
             }
         }
+
+
     }
 
     override fun onItemClick(position: Int, adapter: TrackListAdapter) {
@@ -179,7 +185,7 @@ class PlaylistViewFragment : Fragment(), TrackListAdapter.ItemClickListener {
         }
     }
 
-    private fun sharePlaylist(){
+    private fun sharePlaylist() {
         trackListAdapter?.let { adapter ->
             if (adapter.itemCount == 0)
                 Toast.makeText(

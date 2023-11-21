@@ -4,19 +4,11 @@ import av.kochekov.playlistmaker.common.data.models.Playlist
 import av.kochekov.playlistmaker.common.data.models.Track
 import kotlinx.coroutines.flow.Flow
 
-interface PlaylistRepositoryObserver {
-    fun update()
-}
-
 interface PlaylistRepository {
 
-    companion object {
-        private var observerList: MutableList<PlaylistRepositoryObserver> = mutableListOf()
-    }
+    fun addPlaylist(playlist: Playlist) : Flow<Playlist?>
 
-    suspend fun addPlaylist(playlist: Playlist)
-
-    suspend fun updatePlaylist(playlist: Playlist)
+    fun updatePlaylist(playlist: Playlist) : Flow<Playlist?>
 
     suspend fun removePlaylist(playlist: Playlist)
 
@@ -36,13 +28,4 @@ interface PlaylistRepository {
 
     suspend fun removeTrack(udi: String, id: Int)
 
-    fun attach(observer: PlaylistRepositoryObserver) {
-        observerList.add(observer)
-    }
-
-    fun update() {
-        observerList.map {
-            it.update()
-        }
-    }
 }

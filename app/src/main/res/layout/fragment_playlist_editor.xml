@@ -42,6 +42,7 @@
         android:layout_marginHorizontal="@dimen/playlist_controlMargins"
         android:layout_marginTop="32dp"
         android:hint="@string/playlist_name"
+        android:textColorHint="@color/black"
         app:hintEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +53,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
-            android:singleLine="true" />
+            android:singleLine="true"
+            tools:text="asdfasdf"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -63,6 +65,7 @@
         android:layout_marginHorizontal="@dimen/playlist_controlMargins"
         android:layout_marginTop="@dimen/playlist_controlMargins"
         android:hint="@string/playlist_description"
+        android:textColorHint="@color/black"
         app:hintEnabled="true"
         app:hintTextColor="@color/YP_blue"
         app:layout_constraintEnd_toEndOf="parent"

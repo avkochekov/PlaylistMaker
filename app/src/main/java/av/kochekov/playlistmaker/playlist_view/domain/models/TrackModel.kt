@@ -10,6 +10,9 @@ data class TrackModel (
     val artwork: String,
     val trackTimeMillis: Int?,      // Продолжительность трека в миллисекундах
 ) {
+    val artwork60: String
+        get() =  artwork.replaceAfterLast('/', "60x60bb.jpg")
+
     val duration: String
         get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
 }

@@ -19,6 +19,7 @@ import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
 import av.kochekov.playlistmaker.player.presentation.utils.Formatter
+import av.kochekov.playlistmaker.playlist_editor.presentation.PlaylistEditorFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -92,7 +93,8 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
         binding.playerPlaylistView.adapter = playListAdapter
 
         binding.newPlaylistButton.setOnClickListener {
-            findNavController().navigate(R.id.action_playerFragment_to_playlistFragment)
+            findNavController().navigate(R.id.action_playerFragment_to_playlistFragment,
+            PlaylistEditorFragment.createArgs())
         }
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet)
@@ -213,6 +215,8 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
         addToPlaylistButton?.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+
+        viewModel.loadPlaylists()
     }
 
     override fun onPause() {

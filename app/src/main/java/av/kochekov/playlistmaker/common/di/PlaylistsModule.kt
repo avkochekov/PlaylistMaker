@@ -8,7 +8,7 @@ import av.kochekov.playlistmaker.common.data.converters.PlaylistDbConvertor
 import av.kochekov.playlistmaker.common.data.repository.PlaylistRepositoryImpl
 import av.kochekov.playlistmaker.playlist_editor.domain.PlaylistInteractor
 import av.kochekov.playlistmaker.common.domain.PlaylistRepository
-import av.kochekov.playlistmaker.common.data.interactor.PlaylistInteractorImpl
+import av.kochekov.playlistmaker.common.domain.interactor.PlaylistInteractorImpl
 import av.kochekov.playlistmaker.library.domain.playlists.PlaylistsInteractor
 import av.kochekov.playlistmaker.library.domain.playlists.PlaylistsInteractorImpl
 import av.kochekov.playlistmaker.library.presentation.playlists.PlaylistsViewModel

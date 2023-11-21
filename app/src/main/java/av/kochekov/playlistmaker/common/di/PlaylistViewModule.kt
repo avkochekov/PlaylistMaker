@@ -25,8 +25,7 @@ val playlistViewModule = module {
 
     single<PlaylistViewInteractor> {
         PlaylistViewInteractorImpl(
-            playlistRepository = get(),
-            trackRepository = get()
+            playlistRepository = get()
         )
     }
 

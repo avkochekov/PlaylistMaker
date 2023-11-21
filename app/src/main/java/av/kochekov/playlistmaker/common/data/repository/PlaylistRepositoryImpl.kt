@@ -15,26 +15,27 @@ class PlaylistRepositoryImpl(
     private val trackConvertor: TrackDbConvertor,
 ) : PlaylistRepository {
 
-    override suspend fun addPlaylist(playlist: Playlist) {
+    override fun addPlaylist(playlist: Playlist): Flow<Playlist?> = flow {
         appDatabase.playlistDao().insertPlaylist(playlistConvertor.map(playlist))
-        update()
+        appDatabase.playlistDao().getPlaylistWithTracks(playlist.uuid)
+            ?.let { data -> emit(playlistConvertor.map(data)) }
     }
 
-    override suspend fun updatePlaylist(playlist: Playlist) {
+    override fun updatePlaylist(playlist: Playlist): Flow<Playlist?> = flow {
         appDatabase.playlistDao().updatePlaylist(playlistConvertor.map(playlist))
-        update()
+        appDatabase.playlistDao().getPlaylistWithTracks(playlist.uuid)
+            ?.let { data -> emit(playlistConvertor.map(data)) }
+
     }
 
     override suspend fun removePlaylist(playlist: Playlist) {
         appDatabase.playlistDao().removePlaylist(playlistConvertor.map(playlist))
         appDatabase.garbageCollectorDao().clearTracks()
-        update()
     }
 
     override suspend fun removePlaylist(uuid: String) {
         appDatabase.playlistDao().removePlaylist(uuid)
         appDatabase.garbageCollectorDao().clearTracks()
-        update()
     }
 
     override fun getPlaylists(): Flow<List<Playlist>> = flow {
@@ -65,12 +66,10 @@ class PlaylistRepositoryImpl(
     override suspend fun addTrack(udi: String, track: Track) {
         appDatabase.trackDao().insertTrack(trackConvertor.map(track))
         appDatabase.playlistDao().addTrack(udi, track.trackId)
-        update()
     }
 
     override suspend fun removeTrack(udi: String, id: Int) {
         appDatabase.playlistDao().removeTrack(udi, id)
         appDatabase.garbageCollectorDao().clearTracks()
-        update()
     }
 }

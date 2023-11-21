@@ -49,6 +49,8 @@
     <string name="playlist_imageNotSelected">"Изображение не выбрано"</string>
     <string name="playlist_rationale">"Разрешение на доступ к хранилищу необходимо, чтобы указать изображение плейлиста"</string>
     <string name="playlist_created">"Плейлист %1$s создан"</string>
+    <string name="playlist_noTracks">"В плейлисте нет треков"</string>
+
 
     <string name="playlist_confirmExit_title">"Завершить создание плейлиста?"</string>
     <string name="playlist_confirmExit_message">"Все несохраненные данные будут потеряны"</string>
