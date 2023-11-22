@@ -8,7 +8,7 @@ import av.kochekov.playlistmaker.common.di.playlistEditorModule
 import av.kochekov.playlistmaker.common.di.playlistViewModule
 import av.kochekov.playlistmaker.common.di.playlistsModule
 import av.kochekov.playlistmaker.search.di.searchModule
-import av.kochekov.playlistmaker.settings.di.settingsModule
+import av.kochekov.playlistmaker.common.di.settingsModule
 import av.kochekov.playlistmaker.settings.domain.SettingsRepository
 import av.kochekov.playlistmaker.settings.domain.models.ThemeSettings
 import org.koin.android.ext.android.inject

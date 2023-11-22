@@ -6,7 +6,6 @@ import av.kochekov.playlistmaker.playlist_view.domain.utils.Converter
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
 class PlaylistViewInteractorImpl(

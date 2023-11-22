@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.flow
 
 class FavoriteTracksInteractorImpl(
     private val repository: TrackRepository
-) : FavoriteTracksInteractor{
-    override fun getTracks() : Flow<List<TrackModel>> = flow {
-        repository.getFavoriteTracks().collect{list ->
+) : FavoriteTracksInteractor {
+    override fun getTracks(): Flow<List<TrackModel>> = flow {
+        repository.getFavoriteTracks().collect { list ->
             emit(list.map { data -> Mapper.toModel(data) })
         }
     }

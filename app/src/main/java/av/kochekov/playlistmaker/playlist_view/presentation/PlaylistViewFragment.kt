@@ -193,8 +193,23 @@ class PlaylistViewFragment : Fragment(), TrackListAdapter.ItemClickListener {
                     getString(R.string.playlist_error_emptyPlaylist),
                     Toast.LENGTH_LONG
                 ).show()
-            else
-                viewModel.share()
+            else {
+                val data = viewModel.playlistData().value
+                data?.let {
+                    var message = String()
+                    message += "${data.name}\n"
+                    message += "${data.description}\n"
+                    message += context?.resources?.getQuantityString(
+                        R.plurals.tracks,
+                        data.tracks.size,
+                        data.tracks.size
+                    ) + "\n"
+                    var index = 1
+                    for (item in data.tracks)
+                        message += "${index++}. ${item.artistName} - ${item.trackName} (${item.duration})\n"
+                    viewModel.share(message)
+                }
+            }
         }
     }
 }

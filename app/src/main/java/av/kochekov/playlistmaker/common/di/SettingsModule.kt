@@ -1,5 +1,6 @@
-package av.kochekov.playlistmaker.settings.di
+package av.kochekov.playlistmaker.common.di
 
+import SharingInteractorImpl
 import android.content.Context
 import android.content.SharedPreferences
 import av.kochekov.playlistmaker.common.data.ExternalNavigator
@@ -27,7 +28,6 @@ val settingsModule = module {
 
     single<SharingInteractor> {
         SharingInteractorImpl(
-            context = get(),
             externalNavigator = get()
         )
     }

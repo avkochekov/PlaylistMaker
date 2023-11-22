@@ -18,7 +18,6 @@ val playlistViewModule = module {
 
     single<SharingInteractor> {
         SharingInteractorImpl(
-            context = androidContext(),
             externalNavigator = get()
         )
     }

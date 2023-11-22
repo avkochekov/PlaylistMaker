@@ -46,8 +46,9 @@ class PlaylistViewViewModel(
         }
     }
 
-    fun share() {
-        playlistData.value?.let { sharingInteractor.sharePlaylist(it) }
+    fun share(data: String) {
+        playlistData.value?.let {
+            sharingInteractor.sharePlaylist( data ) }
     }
 
     private fun setPlaylistData(data: PlaylistModel) {

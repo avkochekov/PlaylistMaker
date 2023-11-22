@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Environment
 import androidx.core.net.toUri
 import av.kochekov.playlistmaker.images.domain.ImagesRepository
+import retrofit2.http.Url
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -33,6 +34,10 @@ class ImagesRepositoryImpl(private val context: Context) : ImagesRepository {
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
 
         return getImage(dir, name)
+    }
+
+    override fun saveImage(path: String, dir: String, name: String): Uri {
+        return saveImage(Uri.parse(path), dir, name)
     }
 
     override fun getImage(dir: String, name: String): Uri {
