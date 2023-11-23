@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginHorizontal="@dimen/margin"
     android:orientation="vertical"
-    tools:context=".library.presentation.playlists.PlayListsFragment">
+    tools:context=".library.presentation.playlists.PlaylistsFragment">
 
     <Button
         android:id="@+id/new_playlist_button"

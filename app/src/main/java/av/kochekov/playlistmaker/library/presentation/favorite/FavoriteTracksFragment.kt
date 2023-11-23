@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import av.kochekov.playlistmaker.player.presentation.PlayerFragment
-import av.kochekov.playlistmaker.search.presentation.TrackListAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment(), TrackListAdapter.ItemClickListener {
@@ -86,7 +85,7 @@ class FavoriteTracksFragment : Fragment(), TrackListAdapter.ItemClickListener {
         val data = adapter.getData(position)
         findNavController().navigate(
             R.id.action_libraryFragment_to_playerFragment,
-            PlayerFragment.createArgs(data)
+            PlayerFragment.createArgs(data.trackId)
         )
     }
 }

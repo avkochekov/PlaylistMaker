@@ -1,10 +1,11 @@
-package av.kochekov.playlistmaker.settings.domain
-import android.content.Context
-import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.settings.data.ExternalNavigator
-import av.kochekov.playlistmaker.settings.domain.models.EmailData
+import av.kochekov.playlistmaker.settings.domain.SharingInteractor
 
-class SharingInteractorImpl(private val context: Context, private val externalNavigator: ExternalNavigator) : SharingInteractor {
+import av.kochekov.playlistmaker.common.data.ExternalNavigator
+import av.kochekov.playlistmaker.common.data.models.EmailData
+
+class SharingInteractorImpl(
+    private val externalNavigator: ExternalNavigator
+) : SharingInteractor {
     override fun shareApp() {
         externalNavigator.shareLink(getShareAppLink())
     }
@@ -18,18 +19,14 @@ class SharingInteractorImpl(private val context: Context, private val externalNa
     }
 
     private fun getShareAppLink(): String {
-        return context.getString(R.string.settings_shareAddress)
+        return externalNavigator.getAppLink()
     }
 
     private fun getSupportEmailData(): EmailData {
-        return EmailData(
-            email = context.getString(R.string.settings_mailAddress),
-            subject = context.getString(R.string.settings_mailSubject),
-            text = context.getString(R.string.settings_mailText)
-        )
+        return externalNavigator.getEmailData()
     }
 
     private fun getTermsLink(): String {
-        return context.getString(R.string.settings_licenseAddress)
+        return externalNavigator.getTermLink()
     }
 }

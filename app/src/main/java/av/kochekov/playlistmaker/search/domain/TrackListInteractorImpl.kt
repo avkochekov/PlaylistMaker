@@ -5,7 +5,6 @@ import av.kochekov.playlistmaker.search.domain.model.Resource
 import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.util.concurrent.Executors
 
 class TrackListInteractorImpl(private val repository: TrackListRepository) :
     TrackListInteractor {

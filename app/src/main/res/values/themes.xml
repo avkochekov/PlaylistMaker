@@ -26,11 +26,13 @@
     <attr name="playlist_tracksCount_textColor" format="color" />
 
     <attr name="grayControlsBackgroundColor" format="color" />
+    <attr name="colorContainer" format="color" />
+    <attr name="colorContainerText" format="color" />
 
     <!-- Base application theme. -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/YP_black</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/YP_white</item>
         <!-- Secondary brand color. -->
@@ -67,6 +69,8 @@
         <item name="playlist_tracksCount_textColor">@color/YP_text_gray</item>
 
         <item name="grayControlsBackgroundColor">@color/YP_button_light_gray</item>
+        <item name="colorContainer">@color/YP_text_gray</item>
+        <item name="colorContainerText">@color/black</item>
     </style>
 
     <style name="MenuBackground">
@@ -89,8 +93,8 @@
         <item name="android:textColor">?attr/textColor</item>
         <item name="android:textSize">@dimen/settings_btn_text_size</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/settings_btn_margin</item>
-        <item name="android:layout_marginBottom">@dimen/settings_btn_margin</item>
+        <item name="android:paddingBottom">@dimen/settings_btn_margin</item>
+        <item name="android:paddingTop">@dimen/settings_btn_margin</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
@@ -239,4 +243,16 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
+    <style name="PlaylistViewText">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textColor">@color/YP_black</item>
+    </style>
+
+    <style name="PlaylistViewText.Title">
+        <item name="android:fontFamily">@font/ys_display_bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontWeight">700</item>
+    </style>
 </resources>

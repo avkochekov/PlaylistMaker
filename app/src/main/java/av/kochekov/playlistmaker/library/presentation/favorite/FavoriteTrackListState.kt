@@ -1,6 +1,6 @@
 package av.kochekov.playlistmaker.library.presentation.favorite
 
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.library.domain.favorite.models.TrackModel
 
 sealed interface FavoriteTrackListState {
     object Loading : FavoriteTrackListState

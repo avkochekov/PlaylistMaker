@@ -2,15 +2,14 @@ package av.kochekov.playlistmaker.player.presentation
 
 import android.util.Log
 import androidx.lifecycle.*
-import av.kochekov.playlistmaker.favorite_tracks.domain.FavoriteTrackInteractor
+import av.kochekov.playlistmaker.favorite_tracks.domain.TrackInteractor
 import av.kochekov.playlistmaker.player.domain.MediaPlayerInteractor
 import av.kochekov.playlistmaker.player.domain.MediaPlayerStateListenerInterface
 import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
-import av.kochekov.playlistmaker.playlist.domain.PlaylistInteractor
-import av.kochekov.playlistmaker.playlist.domain.PlaylistRepositoryObserver
-import av.kochekov.playlistmaker.playlist.domain.models.PlaylistModel
+import av.kochekov.playlistmaker.playlist_editor.domain.PlaylistInteractor
+import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
 import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
@@ -20,9 +19,10 @@ private const val DEFAULT_TRACK_POSITION = 0
 
 class PlayerViewModel(
     private val mediaPlayerInteractor: MediaPlayerInteractor,
-    private val favoriteTrackInteractor: FavoriteTrackInteractor,
-    private val playlistInteractor: PlaylistInteractor
-) : ViewModel(), PlaylistRepositoryObserver {
+    private val favoriteTrackInteractor: TrackInteractor,
+    private val playlistInteractor: PlaylistInteractor,
+    private val trackInteractor: TrackInteractor
+) : ViewModel() {
 
     private var trackModel = MutableLiveData<TrackModel>()
     private var trackPosition = MutableLiveData<Int>()
@@ -36,10 +36,9 @@ class PlayerViewModel(
     private var timerJob: Job? = null
 
     init {
-        playlistInteractor.observe(this)
         mediaPlayerInteractor.setListener(object : MediaPlayerStateListenerInterface {
             override fun onStateChanged(state: MediaPlayerState) {
-                playerState.value = state
+                playerState.postValue(state)
             }
         })
         checkTrackInFavorite()
@@ -71,10 +70,18 @@ class PlayerViewModel(
     }
 
     fun setTrack(track: TrackModel) {
-        trackModel.value = track
-        trackPosition.value = DEFAULT_TRACK_POSITION
+        trackModel.postValue(track)
+        trackPosition.postValue(DEFAULT_TRACK_POSITION)
         mediaPlayerInteractor.setTrack(track.previewUrl.toString())
-        checkTrackInFavorite()
+        checkTrackInFavorite(track.trackId)
+    }
+
+    fun setTrack(track: Int) {
+        viewModelScope.async {
+            trackInteractor.getTrack(track).collect { data ->
+                data?.let { setTrack(it) }
+            }
+        }
     }
 
     fun onPlayClicked() {
@@ -115,37 +122,41 @@ class PlayerViewModel(
     }
 
     fun changeFavoriteState() {
-        if (trackInFavorite.value == true) {
-            trackModel.value?.let { favoriteTrackInteractor.removeTrack(it) }
-        } else {
-            trackModel.value?.let { favoriteTrackInteractor.addTrack(it) }
+        trackModel.value?.let { data ->
+            val inFavorite = trackInFavorite.value == true
+            if (inFavorite) {
+                favoriteTrackInteractor.removeTrack(data)
+            } else {
+                favoriteTrackInteractor.addTrack(data)
+            }
+            trackInFavorite.postValue(inFavorite.not())
         }
-        trackInFavorite.postValue(trackInFavorite.value?.not())
     }
 
     fun loadPlaylists() {
         viewModelScope.launch {
-            playlistInteractor.getPlaylists()
-                .collect { list ->
-                    if (list.isNullOrEmpty())
-                        playlistState.postValue(PlaylistListState.Empty)
-                    else
-                        playlistState.postValue(PlaylistListState.Data(list))
-                }
+            playlistInteractor.getPlaylists().collect { setPlaylists(it) }
         }
     }
 
-    override fun update() {
-        loadPlaylists()
+    private fun setPlaylists(list: List<PlaylistModel>) {
+        if (list.isNullOrEmpty())
+            playlistState.postValue(PlaylistListState.Empty)
+        else
+            playlistState.postValue(PlaylistListState.Data(list))
+    }
+
+    private fun checkTrackInFavorite(id: Int) {
+        viewModelScope.launch {
+            favoriteTrackInteractor.getInFavorites(id).collect { inFavorite ->
+                trackInFavorite.postValue(inFavorite)
+            }
+        }
     }
 
     private fun checkTrackInFavorite() {
         trackModel.value?.let { track ->
-            viewModelScope.launch {
-                trackInFavorite.postValue(
-                    favoriteTrackInteractor.getInFavorites(track.trackId).equals(true)
-                )
-            }
+            checkTrackInFavorite(track.trackId)
         }
     }
 
@@ -157,22 +168,11 @@ class PlayerViewModel(
         trackModel.value?.let { track ->
             viewModelScope.launch {
                 val contains = playlistInteractor.contains(playlist.uuid, track.trackId).first()
-                Log.w(
-                    "TAGGED",
-                    "TRACK: ${playlist.name}, ${playlist.uuid}, ${trackModel.value?.trackId ?: "UNDEF"}, CONTAINS: $contains "
-                )
                 if (contains) {
-                    Log.w(
-                        "TAGGED",
-                        "NEW TRACK: ${playlist.name}, ${playlist.uuid}, ${trackModel.value?.trackId ?: "UNDEF"}"
-                    )
                     message.postValue(MessageState.TrackAlreadyInPlaylist(playlist.name))
                 } else {
-                    Log.w(
-                        "TAGGED",
-                        "TRACK EXISTS: ${playlist.name}, ${playlist.uuid}, ${trackModel.value?.trackId ?: "UNDEF"}"
-                    )
                     playlistInteractor.addToPlaylist(playlist.uuid, track)
+                        .collect { setPlaylists(it) }
                     message.postValue(MessageState.AddTrackToPlaylistSuccess(playlist.name))
                 }
             }

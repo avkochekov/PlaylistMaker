@@ -19,6 +19,7 @@ import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
 import av.kochekov.playlistmaker.player.presentation.utils.Formatter
+import av.kochekov.playlistmaker.playlist_editor.presentation.PlaylistEditorFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -44,6 +45,8 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
     private val viewModel by viewModel<PlayerViewModel>()
     private var playListAdapter: PlaylistAdapter? = null
 
+    private var bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,14 +57,23 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
 
     companion object {
         const val TRACK = "CurrentTrackInfo"
+        const val TRACK_ID = "CurrentTrackId"
         fun createArgs(track: TrackModel): Bundle =
             bundleOf(TRACK to track)
+
+        fun createArgs(track: Int): Bundle =
+            bundleOf(TRACK_ID to track)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.setTrack(requireArguments().get(TRACK) as TrackModel)
+        requireArguments().get(TRACK)?.let { data ->
+            viewModel.setTrack(data as TrackModel)
+        }
+        requireArguments().get(TRACK_ID)?.let { data ->
+            viewModel.setTrack(data as Int)
+        }
         playListAdapter = PlaylistAdapter(this)
 
         binding.toolbar.setNavigationOnClickListener {
@@ -84,17 +96,19 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
         binding.playerPlaylistView.adapter = playListAdapter
 
         binding.newPlaylistButton.setOnClickListener {
-            findNavController().navigate(R.id.action_playerFragment_to_playlistFragment)
+            findNavController().navigate(
+                R.id.action_playerFragment_to_playlistFragment,
+                PlaylistEditorFragment.createArgs()
+            )
         }
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        bottomSheetBehavior.addBottomSheetCallback(object :
+        bottomSheetCallback = object :
             BottomSheetBehavior.BottomSheetCallback() {
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         binding.overlay.visibility = View.GONE
@@ -108,7 +122,9 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 binding.overlay.alpha = 1 + slideOffset
             }
-        })
+        }
+
+        bottomSheetCallback?.let { bottomSheetBehavior.addBottomSheetCallback(it) }
 
         viewModel.playlistState().observe(viewLifecycleOwner, Observer {
             when (it) {
@@ -205,6 +221,8 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
         addToPlaylistButton?.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+
+        viewModel.loadPlaylists()
     }
 
     override fun onPause() {
@@ -215,6 +233,12 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.stopPlayer()
+        // I don’t know how else to untie the callback so that the application doesn’t crash
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet)
+        bottomSheetCallback?.let {
+            bottomSheetBehavior.removeBottomSheetCallback(it)
+            bottomSheetCallback = null
+        }
         _binding = null
     }
 

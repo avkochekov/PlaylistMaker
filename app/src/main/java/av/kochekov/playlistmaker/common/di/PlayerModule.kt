@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker.player.di
+package av.kochekov.playlistmaker.common.di
 
 import av.kochekov.playlistmaker.player.data.MediaPlayerImpl
 import av.kochekov.playlistmaker.player.domain.MediaPlayerInteractor
@@ -19,7 +19,8 @@ val playerModule = module {
         PlayerViewModel(
             mediaPlayerInteractor = get(),
             favoriteTrackInteractor = get(),
-            playlistInteractor = get()
+            playlistInteractor = get(),
+            trackInteractor = get()
         )
     }
 }
