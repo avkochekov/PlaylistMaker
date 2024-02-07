@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="24dp"
+    android:layout_marginTop="@dimen/searchMessageTopMargin"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/errorPlaceholderImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        tools:src="@drawable/connection_error" />
+
+    <TextView
+        android:id="@+id/errorPlaceholderText"
+        style="@style/ErrorPlaceholderStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        tools:text="@string/search_error_connectionFailed" />
+
+    <Button
+        android:id="@+id/errorPlaceholderButton"
+        style="@style/RoundedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        tools:text="@string/search_update" />
+</LinearLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="title_height">56dp</dimen>
+    <dimen name="title_text_size">22sp</dimen>
+    <dimen name="title_bottom_margin">24dp</dimen>
+
+    <dimen name="menu_icon_padding">8dp</dimen>
+    <dimen name="menu_btn_text_size">22sp</dimen>
+    <dimen name="menu_btn_radius">16dp</dimen>
+
+    <dimen name="padding">16dp</dimen>
+    <dimen name="margin">16dp</dimen>
+
+    <dimen name="settings_btn_height">61dp</dimen>
+    <dimen name="settings_btn_text_size">16sp</dimen>
+    <dimen name="settings_btn_margin">21dp</dimen>
+    <dimen name="settings_btn_padding">21dp</dimen>
+    <dimen name="settings_btn_right_padding">12dp</dimen>
+    <dimen name="settings_btn_image_margin_left">8dp</dimen>
+
+    <dimen name="search_txt_size">16sp</dimen>
+    <dimen name="search_errorText_size">19sp</dimen>
+    <dimen name="magicNumber">42dp</dimen>
+
+    <dimen name="trackItem_mainText_size">16sp</dimen>
+    <dimen name="trackItem_additionalText_size">11sp</dimen>
+
+    <dimen name="trackItem_padding_left">13dp</dimen>
+    <dimen name="trackItem_padding_right">12dp</dimen>
+    <dimen name="trackItem_padding_vertical">8dp</dimen>
+
+    <dimen name="trackItemInfo_padding_vertical">6dp</dimen>
+    <dimen name="trackItemInfo_padding_horizontal">8dp</dimen>
+
+    <dimen name="trackItemImage_round">2dp</dimen>
+    <dimen name="playlistItemImage_round">8dp</dimen>
+
+    <dimen name="searchMessageTopMargin">102dp</dimen>
+    <dimen name="updateButtonTextSize">14sp</dimen>
+    <dimen name="updateButtonRadius">54dp</dimen>
+    <dimen name="updateButtonHorizontalPadding">14dp</dimen>
+    <dimen name="updateButtonVerticalPadding">10dp</dimen>
+
+    <dimen name="audioPlayer_horizontalPadding">16dp</dimen>
+    <dimen name="audioPlayer_topPadding">9dp</dimen>
+    <dimen name="audioPlayer_bottomPadding">8dp</dimen>
+    <dimen name="audioPlayer_artworkRadius">8dp</dimen>
+
+    <dimen name="playlist_artworkPadding">8dp</dimen>
+    <dimen name="playlist_artworkRadius">8dp</dimen>
+    <dimen name="playlist_artworkMargins">24dp</dimen>
+    <dimen name="playlist_controlMargins">16dp</dimen>
+    <dimen name="playlist_controlTextSize">16dp</dimen>
+
+</resources>

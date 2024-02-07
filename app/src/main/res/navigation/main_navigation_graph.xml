@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation_graph"
+    app:startDestination="@id/libraryFragment">
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="av.kochekov.playlistmaker.search.presentation.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteTracksFragment"
+        android:name="av.kochekov.playlistmaker.library.presentation.favorite.FavoriteTracksFragment"
+        android:label="fragment_favorite_tracks"
+        tools:layout="@layout/fragment_favorite_tracks" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="av.kochekov.playlistmaker.settings.presentation.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="av.kochekov.playlistmaker.library.presentation.LibraryFragment"
+        android:label="fragment_library"
+        tools:layout="@layout/fragment_library">
+        <action
+            android:id="@+id/action_libraryFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_playlistFragment"
+            app:destination="@id/playlistEditorFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_playlistViewFragment"
+            app:destination="@id/playlistViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playListsFragment"
+        android:name="av.kochekov.playlistmaker.library.presentation.playlists.PlaylistsFragment"
+        android:label="fragment_playlists"
+        tools:layout="@layout/fragment_playlists" />
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="av.kochekov.playlistmaker.player.presentation.PlayerFragment"
+        android:label="fragment_player"
+        tools:layout="@layout/fragment_player">
+        <action
+            android:id="@+id/action_playerFragment_to_playlistFragment"
+            app:destination="@id/playlistEditorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistEditorFragment"
+        android:name="av.kochekov.playlistmaker.playlist_editor.presentation.PlaylistEditorFragment"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist_editor" />
+    <fragment
+        android:id="@+id/playlistViewFragment"
+        android:name="av.kochekov.playlistmaker.playlist_view.presentation.PlaylistViewFragment"
+        android:label="fragment_playlist_view"
+        tools:layout="@layout/fragment_playlist_view" >
+        <action
+            android:id="@+id/action_playlistViewFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_playlistViewFragment_to_playlistEditorFragment"
+            app:destination="@id/playlistEditorFragment" />
+    </fragment>
+</navigation>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:gravity="center">
+        <shape
+            android:shape="rectangle">
+            <stroke
+                android:color="@color/YP_gray"
+                android:width="1dp"
+                android:dashGap="32dp"
+                android:dashWidth="32dp"/>
+            <corners
+                android:radius="@dimen/playlist_artworkRadius"/>
+
+        </shape>
+    </item>
+    <item
+        android:gravity="center">
+        <inset
+            android:drawable="@drawable/ic_100x100_add_to_playlist"
+            />
+    </item>
+</layer-list>
