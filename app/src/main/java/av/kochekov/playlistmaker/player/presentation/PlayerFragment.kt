@@ -37,7 +37,7 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
     private var release: TextView? = null
     private var genre: TextView? = null
     private var country: TextView? = null
-    private var play: ImageButton? = null
+    private var play: ImageView? = null
     private var trackTime: TextView? = null
     private var favoriteButton: ImageButton? = null
     private var addToPlaylistButton: ImageButton? = null
@@ -169,16 +169,13 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
             when (it) {
                 MediaPlayerState.STATE_DEFAULT -> {
                     play?.isEnabled = false
-                    play?.setBackgroundResource(R.drawable.audioplayer_play_button)
                 }
                 MediaPlayerState.STATE_PLAYING -> {
                     play?.isEnabled = true
-                    play?.setBackgroundResource(R.drawable.audioplayer_pause_button)
                 }
                 MediaPlayerState.STATE_PAUSED,
                 MediaPlayerState.STATE_PREPARED -> {
                     play?.isEnabled = true
-                    play?.setBackgroundResource(R.drawable.audioplayer_play_button)
                 }
             }
         })
