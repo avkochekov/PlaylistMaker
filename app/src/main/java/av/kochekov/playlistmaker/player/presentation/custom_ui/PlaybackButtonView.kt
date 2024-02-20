@@ -65,7 +65,7 @@ class PlaybackButtonView @JvmOverloads constructor(
         return result
     }
 
-    fun changeState() {
+    private fun changeState() {
         isPlay = !isPlay
         setPlayState(isPlay)
     }
