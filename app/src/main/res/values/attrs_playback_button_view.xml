@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PlaybackButtonView">
+        <attr name="playButtonImage"
+            format="reference" />
+        <attr name="stopButtonImage"
+            format="reference" />
+    </declare-styleable>
+</resources>
