@@ -17,6 +17,9 @@ class PlaybackButtonView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
     @StyleRes defStyleRes: Int = 0,
+    // При наследовании от ImageView ругается линтер:
+    // This custom view should extend androidx.appcompat.widget.AppCompatImageView instead [AppCompatCustomView]
+    // как это пофиксить мне пока не понятно
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
     private var imagePlay: Bitmap? = null
