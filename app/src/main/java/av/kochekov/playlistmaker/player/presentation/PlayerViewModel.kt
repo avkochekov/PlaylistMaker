@@ -38,7 +38,7 @@ class PlayerViewModel(
     init {
         mediaPlayerInteractor.setListener(object : MediaPlayerStateListenerInterface {
             override fun onStateChanged(state: MediaPlayerState) {
-                playerState.postValue(state)
+                playerState.value = state
             }
         })
         checkTrackInFavorite()
