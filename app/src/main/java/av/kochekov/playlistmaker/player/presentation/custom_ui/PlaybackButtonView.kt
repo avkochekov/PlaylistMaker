@@ -6,7 +6,7 @@ import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.widget.ImageView
+import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import androidx.core.graphics.drawable.toBitmap
@@ -17,7 +17,7 @@ class PlaybackButtonView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
     @StyleRes defStyleRes: Int = 0,
-) : ImageView(context, attrs, defStyleAttr, defStyleRes) {
+) : View(context, attrs, defStyleAttr, defStyleRes) {
 
     private var imagePlay: Bitmap? = null
     private var imageStop: Bitmap? = null

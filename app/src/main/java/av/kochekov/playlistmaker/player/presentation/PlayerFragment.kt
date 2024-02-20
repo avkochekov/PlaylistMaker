@@ -37,7 +37,7 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
     private var release: TextView? = null
     private var genre: TextView? = null
     private var country: TextView? = null
-    private var play: ImageView? = null
+    private var play: View? = null
     private var trackTime: TextView? = null
     private var favoriteButton: ImageButton? = null
     private var addToPlaylistButton: ImageButton? = null
