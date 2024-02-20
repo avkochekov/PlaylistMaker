@@ -25,6 +25,7 @@ class PlaybackButtonView @JvmOverloads constructor(
     private var imagePlay: Bitmap? = null
     private var imageStop: Bitmap? = null
     private var imageBitmap: Bitmap? = null
+    private var imageRect: RectF = RectF()
     private var isPlay: Boolean = false
 
     init {
@@ -44,19 +45,19 @@ class PlaybackButtonView @JvmOverloads constructor(
         }
     }
 
+    @SuppressLint("DrawAllocation")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
         val minViewSize = resources.getDimension(R.dimen.playbackButtonViewMinSize).toInt()
 
         setMeasuredDimension(minViewSize, minViewSize)
+
+        imageRect = RectF(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (imageBitmap != null) {
-            val rect = RectF(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat())
-            canvas.drawBitmap(imageBitmap!!, null, rect, null)
-        }
+        imageBitmap?.let { canvas.drawBitmap(it, null, imageRect, null) }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
