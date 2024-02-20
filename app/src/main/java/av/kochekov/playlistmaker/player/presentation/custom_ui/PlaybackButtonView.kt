@@ -1,5 +1,6 @@
 package av.kochekov.playlistmaker.player.presentation.custom_ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -36,8 +37,10 @@ class PlaybackButtonView @JvmOverloads constructor(
             defStyleRes
         ).apply {
             try {
-                imagePlay = getDrawable(R.styleable.PlaybackButtonView_playButtonImage)?.toBitmap()
                 imageStop = getDrawable(R.styleable.PlaybackButtonView_stopButtonImage)?.toBitmap()
+                    ?: resources.getDrawable(R.drawable.pause_button).toBitmap()
+                imagePlay = getDrawable(R.styleable.PlaybackButtonView_playButtonImage)?.toBitmap()
+                    ?: resources.getDrawable(R.drawable.play_button).toBitmap()
                 imageBitmap = imagePlay
             } finally {
                 recycle()

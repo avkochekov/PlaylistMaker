@@ -95,8 +95,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                app:playButtonImage="@drawable/play_button"
-                app:stopButtonImage="@drawable/pause_button"
                 />
 
             <ImageButton
