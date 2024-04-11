@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
+import av.kochekov.playlistmaker.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,6 +34,8 @@ class MusicService : Service() {
     val playerState = _playerState.asStateFlow()
 
     private var songUrl = ""
+    private var artist = ""
+    private var track = ""
 
     private var mediaPlayer: MediaPlayer? = null
 
@@ -54,6 +57,8 @@ class MusicService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         songUrl = intent?.getStringExtra("song_url") ?: ""
+        artist = intent?.getStringExtra("artist") ?: ""
+        track = intent?.getStringExtra("track") ?: ""
         initMediaPlayer()
 
         return binder
@@ -124,8 +129,9 @@ class MusicService : Service() {
 
     private fun createServiceNotification(): Notification {
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle("Music foreground service TITLE")
-            .setContentText("Music foreground service TEXT")
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(String.format("%s - %s", artist, track))
+            .setSmallIcon(R.drawable.ic_24x24_library)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .build()
