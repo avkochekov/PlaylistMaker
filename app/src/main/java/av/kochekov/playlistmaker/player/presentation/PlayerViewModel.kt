@@ -161,7 +161,8 @@ class PlayerViewModel(
     }
 
     fun onPause(){
-        notificationControl?.showNotification()
+        if (playerState().value is PlayerState.Playing)
+            notificationControl?.showNotification()
     }
 
     fun onResume(){
