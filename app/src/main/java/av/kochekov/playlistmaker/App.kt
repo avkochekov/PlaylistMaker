@@ -7,6 +7,7 @@ import av.kochekov.playlistmaker.common.di.playerModule
 import av.kochekov.playlistmaker.common.di.playlistEditorModule
 import av.kochekov.playlistmaker.common.di.playlistViewModule
 import av.kochekov.playlistmaker.common.di.playlistsModule
+import av.kochekov.playlistmaker.common.di.serviceModule
 import av.kochekov.playlistmaker.search.di.searchModule
 import av.kochekov.playlistmaker.common.di.settingsModule
 import av.kochekov.playlistmaker.settings.domain.SettingsRepository
@@ -24,7 +25,16 @@ class App : Application() {
 
         startKoin {
             androidContext(this@App)
-            modules(settingsModule, searchModule, playerModule, libraryModule, playlistsModule, playlistEditorModule, playlistViewModule)
+            modules(
+                settingsModule,
+                searchModule,
+                playerModule,
+                libraryModule,
+                playlistsModule,
+                playlistEditorModule,
+                playlistViewModule,
+                serviceModule
+            )
         }
 
         setIsNightMode(getIsNightMode(), true)

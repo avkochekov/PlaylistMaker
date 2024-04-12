@@ -8,6 +8,7 @@ import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import av.kochekov.playlistmaker.R
@@ -16,12 +17,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
+import org.koin.android.ext.android.get
 
-class MusicService : Service() {
+class MusicService : Service(), AudioPlayerControl, NotificationControl {
 
     private val binder = MusicServiceBinder()
 
@@ -30,22 +33,22 @@ class MusicService : Service() {
         const val NOTIFICATION_CHANNEL_ID = "music_service_channel"
         const val SERVICE_NOTIFICATION_ID = 100
     }
+
     private val _playerState = MutableStateFlow<PlayerState>(PlayerState.Default())
-    val playerState = _playerState.asStateFlow()
 
     private var songUrl = ""
     private var artist = ""
     private var track = ""
 
-    private var mediaPlayer: MediaPlayer? = null
+    private var mediaPlayer: MediaPlayer = get()
 
     private var timerJob: Job? = null
 
     private fun startTimer() {
         timerJob = CoroutineScope(Dispatchers.Default).launch {
-            while (mediaPlayer?.isPlaying == true) {
-                delay(200L)
+            while (mediaPlayer.isPlaying == true) {
                 _playerState.value = PlayerState.Playing(getCurrentPlayerPosition())
+                delay(200L)
             }
         }
     }
@@ -65,12 +68,8 @@ class MusicService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        ServiceCompat.startForeground(
-            this,
-            SERVICE_NOTIFICATION_ID,
-            createServiceNotification(),
-            getForegroundServiceTypeConstant()
-        )
+        Log.d(LOG_TAG, String.format("Start id: %d", startId))
+
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -79,46 +78,47 @@ class MusicService : Service() {
         return super.onUnbind(intent)
     }
 
-    // Методы управления Media Player
-
     private fun initMediaPlayer() {
         if (songUrl.isEmpty()) return
 
-        mediaPlayer?.setDataSource(songUrl)
-        mediaPlayer?.prepareAsync()
-        mediaPlayer?.setOnPreparedListener {
+        mediaPlayer.setDataSource(songUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
             _playerState.value = PlayerState.Prepared()
         }
-        mediaPlayer?.setOnCompletionListener {
+        mediaPlayer.setOnCompletionListener {
             _playerState.value = PlayerState.Prepared()
-            stopSelf()
+            hideNotification()
         }
     }
 
-    fun startPlayer() {
-        mediaPlayer?.start()
+    override fun getPlayerState(): StateFlow<PlayerState> {
+        return _playerState.asStateFlow()
+    }
+
+    override fun startPlayer() {
+        mediaPlayer.start()
         _playerState.value = PlayerState.Playing(getCurrentPlayerPosition())
         startTimer()
     }
 
-    fun pausePlayer() {
-        mediaPlayer?.pause()
+    override fun pausePlayer() {
+        mediaPlayer.pause()
         timerJob?.cancel()
         _playerState.value = PlayerState.Paused(getCurrentPlayerPosition())
     }
 
     private fun releasePlayer() {
         timerJob?.cancel()
-        mediaPlayer?.stop()
+        mediaPlayer.stop()
         _playerState.value = PlayerState.Default()
-        mediaPlayer?.setOnPreparedListener(null)
-        mediaPlayer?.setOnCompletionListener(null)
-        mediaPlayer?.release()
-        mediaPlayer = null
+        mediaPlayer.setOnPreparedListener(null)
+        mediaPlayer.setOnCompletionListener(null)
+        mediaPlayer.release()
     }
 
     private fun getCurrentPlayerPosition(): String {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer?.currentPosition) ?: "00:00"
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition) ?: "00:00"
     }
 
     // Binder
@@ -143,5 +143,18 @@ class MusicService : Service() {
         } else {
             0
         }
+    }
+
+    override fun showNotification() {
+        ServiceCompat.startForeground(
+            this,
+            SERVICE_NOTIFICATION_ID,
+            createServiceNotification(),
+            getForegroundServiceTypeConstant()
+        )
+    }
+
+    override fun hideNotification() {
+        stopForeground(true)
     }
 }
