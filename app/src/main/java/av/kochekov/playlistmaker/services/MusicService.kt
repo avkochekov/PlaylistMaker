@@ -1,7 +1,10 @@
 package av.kochekov.playlistmaker.services
 
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.media.MediaPlayer
@@ -55,7 +58,7 @@ class MusicService : Service(), AudioPlayerControl, NotificationControl {
 
     override fun onCreate() {
         super.onCreate()
-        mediaPlayer = MediaPlayer()
+        createNotificationChannel()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -143,6 +146,24 @@ class MusicService : Service(), AudioPlayerControl, NotificationControl {
         } else {
             0
         }
+    }
+
+    private fun createNotificationChannel() {
+        // Создание каналов доступно только с Android 8.0
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return
+        }
+
+        val channel = NotificationChannel(
+            /* id= */ NOTIFICATION_CHANNEL_ID,
+            /* name= */ "Music service",
+            /* importance= */ NotificationManager.IMPORTANCE_DEFAULT
+        )
+        channel.description = "Service for playing music"
+
+        // Регистрируем канал уведомлений
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     override fun showNotification() {
