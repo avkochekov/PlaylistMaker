@@ -1,16 +1,15 @@
 package av.kochekov.playlistmaker.player.presentation
 
-import android.util.Log
 import androidx.lifecycle.*
 import av.kochekov.playlistmaker.favorite_tracks.domain.TrackInteractor
-import av.kochekov.playlistmaker.player.domain.MediaPlayerInteractor
-import av.kochekov.playlistmaker.player.domain.MediaPlayerStateListenerInterface
-import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
 import av.kochekov.playlistmaker.playlist_editor.domain.PlaylistInteractor
 import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
 import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.services.AudioPlayerControl
+import av.kochekov.playlistmaker.services.NotificationControl
+import av.kochekov.playlistmaker.services.PlayerState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 
@@ -18,15 +17,12 @@ private const val TIME_UPDATE_VALUE_MILLIS = 300L
 private const val DEFAULT_TRACK_POSITION = 0
 
 class PlayerViewModel(
-    private val mediaPlayerInteractor: MediaPlayerInteractor,
     private val favoriteTrackInteractor: TrackInteractor,
     private val playlistInteractor: PlaylistInteractor,
     private val trackInteractor: TrackInteractor
 ) : ViewModel() {
 
     private var trackModel = MutableLiveData<TrackModel>()
-    private var trackPosition = MutableLiveData<Int>()
-    private var playerState = MutableLiveData<MediaPlayerState>()
     private var trackInFavorite = MutableLiveData<Boolean>()
 
     private var message = MutableLiveData<MessageState>()
@@ -36,21 +32,46 @@ class PlayerViewModel(
     private var timerJob: Job? = null
 
     init {
-        mediaPlayerInteractor.setListener(object : MediaPlayerStateListenerInterface {
-            override fun onStateChanged(state: MediaPlayerState) {
-                playerState.value = state
-            }
-        })
         checkTrackInFavorite()
         loadPlaylists()
     }
 
-    fun playerState(): LiveData<MediaPlayerState> {
-        return playerState
+    private val _playerState = MutableLiveData<PlayerState>(PlayerState.Default())
+    fun playerState(): LiveData<PlayerState> = _playerState
+
+    private var audioPlayerControl: AudioPlayerControl? = null
+    private var notificationControl: NotificationControl? = null
+
+    fun setAudioPlayerControl(control: AudioPlayerControl) {
+        audioPlayerControl = control
+
+        viewModelScope.launch {
+            audioPlayerControl?.let {control ->
+                control.getPlayerState().collect {state ->
+                    _playerState.postValue(state)
+                }
+            }
+        }
     }
 
-    fun trackPosition(): LiveData<Int> {
-        return trackPosition
+    fun removeAudioPlayerControl() {
+        audioPlayerControl = null
+    }
+
+    fun setNotificationControl(control: NotificationControl) {
+        notificationControl = control
+    }
+
+    fun removeNotificationControl() {
+        notificationControl = null
+    }
+
+    fun onPlayerButtonClicked() {
+        if (_playerState.value is PlayerState.Playing) {
+            audioPlayerControl?.pausePlayer()
+        } else {
+            audioPlayerControl?.startPlayer()
+        }
     }
 
     fun trackInfo(): LiveData<TrackModel> {
@@ -71,8 +92,6 @@ class PlayerViewModel(
 
     fun setTrack(track: TrackModel) {
         trackModel.postValue(track)
-        trackPosition.postValue(DEFAULT_TRACK_POSITION)
-        mediaPlayerInteractor.setTrack(track.previewUrl.toString())
         checkTrackInFavorite(track.trackId)
     }
 
@@ -83,44 +102,6 @@ class PlayerViewModel(
             }
         }
     }
-
-    fun onPlayClicked() {
-        when (playerState.value) {
-            MediaPlayerState.STATE_PLAYING -> mediaPlayerInteractor.pause()
-            MediaPlayerState.STATE_PAUSED,
-            MediaPlayerState.STATE_PREPARED -> mediaPlayerInteractor.play()
-            else -> {}
-        }
-        updateRemainingTime()
-    }
-
-    fun stopPlayer() {
-        playerState.value?.let { state ->
-            if (state == MediaPlayerState.STATE_DEFAULT)
-                return
-            mediaPlayerInteractor.stop()
-        }
-        timerJob?.cancel()
-    }
-
-    fun pausePlayer() {
-        playerState.value?.let { state ->
-            if (state == MediaPlayerState.STATE_DEFAULT)
-                return
-            mediaPlayerInteractor.pause()
-        }
-    }
-
-    private fun updateRemainingTime() {
-        timerJob = viewModelScope.launch {
-            while (playerState?.value == MediaPlayerState.STATE_PLAYING || playerState?.value == MediaPlayerState.STATE_PAUSED) {
-                delay(TIME_UPDATE_VALUE_MILLIS)
-                trackPosition.postValue(mediaPlayerInteractor.timePosition())
-            }
-            trackPosition.postValue(0)
-        }
-    }
-
     fun changeFavoriteState() {
         trackModel.value?.let { data ->
             val inFavorite = trackInFavorite.value == true
@@ -178,4 +159,14 @@ class PlayerViewModel(
             }
         }
     }
+
+    fun onPause(){
+        if (playerState().value is PlayerState.Playing)
+            notificationControl?.showNotification()
+    }
+
+    fun onResume(){
+        notificationControl?.hideNotification()
+    }
+
 }

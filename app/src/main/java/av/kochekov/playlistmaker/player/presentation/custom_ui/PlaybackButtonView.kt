@@ -63,8 +63,10 @@ class PlaybackButtonView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         val result = super.onTouchEvent(event)
 
-        when (event?.action) {
-            MotionEvent.ACTION_UP -> changeState()
+        if (isEnabled) {
+            when (event?.action) {
+                MotionEvent.ACTION_UP -> changeState()
+            }
         }
         return result
     }
@@ -74,7 +76,7 @@ class PlaybackButtonView @JvmOverloads constructor(
         setPlayState(isPlay)
     }
 
-    private fun setPlayState(isPlay: Boolean) {
+    fun setPlayState(isPlay: Boolean) {
         imageBitmap = if (isPlay) imageStop else imagePlay
         invalidate()
     }

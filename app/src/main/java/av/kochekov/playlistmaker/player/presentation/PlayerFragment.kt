@@ -1,6 +1,13 @@
 package av.kochekov.playlistmaker.player.presentation
 
+import android.Manifest
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,22 +15,27 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.databinding.FragmentPlayerBinding
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
-import av.kochekov.playlistmaker.player.domain.models.MediaPlayerState
 import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
+import av.kochekov.playlistmaker.player.presentation.custom_ui.PlaybackButtonView
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
-import av.kochekov.playlistmaker.player.presentation.utils.Formatter
 import av.kochekov.playlistmaker.playlist_editor.presentation.PlaylistEditorFragment
+import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.services.AudioPlayerControl
+import av.kochekov.playlistmaker.services.MusicService
+import av.kochekov.playlistmaker.services.NotificationControl
+import av.kochekov.playlistmaker.services.PlayerState
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
     private var _binding: FragmentPlayerBinding? = null
@@ -37,7 +49,7 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
     private var release: TextView? = null
     private var genre: TextView? = null
     private var country: TextView? = null
-    private var play: View? = null
+    private var play: PlaybackButtonView? = null
     private var trackTime: TextView? = null
     private var favoriteButton: ImageButton? = null
     private var addToPlaylistButton: ImageButton? = null
@@ -46,6 +58,51 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
     private var playListAdapter: PlaylistAdapter? = null
 
     private var bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback? = null
+
+    private var musicService: MusicService? = null
+
+    private var playerState: PlayerState = PlayerState.Default()
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicService.MusicServiceBinder
+            binder.getService().let {musicService ->
+                viewModel.setAudioPlayerControl(musicService as AudioPlayerControl)
+                viewModel.setNotificationControl(musicService as NotificationControl)
+            }
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            viewModel.removeAudioPlayerControl()
+            viewModel.removeNotificationControl()
+        }
+    }
+
+    private fun bindMusicService() {
+        val intent = Intent(requireContext(), MusicService::class.java).apply {
+            putExtra("song_url", viewModel.trackInfo().value?.previewUrl)
+            putExtra("artist", viewModel.trackInfo().value?.artistName)
+            putExtra("track", viewModel.trackInfo().value?.trackName)
+        }
+
+        context?.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun unbindMusicService() {
+        context?.unbindService(serviceConnection)
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // Если выдали разрешение — привязываемся к сервису.
+            bindMusicService()
+        } else {
+            // Иначе просто покажем ошибку
+            Toast.makeText(requireContext(), "Can't bind service!", Toast.LENGTH_LONG).show()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,6 +131,7 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
         requireArguments().get(TRACK_ID)?.let { data ->
             viewModel.setTrack(data as Int)
         }
+
         playListAdapter = PlaylistAdapter(this)
 
         binding.toolbar.setNavigationOnClickListener {
@@ -126,6 +184,10 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
 
         bottomSheetCallback?.let { bottomSheetBehavior.addBottomSheetCallback(it) }
 
+        play?.isEnabled = viewModel.playerState().value !is PlayerState.Default
+        play?.setPlayState(viewModel.playerState().value is PlayerState.Playing)
+        trackTime?.text = viewModel.playerState().value?.progress?:"00:00"
+
         viewModel.playlistState().observe(viewLifecycleOwner, Observer {
             when (it) {
                 is PlaylistListState.Empty -> {
@@ -146,6 +208,17 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
         })
 
         viewModel.trackInfo().observe(viewLifecycleOwner, Observer {
+
+            // Прежде чем привязаться к сервису, который будет показывать уведомление
+            // Мы должны проверить, выданы ли соответствующие разрешения
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                // На версиях ниже Android 13 —
+                // можно сразу привязаться к сервису.
+                bindMusicService()
+            }
+
             trackName?.text = it.trackName
             artistName?.text = it.artistName
             duration?.text = it.duration
@@ -165,23 +238,32 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
             }
         })
 
-        viewModel.playerState().observe(viewLifecycleOwner, Observer {
-            when (it) {
-                MediaPlayerState.STATE_DEFAULT -> {
+        viewModel.playerState().observe(viewLifecycleOwner, Observer {state ->
+            when (state) {
+                is PlayerState.Default -> {
                     play?.isEnabled = false
+                    play?.setPlayState(false)
+                    trackTime?.text = "00:00"
                 }
-                MediaPlayerState.STATE_PLAYING -> {
+
+                is PlayerState.Prepared -> {
                     play?.isEnabled = true
+                    trackTime?.text = "00:00"
+                    play?.setPlayState(false)
                 }
-                MediaPlayerState.STATE_PAUSED,
-                MediaPlayerState.STATE_PREPARED -> {
+
+                is PlayerState.Playing -> {
                     play?.isEnabled = true
+                    trackTime?.text = state.progress
+                    play?.setPlayState(true)
+                }
+
+                is PlayerState.Paused -> {
+                    play?.isEnabled = true
+                    trackTime?.text = state.progress
+                    play?.setPlayState(false)
                 }
             }
-        })
-
-        viewModel.trackPosition().observe(viewLifecycleOwner, Observer {
-            trackTime?.text = Formatter.timeToText(it)
         })
 
         viewModel.message().observe(viewLifecycleOwner, Observer {
@@ -207,10 +289,6 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
 
         })
 
-        play?.setOnClickListener {
-            viewModel.onPlayClicked()
-        }
-
         favoriteButton?.setOnClickListener {
             viewModel.changeFavoriteState()
         }
@@ -219,17 +297,26 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
+        play?.setOnClickListener {
+            viewModel.onPlayerButtonClicked()
+        }
+
         viewModel.loadPlaylists()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.pausePlayer()
+        viewModel.onPause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.stopPlayer()
+        unbindMusicService()
         // I don’t know how else to untie the callback so that the application doesn’t crash
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet)
         bottomSheetCallback?.let {
