@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -13,28 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.common.presentation.CustomSwitch
 import av.kochekov.playlistmaker.common.presentation.CustomTopAppBar
-import av.kochekov.playlistmaker.common.presentation.appFontFamily
 import av.kochekov.playlistmaker.common.presentation.getColor
 import av.kochekov.playlistmaker.settings.presentation.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
-
-@Composable
-fun CommonText (
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        modifier = modifier,
-        text = text,
-        fontSize = 16.sp,
-        fontFamily = appFontFamily,
-        color = getColor(R.attr.textColor)
-    )
-}
 
 @Composable
 fun SettingsPage() {

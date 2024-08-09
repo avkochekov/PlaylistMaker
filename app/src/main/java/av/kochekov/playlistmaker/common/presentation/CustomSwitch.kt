@@ -15,7 +15,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.settings.presentation.composeUI.CommonText
 
 @Composable
 fun CustomSwitch (
@@ -38,7 +37,7 @@ fun CustomSwitch (
                     horizontal = 16.dp,
                 )
         ){
-            CommonText(
+            CustomText(
                 modifier = Modifier
                     .weight(1f)
                     .align(alignment = Alignment.CenterVertically),

@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import av.kochekov.playlistmaker.R
+import av.kochekov.playlistmaker.common.presentation.CustomText
 import av.kochekov.playlistmaker.common.presentation.getColor
 
 @Composable
@@ -40,7 +41,7 @@ fun CustomSettingsItem (
                     vertical = 21.dp
                 )
         ) {
-            CommonText(
+            CustomText(
                 modifier = Modifier
                     .weight(1f)
                     .align(alignment = Alignment.CenterVertically),
