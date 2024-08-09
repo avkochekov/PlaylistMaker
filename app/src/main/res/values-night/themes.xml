@@ -38,6 +38,7 @@
 
         <item name="grayControlsBackgroundColor">@color/YP_button_dark_gray</item>
         <item name="colorContainer">@color/white</item>
+        <item name="imageTintColor">@color/white</item>
     </style>
 
     <style name="MenuBackground">

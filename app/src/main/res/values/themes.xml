@@ -29,6 +29,8 @@
     <attr name="colorContainer" format="color" />
     <attr name="colorContainerText" format="color" />
 
+    <attr name="imageTintColor" format="color" />
+
     <!-- Base application theme. -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -71,6 +73,7 @@
         <item name="grayControlsBackgroundColor">@color/YP_button_light_gray</item>
         <item name="colorContainer">@color/YP_text_gray</item>
         <item name="colorContainerText">@color/black</item>
+        <item name="imageTintColor">@color/gray</item>
     </style>
 
     <style name="MenuBackground">

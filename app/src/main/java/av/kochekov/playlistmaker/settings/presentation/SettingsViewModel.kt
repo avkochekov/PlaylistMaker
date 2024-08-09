@@ -15,14 +15,11 @@ class SettingsViewModel(
 ) : ViewModel() {
 
     private var isDarkTheme = MutableLiveData<Boolean>()
+    fun isDarkTheme(): LiveData<Boolean> = isDarkTheme
 
     init {
         isDarkTheme.value = settingsInteractor.getThemeSettings() == ThemeSettings.DARK
         updateTheme()
-    }
-
-    fun isDarkTheme(): LiveData<Boolean> {
-        return isDarkTheme
     }
 
     fun shareApp() {
