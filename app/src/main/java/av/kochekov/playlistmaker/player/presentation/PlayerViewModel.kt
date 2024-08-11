@@ -6,7 +6,7 @@ import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
 import av.kochekov.playlistmaker.playlist_editor.domain.PlaylistInteractor
 import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import av.kochekov.playlistmaker.services.AudioPlayerControl
 import av.kochekov.playlistmaker.services.NotificationControl
 import av.kochekov.playlistmaker.services.PlayerState

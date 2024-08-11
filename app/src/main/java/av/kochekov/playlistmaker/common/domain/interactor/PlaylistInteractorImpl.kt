@@ -6,7 +6,7 @@ import av.kochekov.playlistmaker.playlist_editor.domain.PlaylistInteractor
 import av.kochekov.playlistmaker.playlist_editor.data.utils.Mapper as PlaylistMapper
 import av.kochekov.playlistmaker.images.domain.ImagesRepository
 import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.single

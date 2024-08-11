@@ -2,7 +2,7 @@ package av.kochekov.playlistmaker.library.domain.favorite
 
 import av.kochekov.playlistmaker.favorite_tracks.domain.TrackRepository
 import av.kochekov.playlistmaker.library.data.utils.Mapper
-import av.kochekov.playlistmaker.library.domain.favorite.models.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

@@ -24,13 +24,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import av.kochekov.playlistmaker.R
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import av.kochekov.playlistmaker.common.presentation.CustomButton
 import av.kochekov.playlistmaker.common.presentation.CustomText
 import av.kochekov.playlistmaker.common.presentation.CustomTopAppBar
+import av.kochekov.playlistmaker.common.presentation.ErrorMessage
+import av.kochekov.playlistmaker.common.presentation.TrackList
 import av.kochekov.playlistmaker.common.presentation.getColor
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
 import av.kochekov.playlistmaker.search.domain.model.SearchFragmentState
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import av.kochekov.playlistmaker.search.presentation.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 

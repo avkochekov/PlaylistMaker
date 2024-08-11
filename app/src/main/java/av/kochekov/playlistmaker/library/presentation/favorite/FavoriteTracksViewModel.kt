@@ -1,8 +1,11 @@
 package av.kochekov.playlistmaker.library.presentation.favorite
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import av.kochekov.playlistmaker.library.domain.favorite.FavoriteTracksInteractor
-import av.kochekov.playlistmaker.library.domain.favorite.models.TrackModel
 import kotlinx.coroutines.launch
 
 class FavoriteTracksViewModel(

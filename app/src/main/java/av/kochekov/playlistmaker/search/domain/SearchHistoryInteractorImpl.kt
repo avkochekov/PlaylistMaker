@@ -1,7 +1,7 @@
 package av.kochekov.playlistmaker.search.domain
 
 import av.kochekov.playlistmaker.search.data.utils.Mapper
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 
 private const val MAX_LIST_SIZE = 10
 

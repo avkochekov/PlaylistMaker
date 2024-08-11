@@ -1,7 +1,7 @@
-package av.kochekov.playlistmaker.search.domain.model
+package av.kochekov.playlistmaker.common.domain
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 data class TrackModel(
     val trackId: Int,               // Уникальный ID композиции

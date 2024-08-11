@@ -1,7 +1,7 @@
 package av.kochekov.playlistmaker.playlist_editor.domain
 
 import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistInteractor {

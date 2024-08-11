@@ -1,11 +1,10 @@
-package av.kochekov.playlistmaker.search.presentation.composeUI
+package av.kochekov.playlistmaker.common.presentation
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import av.kochekov.playlistmaker.common.presentation.TrackItem
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 
 @Composable
 fun TrackList(

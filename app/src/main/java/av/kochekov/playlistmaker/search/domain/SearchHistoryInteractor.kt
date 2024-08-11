@@ -1,6 +1,6 @@
 package av.kochekov.playlistmaker.search.domain
 
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 
 interface SearchHistoryInteractor {
     fun add(track: TrackModel)

@@ -1,4 +1,4 @@
-package av.kochekov.playlistmaker.search.presentation.composeUI
+package av.kochekov.playlistmaker.common.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import av.kochekov.playlistmaker.R
-import av.kochekov.playlistmaker.common.presentation.CustomText
 
 @Composable
 fun ErrorMessage(

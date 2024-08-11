@@ -26,7 +26,7 @@ import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
 import av.kochekov.playlistmaker.player.presentation.custom_ui.PlaybackButtonView
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
 import av.kochekov.playlistmaker.playlist_editor.presentation.PlaylistEditorFragment
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import av.kochekov.playlistmaker.services.AudioPlayerControl
 import av.kochekov.playlistmaker.services.MusicService
 import av.kochekov.playlistmaker.services.NotificationControl
