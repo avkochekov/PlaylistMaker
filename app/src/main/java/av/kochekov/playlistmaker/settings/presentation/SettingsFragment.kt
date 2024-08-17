@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import av.kochekov.playlistmaker.settings.presentation.composeUI.SettingsPage
 
@@ -15,6 +16,7 @@ class SettingsFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 SettingsPage()
             }
         }

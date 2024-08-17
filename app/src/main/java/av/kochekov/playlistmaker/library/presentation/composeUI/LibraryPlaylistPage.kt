@@ -45,12 +45,12 @@ fun LibraryPlaylistPage(
             text = stringResource(id = R.string.library_newPlayList),
             onClicked = onNewPlaylistClicked
         )
-        when (state) {
+        when (val data = state) {
 
             is PlaylistState.Content -> {
                 PlaylistList(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    list = (state as PlaylistState.Content).list,
+                    list = data.list,
                     onItemClicked = onPlaylistClicked
                 )
             }

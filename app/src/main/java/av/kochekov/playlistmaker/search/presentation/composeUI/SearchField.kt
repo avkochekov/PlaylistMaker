@@ -1,6 +1,5 @@
 package av.kochekov.playlistmaker.search.presentation.composeUI
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -54,15 +53,14 @@ fun SearchField(
                 .fillMaxWidth()
                 .align(Alignment.Center)
         ) {
-            Image(
+            Icon(
                 modifier = Modifier
                     .padding(start = 12.dp)
                     .align(Alignment.CenterVertically),
                 painter = painterResource(id = R.drawable.ic_16x16_search),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(getColor(R.attr.searchHintColor))
-            )
-
+                tint = getColor(R.attr.searchHintColor)
+                )
             Box (
                 modifier = Modifier
                     .weight(1f)
@@ -71,7 +69,8 @@ fun SearchField(
             ) {
                 if (text.isEmpty()) {
                     CustomText(
-                        modifier = Modifier.align(Alignment.CenterStart),
+                        modifier = Modifier
+                            .align(Alignment.CenterStart),
                         color = getColor(R.attr.searchHintColor),
                         text = placeholder,
                     )
@@ -94,16 +93,17 @@ fun SearchField(
                     )
                 )
             }
-            Image(
-                modifier = Modifier
-                    .padding(end = 12.dp)
-                    .align(Alignment.CenterVertically)
-                    .clickable { onTextChanged("") },
-                painter = painterResource(id = R.drawable.ic_16x16_clear),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(getColor(R.attr.searchHintColor))
-            )
-
+            if (text.isNotEmpty()) {
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .align(Alignment.CenterVertically)
+                        .clickable { onTextChanged("") },
+                    painter = painterResource(id = R.drawable.ic_16x16_clear),
+                    contentDescription = null,
+                    tint = getColor(R.attr.searchHintColor)
+                )
+            }
         }
     }
 }

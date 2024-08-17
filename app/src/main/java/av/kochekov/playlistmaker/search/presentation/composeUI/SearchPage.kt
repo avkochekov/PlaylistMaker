@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -14,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -34,15 +34,14 @@ import av.kochekov.playlistmaker.common.presentation.getColor
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
 import av.kochekov.playlistmaker.search.domain.model.SearchFragmentState
 import av.kochekov.playlistmaker.search.presentation.SearchViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchPage(
+    viewModel: SearchViewModel,
     onTrackClicked: (TrackModel) -> Unit?
 ) {
-    var viewModel: SearchViewModel = koinViewModel()
     val state by viewModel.fragmentState().observeAsState()
-    var text = remember { mutableStateOf("") }
+    val text = remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -57,10 +56,6 @@ fun SearchPage(
                 .padding(innerPadding)
         )
         {
-            BasicTextField(
-                value = String(),
-                onValueChange = {}
-            )
             SearchField(
                 modifier = Modifier.padding(
                     horizontal = 16.dp,
@@ -73,9 +68,9 @@ fun SearchPage(
                     viewModel.search(it)
                 },
             )
-            when (state) {
+            when (val data = state) {
                 is SearchFragmentState.HistoryList -> {
-                    val list = (state as SearchFragmentState.HistoryList).trackList
+                    val list = data.trackList
                     val isEmpty = list.isEmpty()
                     if (!isEmpty) {
                         Box(
@@ -114,7 +109,7 @@ fun SearchPage(
                 }
                 is SearchFragmentState.SearchResultList -> {
                     TrackList(
-                        list = (state as SearchFragmentState.SearchResultList).trackList,
+                        list = data.trackList,
                         onClicked = {track ->
                             viewModel.addToHistory(track)
                             onTrackClicked(track)
@@ -130,10 +125,10 @@ fun SearchPage(
                     )
                 }
                 is SearchFragmentState.Error -> {
-                    val errorImage: Int
-                    val errorText: String
-                    val displayButton: Boolean
-                    when ((state as SearchFragmentState.Error).error) {
+                    var errorImage by remember { mutableStateOf(0) }
+                    var errorText by remember { mutableStateOf("") }
+                    var displayButton by remember { mutableStateOf(false) }
+                    when (data.error) {
                         ErrorMessageType.NO_CONNECTION -> {
                             errorImage = R.drawable.connection_error
                             errorText = stringResource(R.string.search_error_connectionFailed)
@@ -179,7 +174,7 @@ fun SearchPage(
     uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun SearchPagePreview() {
-    SearchPage(
-        onTrackClicked = {}
-    )
+//    SearchPage(
+//        viewModel = 
+//    ) {}
 }

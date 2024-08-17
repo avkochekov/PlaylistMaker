@@ -21,12 +21,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import av.kochekov.playlistmaker.R
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import av.kochekov.playlistmaker.databinding.FragmentPlayerBinding
 import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
 import av.kochekov.playlistmaker.player.presentation.custom_ui.PlaybackButtonView
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
 import av.kochekov.playlistmaker.playlist_editor.presentation.PlaylistEditorFragment
-import av.kochekov.playlistmaker.common.domain.TrackModel
 import av.kochekov.playlistmaker.services.AudioPlayerControl
 import av.kochekov.playlistmaker.services.MusicService
 import av.kochekov.playlistmaker.services.NotificationControl
@@ -85,11 +85,16 @@ class PlayerFragment : Fragment(), PlaylistAdapter.ItemClickListener {
             putExtra("track", viewModel.trackInfo().value?.trackName)
         }
 
-        context?.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+
+        val bounded = context?.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        viewModel.setIsServiceBounded(bounded?:false)
     }
 
     private fun unbindMusicService() {
-        context?.unbindService(serviceConnection)
+        if (viewModel.isServiceBounded()) {
+            context?.unbindService(serviceConnection)
+            viewModel.setIsServiceBounded(false)
+        }
     }
 
     private val requestPermissionLauncher = registerForActivityResult(

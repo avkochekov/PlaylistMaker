@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import av.kochekov.playlistmaker.R
 import av.kochekov.playlistmaker.player.presentation.PlayerFragment
 import av.kochekov.playlistmaker.search.presentation.composeUI.SearchPage
+import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment(){
@@ -20,14 +22,15 @@ class SearchFragment : Fragment(){
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 SearchPage(
-                    onTrackClicked = {track ->
-                        findNavController().navigate(
-                            R.id.action_searchFragment_to_playerFragment,
-                            PlayerFragment.createArgs(track)
-                        )
-                    }
-                )
+                    viewModel = koinViewModel()
+                ) { track ->
+                    findNavController().navigate(
+                        R.id.action_searchFragment_to_playerFragment,
+                        PlayerFragment.createArgs(track)
+                    )
+                }
             }
         }
     }

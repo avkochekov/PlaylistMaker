@@ -1,6 +1,5 @@
 package av.kochekov.playlistmaker.common.presentation
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,7 +66,7 @@ fun TrackItem(
                         text = track.artistName,
                         fontSize = 11.sp
                     )
-                    Image(
+                    Icon(
                         painter = painterResource(id = R.drawable.circle_separator),
                         contentDescription = ""
                     )
@@ -76,7 +76,7 @@ fun TrackItem(
                     )
                 }
             }
-            Image(
+            Icon(
                 modifier = Modifier
                     .align(Alignment.CenterVertically),
                 painter = painterResource(id = R.drawable.ic_24x24_arrow_forward),

@@ -41,7 +41,7 @@ fun LibraryPage(
     val scope = rememberCoroutineScope()
 
     // Ключевое состояние Pager, при инициализации которого указывается количество экранов, которые можно переключать
-    var pagerState = rememberPagerState(pageCount = { 2 })
+    val pagerState = rememberPagerState(pageCount = { 2 })
 
     Scaffold(
         topBar = {
@@ -77,7 +77,6 @@ fun LibraryPage(
                     onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(0)
-                            Log.d("PAGER", "Current page: ${pagerState.currentPage}")
                         }
                     },
                     text = { CustomText(text = stringResource(id = R.string.library_favoriteTracks)) },

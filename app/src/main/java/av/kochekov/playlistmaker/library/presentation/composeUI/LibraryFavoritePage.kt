@@ -33,7 +33,7 @@ fun LibraryFavoritePage(
     Box (
         modifier = modifier
     ) {
-        when (state) {
+        when (val data = state) {
             is FavoriteTrackListState.Empty -> {
                 ErrorMessage(
                     modifier = Modifier
@@ -47,7 +47,7 @@ fun LibraryFavoritePage(
             is FavoriteTrackListState.Content -> {
                 TrackList(
                     modifier = Modifier.fillMaxSize(),
-                    list = (state as FavoriteTrackListState.Content).tracks,
+                    list = data.tracks,
                     onClicked = {track ->
                         onTrackClicked(track.trackId)
                     }
