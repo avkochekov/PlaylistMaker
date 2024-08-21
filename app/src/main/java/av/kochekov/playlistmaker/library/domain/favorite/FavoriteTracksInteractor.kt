@@ -1,6 +1,6 @@
 package av.kochekov.playlistmaker.library.domain.favorite
 
-import av.kochekov.playlistmaker.library.domain.favorite.models.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import kotlinx.coroutines.flow.Flow
 
 interface FavoriteTracksInteractor {

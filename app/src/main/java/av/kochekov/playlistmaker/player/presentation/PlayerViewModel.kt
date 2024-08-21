@@ -1,17 +1,22 @@
 package av.kochekov.playlistmaker.player.presentation
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import av.kochekov.playlistmaker.favorite_tracks.domain.TrackInteractor
 import av.kochekov.playlistmaker.player.domain.models.PlaylistListState
 import av.kochekov.playlistmaker.player.presentation.models.MessageState
 import av.kochekov.playlistmaker.playlist_editor.domain.PlaylistInteractor
 import av.kochekov.playlistmaker.playlist_editor.domain.models.PlaylistModel
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
 import av.kochekov.playlistmaker.services.AudioPlayerControl
 import av.kochekov.playlistmaker.services.NotificationControl
 import av.kochekov.playlistmaker.services.PlayerState
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 private const val TIME_UPDATE_VALUE_MILLIS = 300L
 private const val DEFAULT_TRACK_POSITION = 0
@@ -31,6 +36,8 @@ class PlayerViewModel(
 
     private var timerJob: Job? = null
 
+    private var _isServiceBounded: Boolean = false
+
     init {
         checkTrackInFavorite()
         loadPlaylists()
@@ -38,6 +45,8 @@ class PlayerViewModel(
 
     private val _playerState = MutableLiveData<PlayerState>(PlayerState.Default())
     fun playerState(): LiveData<PlayerState> = _playerState
+
+    fun isServiceBounded(): Boolean = _isServiceBounded
 
     private var audioPlayerControl: AudioPlayerControl? = null
     private var notificationControl: NotificationControl? = null
@@ -56,6 +65,10 @@ class PlayerViewModel(
 
     fun removeAudioPlayerControl() {
         audioPlayerControl = null
+    }
+
+    fun setIsServiceBounded(state: Boolean) {
+        _isServiceBounded = state
     }
 
     fun setNotificationControl(control: NotificationControl) {

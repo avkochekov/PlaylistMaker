@@ -1,7 +1,7 @@
 package av.kochekov.playlistmaker.library.data.utils
 
 import av.kochekov.playlistmaker.common.data.models.Track
-import av.kochekov.playlistmaker.library.domain.favorite.models.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 
 object Mapper {
     fun toModel(data: Track) : TrackModel{
@@ -9,8 +9,13 @@ object Mapper {
             trackId = data.trackId,
             trackName = data.trackName,
             artistName = data.artistName,
-            artwork = data.artworkUrl100,
-            trackTimeMillis = data.trackTimeMillis
+            trackTimeMillis = data.trackTimeMillis,
+            previewUrl = null,
+            artworkUrl100 = data.artworkUrl100,
+            collectionName = "",
+            releaseDate = null,
+            primaryGenreName = "",
+            country = ""
         )
     }
 }

@@ -1,7 +1,7 @@
 package av.kochekov.playlistmaker.favorite_tracks.data.utils
 
 import av.kochekov.playlistmaker.common.data.models.Track
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 
 object Mapper {
     fun toModel(data: Track): TrackModel {

@@ -1,5 +1,7 @@
 package av.kochekov.playlistmaker.search.domain.model
 
+import av.kochekov.playlistmaker.common.domain.TrackModel
+
 sealed interface SearchFragmentState {
 
     data class HistoryList(

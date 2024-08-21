@@ -8,7 +8,7 @@ import av.kochekov.playlistmaker.search.domain.SearchHistoryInteractor
 import av.kochekov.playlistmaker.search.domain.TrackListInteractor
 import av.kochekov.playlistmaker.search.domain.model.ErrorMessageType
 import av.kochekov.playlistmaker.search.domain.model.SearchFragmentState
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import kotlinx.coroutines.launch
 
 class SearchViewModel(

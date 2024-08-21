@@ -3,7 +3,7 @@ package av.kochekov.playlistmaker.common.domain.interactor
 import av.kochekov.playlistmaker.favorite_tracks.domain.TrackRepository
 import av.kochekov.playlistmaker.favorite_tracks.data.utils.Mapper
 import av.kochekov.playlistmaker.favorite_tracks.domain.TrackInteractor
-import av.kochekov.playlistmaker.search.domain.model.TrackModel
+import av.kochekov.playlistmaker.common.domain.TrackModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
